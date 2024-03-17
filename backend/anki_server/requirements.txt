@@ -2,3 +2,6 @@ djangorestframework
 markdown       # Markdown support for the browsable API.
 django-filter  # Filtering support
 pygments
+django-allauth
+django-rest-auth
+exarth-rest-auth

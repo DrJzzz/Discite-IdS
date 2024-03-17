@@ -15,21 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-from django.contrib.auth.models import User
+from django.urls import include, path, re_path
+from django.contrib.auth import get_user_model
 from rest_framework import routers, serializers, viewsets
+from snippets.models import CustomUser
+
 
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
+        model = CustomUser
+        fields = ['id', 'email','name', 'birthdate', 'max_reviews', 'phone_number']
 
 
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
@@ -42,6 +44,10 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('', include('snippets.urls')),
+    path('accounts/', include('allauth.urls')),
+    re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
+    re_path(r'^rest-auth/registration/', include('exarth_rest_auth.registration.urls')),
+    re_path(r'^rest-auth/', include('exarth_rest_auth.urls'))
 ]
 
 urlpatterns += router.urls

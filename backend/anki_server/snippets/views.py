@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from snippets.serializers import UserSerializer
 from rest_framework import permissions
 from snippets.permissions import IsOwnerOrReadOnly
@@ -43,6 +43,6 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This viewset automatically provides `list` and `retrieve` actions.
     """
-    queryset = User.objects.all()
+    queryset = get_user_model()
     serializer_class = UserSerializer
 
