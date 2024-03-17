@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
-from anki_server.polls import views
+
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,13 +36,12 @@ class UserViewSet(viewsets.ModelViewSet):
 # Routers provide a way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [
-    path("polls/", include("anki_server.polls.urls")),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('', include('snippets.urls')),
 ]
 
 urlpatterns += router.urls
