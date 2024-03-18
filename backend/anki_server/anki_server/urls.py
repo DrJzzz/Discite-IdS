@@ -21,7 +21,6 @@ from rest_framework import routers, serializers, viewsets
 from snippets.models import CustomUser
 
 
-
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

@@ -46,12 +46,12 @@ class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['name', 'birthdate']
     objects = CustomUserManager()
-    name = models.CharField(blank=True, max_length=100)
-    birthdate = models.DateField(blank=True, null=True)
-    max_reviews = models.IntegerField(blank=True, default=0)
-    phone_number = models.CharField(blank=True, max_length=10, null=True)
+    name = models.CharField( max_length=100)
+    birthdate = models.DateField( null=True)
+    max_reviews = models.IntegerField( default=0)
+    phone_number = models.CharField(default='000000-0000' ,max_length=10, null=True)
 
     def __str__(self):
         return self.email
