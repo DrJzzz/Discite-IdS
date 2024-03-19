@@ -19,14 +19,15 @@
   </div>
   
   <div class="md:flex hidden">
-    <div class="flex lg:ml-4">
-      </div>
+    <a href="/signin" class=" mx-4">
+        <SimpleBtn text="Sign In" />
+      </a>
+      <a href="/login" class="">
+        <SimpleBtn text="Log In" />
+      </a>
   </div>
-  <a href="#contact-form" class="md:flex hidden">
-    <SimpleBtn text="Log In" />
-  </a>
   
-
+<!-- Responsive Menu -->
   <div class="md:hidden">
     <button class="text-white" type="button" on:click={toggleMenu}>
       {#if isOpen}
@@ -38,9 +39,12 @@
     {#if isOpen}
       <div class="absolute mt-4 right-0 bg-[#2e2f31] w-full py-2 shadow-lg z-50">
         <div class="w-full flex">
-          <a href="" class="ml-auto mr-3">
-          <SimpleBtn text="Log In"/>
-        </a>
+          <a href="login" class="ml-auto mr-3">
+            <SimpleBtn text="Log In"/>
+          </a>
+          <a href="signin" class="ml-auto mr-3">
+            <SimpleBtn text="Log In"/>
+          </a>
         </div>
         
       </div>
