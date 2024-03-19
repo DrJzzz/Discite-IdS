@@ -3,3 +3,7 @@ __pycache__
 .DS_Store
 migrations/
 db.sqlite3
+
+
+# Environment Variables
+/backend/anki_server/anki_server/.env
