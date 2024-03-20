@@ -30,19 +30,7 @@
   let registroIsOpen = false;
 </script>
 
-
 <nav class="flex items-center justify-between px-6 py-2 bg-[#2e2f31] text-[#eaeaea]">
-  <Modal isOpen={loginIsOpen} on:close={closeLogin}>
-    <slot>
-      <Login />
-    </slot>
-  </Modal>
-
-  <Modal isOpen={registroIsOpen} on:close={closeRegistro}>
-    <slot> 
-      <Registro isOpen={registroIsOpen}/>
-    </slot>
-  </Modal>
 
   <div class="flex items-center">
     <a href="/">
@@ -51,11 +39,13 @@
   </div>
   
   <div class="md:flex hidden">
-    <div class="mx-2">
+    <a href="/login" class="mx-2">
       <SimpleBtn text="Log In" on:click={openLogin}/>
-    </div>
-          
+    </a>
+       <a href="/signIn" class="mx-2">   
       <SimpleBtn text="Sign In" on:click={openRegistro}/>
+    </a>
+        
   </div>
   
 <!-- Responsive Menu -->
