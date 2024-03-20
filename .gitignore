@@ -1,7 +1,7 @@
 .idea
 __pycache__
 .DS_Store
-migrations/
+
 db.sqlite3
 env/
 backend/.venv/

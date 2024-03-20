@@ -11,7 +11,7 @@
   }
 
   let modal1isOpen = false;
-  let modal2isOpen = true;
+  let modal2isOpen = false;
 </script>
 
 
@@ -33,12 +33,10 @@
   </div>
   
   <div class="md:flex hidden">
-    <a href="/signin" class=" mx-4">
-        <SimpleBtn text="Sign In" />
-      </a>
-      <a href="/login" class="">
-        <SimpleBtn text="Log In" />
-      </a>
+    <SimpleBtn text="Log In" on:click={() => modal1isOpen = true}/>
+          
+          
+      <SimpleBtn text="Log In" on:click={() => modal2isOpen = true}/>
   </div>
   
 <!-- Responsive Menu -->
@@ -53,12 +51,10 @@
     {#if isOpen}
       <div class="absolute mt-1 right-0 bg-[#2e2f31] w-full py-2 shadow-lg z-50">
         <div class="w-full flex">
-          <a href="login" class="ml-auto mr-3">
-            <SimpleBtn text="Log In"/>
-          </a>
-          <a href="signin" class="ml-auto mr-3">
-            <SimpleBtn text="Log In"/>
-          </a>
+          
+            <SimpleBtn text="Sign In" on:click={() => {modal2isOpen = true; isOpen = false}}/>
+            <SimpleBtn text="Log In" on:click={() => {modal1isOpen = true; isOpen = false}}/>
+          
         </div>
         
       </div>
