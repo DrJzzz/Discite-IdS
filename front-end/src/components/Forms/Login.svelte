@@ -24,7 +24,8 @@
 
             const result = await response.json();
             
-            if (response.ok) {                
+            if (response.ok) {   
+                localStorage.setItem('key', result.key);             
                 goto('/dashboard');
             } else {
                 alert('Tu usuairo o contraseña son incorrectos, por favor intenta de nuevo.');
