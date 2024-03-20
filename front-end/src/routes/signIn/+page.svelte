@@ -3,8 +3,7 @@
 
 </script>
 
-<div class="container">
+
     <div class="mx-auto">
         <Registro />
     </div>
-</div>
