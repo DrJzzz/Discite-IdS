@@ -3,6 +3,7 @@
 	import InputPassword from '../Inputs/InputPassword.svelte';
 	import InputText from '../Inputs/InputText.svelte';
 
+    export let isOpen
     let name = '';
     let email = '';
 
@@ -33,8 +34,9 @@
 
             const result = await response.json();
             
-            if (response.ok) {                
-                goto('/dashboard');
+            if (response.ok) {    
+                alert('Usuario creado exitosamente');
+                isOpen = false;
             } else {
                 alert('Tu usuairo o contraseña son incorrectos, por favor intenta de nuevo.');
             }
