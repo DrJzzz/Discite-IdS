@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'snippets.middleware.DisableCSRF',
-    'allauth.account.middleware.AccountMiddleware',
+   # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'anki_server.urls'
@@ -89,7 +89,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'anki_server.wsgi.application'
+#$WSGI_APPLICATION = 'anki_server.wsgi.application'
 
 
 # Database
