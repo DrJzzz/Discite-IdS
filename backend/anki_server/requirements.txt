@@ -1,7 +1,8 @@
-djangorestframework
+djangorestframework==3.14.0
 markdown       # Markdown support for the browsable API.
 django-filter  # Filtering support
 pygments
-django-allauth
+django-allauth==0.54.0
 django-rest-auth
 exarth-rest-auth
+django-environ
