@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'snippets',
+    #'snippets',
+    'userapp',
     'rest_framework.authtoken',
     'rest_auth',
     'django.contrib.sites',
@@ -59,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'snippets.middleware.DisableCSRF',
+    #'snippets.middleware.DisableCSRF',
    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -123,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'snippets.CustomUser'
+# AUTH_USER_MODEL = 'snippets.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -166,13 +167,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'snippets.serializers.UserSerializer',
-}
+# REST_AUTH_SERIALIZERS = {
+#     'USER_DETAILS_SERIALIZER': 'snippets.serializers.UserSerializer',
+# }
 
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'snippets.serializers.CustomRegisterSerializer',
-}
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'snippets.serializers.CustomRegisterSerializer',
+# }
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
