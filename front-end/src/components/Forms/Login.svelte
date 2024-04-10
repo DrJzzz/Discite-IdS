@@ -7,7 +7,7 @@
     let password = '';
 
     async function handleSubmit() {
-        const url = 'http://localhost:8000/rest-auth/login/';
+        const url = 'http://localhost:8000/auth/login/';
         const data = {
             email,
             password
