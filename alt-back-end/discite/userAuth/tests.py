@@ -15,9 +15,14 @@ class UserLoginAPIViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], 'testuser')
         self.assertTrue('token' in response.data)
+        
+    def test_login_with_nonexistent_user(self):
+        data = {'username': 'nonexistentuser', 'password': 'testpass'}
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_invalid_credentials(self):
-        data = {'username': 'testuser', 'password': 'wrongpass'}
+        data = {'username': 'testuser', 'password': 'wrong-password'}
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
@@ -50,7 +55,7 @@ class UserRegisterAPIViewTests(APITestCase):
             'password2': 'wrongpass'
         }
         response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_406_NOT_ACCEPTABLE)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_register_with_existing_username(self):
         User.objects.create_user(username='testuser', password='testpass')
@@ -63,7 +68,7 @@ class UserRegisterAPIViewTests(APITestCase):
             'password2': 'testpass'
         }
         response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_406_NOT_ACCEPTABLE)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
         
 class UserLogoutAPIViewTests(APITestCase):

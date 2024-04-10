@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+class UserLoginSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
     username = serializers.CharField(read_only=True)
     password = serializers.CharField(write_only=True)
@@ -15,7 +15,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "password"]
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
     username = serializers.CharField()
     first_name = serializers.CharField()
