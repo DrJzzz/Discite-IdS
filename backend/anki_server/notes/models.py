@@ -1,6 +1,4 @@
 from django.db import models
-from mdeditor.fields import MDTextField
-
 
 class Note(models.Model):
     title : models.CharField(max_length=255)
@@ -11,5 +9,11 @@ class Note(models.Model):
     linkedTo :  models.ManyToManyField(Note)
     linkedFrom : models.MayToManyField(Note)
 
+    def __str__(self):
+        return self.title
+
 class Tag(models.Model):
     name : models.CharField()
+
+    def __str__(self):
+        return self.name
