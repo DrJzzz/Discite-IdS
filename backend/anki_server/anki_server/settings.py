@@ -43,12 +43,13 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'django.contrib.sites',
-    'corsheaders',
+    #'corsheaders',
     'allauth',
     'allauth.account',
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
-    'mdeditor'
+    #'mdeditor',
+    'card'
 ]
 
 MIDDLEWARE = [
@@ -216,5 +217,5 @@ MDEDITOR_CONFIGS = {
 }
 
 # enabling media uploads
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/media/'
