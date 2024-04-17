@@ -1,4 +1,8 @@
-from django.conf.urls import url, include
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import include, path
 
+from notes.views import *
+
+urlpatterns = [
+    path('allnotes/', NoteList.as_view()),  # /notes/allnotes
+    path('note/<int>', NoteDetail.as_view())
+]

@@ -11,3 +11,4 @@ django-mdeditor
 requests
 bleach
 tzdata
+markdown

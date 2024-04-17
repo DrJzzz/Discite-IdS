@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    #'snippets',
     'userapp',
     'rest_framework.authtoken',
     'rest_auth',
@@ -48,7 +47,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
-    'mdeditor'
+    'notes.apps.NotesConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -61,8 +61,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    #'snippets.middleware.DisableCSRF',
-   # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'anki_server.urls'
