@@ -47,20 +47,20 @@ INSTALLED_APPS = [
     'allauth.account',
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
-    'notes.apps.NotesConfig'
-
+    'notes.apps.NotesConfig',
 ]
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'anki_server.urls'
@@ -176,6 +176,6 @@ AUTHENTICATION_BACKENDS = [
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:5173', 'http://localhost:5173']
 
 
