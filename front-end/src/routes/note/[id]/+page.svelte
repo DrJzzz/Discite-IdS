@@ -3,4 +3,4 @@
 </script>
 
 
-<h1>{data.id}</h1>
+<h1>{data.content}</h1>

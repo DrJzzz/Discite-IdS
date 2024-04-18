@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from notes.models import *
 from notes.serializers import *
 
@@ -16,3 +16,9 @@ class NoteDetail(generics.RetrieveAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
     lookup_url_kwarg = "id"
+
+
+
+class NoteViewSet(viewsets.ModelViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer

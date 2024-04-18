@@ -7,12 +7,13 @@ class NoteHyperLinkedRelatedField(serializers.HyperlinkedRelatedField):
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
     serializer_related_field = NoteHyperLinkedRelatedField
+    
     class Meta:
         model = Note
         fields = ['url', 'id','title', 'content']
-        extra_kwargs = {
-            "url": {"lookup_url_kwarg": "id"},
-        }
+        # extra_kwargs = {
+        #     "url": {"lookup_url_kwarg": "id"},
+        # }
         
 
 
