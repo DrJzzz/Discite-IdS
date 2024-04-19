@@ -5,4 +5,4 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Card
         fields = ['id', 'lastAnswer', 'lastStudied', 'ease', 'interval', 'due', 'reviews', 'lapses', 'avgTime',
-                  'tags', 'modified', 'subject']
+                  'tags', 'modified', 'subject','data']

@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    #'snippets',
     'userapp',
     'rest_framework.authtoken',
     'rest_auth',
@@ -49,11 +48,11 @@ INSTALLED_APPS = [
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
     #'mdeditor',
-    'card'
+    'cards'
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    #'corsheaders.middleware.CorsMiddleware',
     #'snippets.middleware.DisableCSRF',
    # 'allauth.account.middleware.AccountMiddleware',
 ]
@@ -102,8 +101,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'Gearsdark12',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -178,7 +181,7 @@ AUTHENTICATION_BACKENDS = [
 # }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 
 
