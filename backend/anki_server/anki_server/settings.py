@@ -129,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTH_USER_MODEL = 'snippets.CustomUser'
+AUTH_USER_MODEL = 'userapp.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -172,13 +172,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# REST_AUTH_SERIALIZERS = {
-#     'USER_DETAILS_SERIALIZER': 'snippets.serializers.UserSerializer',
-# }
+REST_AUTH_SERIALIZERS = {
+     'USER_DETAILS_SERIALIZER': 'userapp.serializers.UserSerializer',
+ }
 
-# REST_AUTH_REGISTER_SERIALIZERS = {
-#     'REGISTER_SERIALIZER': 'snippets.serializers.CustomRegisterSerializer',
-# }
+REST_AUTH_REGISTER_SERIALIZERS = {
+     'REGISTER_SERIALIZER': 'userapp.serializers.CustomRegisterSerializer',
+ }
 
 # CORS settings
 #CORS_ALLOW_ALL_ORIGINS = True
