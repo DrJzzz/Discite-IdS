@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    #'snippets',
     'userapp',
     'rest_framework.authtoken',
     'rest_auth',
@@ -48,18 +47,20 @@ INSTALLED_APPS = [
     'allauth.account',
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
+    'cards',
+    'notes',
 ]
 
 MIDDLEWARE = [
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     #'snippets.middleware.DisableCSRF',
    # 'allauth.account.middleware.AccountMiddleware',
 ]
@@ -100,8 +101,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'Gearsdark12',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -124,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTH_USER_MODEL = 'snippets.CustomUser'
+AUTH_USER_MODEL = 'userapp.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -167,13 +172,16 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-# REST_AUTH_SERIALIZERS = {
-#     'USER_DETAILS_SERIALIZER': 'snippets.serializers.UserSerializer',
-# }
+REST_AUTH_SERIALIZERS = {
+     'USER_DETAILS_SERIALIZER': 'userapp.serializers.UserSerializer',
+ }
 
-# REST_AUTH_REGISTER_SERIALIZERS = {
-#     'REGISTER_SERIALIZER': 'snippets.serializers.CustomRegisterSerializer',
-# }
+REST_AUTH_REGISTER_SERIALIZERS = {
+     'REGISTER_SERIALIZER': 'userapp.serializers.CustomRegisterSerializer',
+ }
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = ['http://127.0.0.1:5173', 'http://localhost:5173']
+
+
