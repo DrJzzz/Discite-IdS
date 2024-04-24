@@ -10,12 +10,12 @@
     let password2 = '';
 
     async function handleSubmit() {
-        const url = 'http://localhost:8000/auth/register/';
+        const url = 'http://localhost:8000/rest-auth/registration/';
         const data = {
             "name": name,
             email,
             "phone_number": "0000000000",
-            "birth_date": "1999-04-09",
+            "birthdate": "1999-04-09",
             "max_reviews" : 0, 
             password1,
             password2,

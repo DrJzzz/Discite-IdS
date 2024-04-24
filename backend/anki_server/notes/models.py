@@ -11,8 +11,8 @@ class Note(models.Model):
     title = models.CharField( max_length=255)
     content = models.TextField()
     tags = models.ManyToManyField("Tag", blank=True)
-    lastEdited = models.DateTimeField()
-    dateCreated = models.DateTimeField()
+    lastEdited = models.DateTimeField(null=True)
+    dateCreated = models.DateTimeField(null=True)
     linkedTo =  models.ManyToManyField("self", blank=True)
     linkedFrom = models.ManyToManyField("self", blank=True)
 

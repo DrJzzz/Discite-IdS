@@ -30,6 +30,7 @@ router.register(r'notes', noteviews.NoteViewSet)
 
 urlpatterns = [
     path('', include('cards.urls')),
+    path('', include('decks.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
