@@ -1,41 +1,17 @@
 <script>
-    let isOpen = false;
 
-    function toggleMenu() {
-        isOpen = !isOpen;
-    }
+
 </script>
-
-<style>
-    .menu {
-        top: 0;
-        left: 0;
-        transition: transform 0.3s ease-in-out;
-        transform: translateX(-200px);
-    }
-
-    .menu.open {
-        transform: translateX(0);
-    }
-
-    .content {
-        margin-left: 200px;
-        transition: margin-left 0.3s ease-in-out;
-    }
-
-    .content.open {
-        margin-left: 0;
-    }
-</style>
-
-<!-- Menu-->
-<div class="w-[200px] h-[100vh] bg-[#2d3542] fixed menu {isOpen ? 'open' : ''}">
-    <button on:click={toggleMenu}>Toggle Menu</button>
-    
-</div>
-
-<!-- Content -->
-<div class="content {isOpen ? 'open' : ''}">
-    <button on:click={toggleMenu}>Toggle Menu</button>
-    <slot />
+<div class="w-full h-full flex">
+    <nav class="w-64 h-full border-r-[1px] bg-primaryBlue border-r-lightBlue text-gray-100">
+        <ul class="flex flex-col">
+            <a href="/dashboard" class="p-4 hover:bg-gray-700">Dashboard</a>
+            <a href="/dashboard/decks" class="p-4 hover:bg-gray-700">My Decks</a>
+            <a href="/dashboard/settings" class="p-4 hover:bg-gray-700">Settings</a>
+            <a href="/dashboard/new-card" class="p-4 bg-gray-600 hover:bg-gray-500">Create a New Card</a>
+        </ul>
+    </nav>
+    <div class="flex-1 p-8 bg-primaryBlue">
+        <slot></slot>
+    </div>
 </div>

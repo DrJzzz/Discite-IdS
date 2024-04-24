@@ -1,1 +1,1 @@
-<h1>You are logged in!</h1>
+<h1 class="text-gray-200">Very dope graphs of how good of student you are.</h1>

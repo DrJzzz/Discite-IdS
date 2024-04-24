@@ -6,7 +6,7 @@ export default {
       colors: {
         primaryBlue: '#1f2937',
         darkerBlue: '#1f2937',
-        lightBLue: '#e3f5ff',
+        lightBlue: '#e3f5ff',
       },
     },
   },
