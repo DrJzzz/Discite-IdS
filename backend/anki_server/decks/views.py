@@ -21,7 +21,14 @@ def cards_deck(request, pk):
     data = {
         'deck': {
             'id': deck.id,
+            'name': deck.name,
+            'cards_count': deck.cards_count,
+            'max_reviews' : deck.max_reviews,
+            'due_today' : deck.due_today
         },
-        'cards': list(cards.values('id')),
+        'cards': list(cards.values('id','lastAnswer', 'lastStudied', 'ease',
+                                   'interval', 'due', 'reviews', 'lapses',
+                                   'avgTime', 'tags', 'modified', 'subject',
+                                   'data')),
     }
     return JsonResponse(data)
