@@ -10,7 +10,7 @@
     let password2 = '';
 
     async function handleSubmit() {
-        const url = 'http://localhost:8000/auth/register/';
+        const url = 'http://localhost:8000/rest-auth/registration/';
         const data = {
             "name": name,
             email,
