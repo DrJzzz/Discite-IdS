@@ -1,4 +1,4 @@
-import uuid
+
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
@@ -17,7 +17,10 @@ class Card(models.Model):
     modified = models.DateTimeField(blank=True, null=True)
     subject = models.CharField(max_length=100, blank=True, null=True)
     data = models.JSONField(blank=True, null=True)
+    deck = models.ForeignKey('decks.Deck', related_name='card_deck',on_delete=models.CASCADE)
 
     def __str__(self):
         return self.id
+
+
 
