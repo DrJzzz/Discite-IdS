@@ -1,5 +1,9 @@
 <script lang="ts">
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
+  import FavIcon from "../../lib/images/favicon.png"
+  import MenuToggle from "../../lib/images/menu-toggle.svg"
+  import MenuToggleHm from "../../lib/images/menu-toggle-hm.svg"
+
   let isOpen = false;
 
   function toggleMenu() {
@@ -11,7 +15,7 @@
 
   <div class="flex items-center">
     <a href="/">
-      <img src="favicon.png" alt="Logo" class="w-12 mx-4 bg-[#2e2f31]">
+      <img src={FavIcon} alt="Logo" class="w-12 mx-4 bg-[#2e2f31]">
     </a>
   </div>
   
@@ -22,16 +26,15 @@
        <a href="/signIn" class="mx-2">   
       <SimpleBtn text="Sign In"/>
     </a>
-        
   </div>
   
 <!-- Responsive Menu -->
   <div class="md:hidden">
     <button class="text-white" type="button" on:click={toggleMenu}>
       {#if isOpen}
-        <img src="menu-toggle.svg" alt="Menu icon" />
+        <img src={MenuToggle} alt="Menu icon" />
       {:else}
-      <img src="menu-toggle-hm.svg" alt="Menu icon" />
+      <img src={MenuToggleHm} alt="Menu icon" />
       {/if}
     </button>
     {#if isOpen}
