@@ -1,36 +1,13 @@
 <script lang="ts">
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
-	import Login from "../Forms/Login.svelte";
-	import Registro from "../Forms/Registro.svelte";
-	import Modal from "../Modal/Modal.svelte";
-
   let isOpen = false;
 
   function toggleMenu() {
     isOpen = !isOpen;
   }
-
-  function openLogin() {
-    loginIsOpen = true;
-  }
-
-  function openRegistro() {
-    registroIsOpen = true;
-  }
-
-  function closeLogin() {
-    loginIsOpen = false;
-  }
-
-  function closeRegistro() {
-    registroIsOpen = false;
-  }
-
-  let loginIsOpen = false;
-  let registroIsOpen = false;
 </script>
 
-<nav class="flex items-center justify-between px-6 py-2 bg-[#2e2f31] text-[#eaeaea]">
+<nav class="flex items-center justify-between px-6 py-2 bg-primaryBlue text-[#eaeaea]">
 
   <div class="flex items-center">
     <a href="/">
@@ -40,10 +17,10 @@
   
   <div class="md:flex hidden">
     <a href="/login" class="mx-2">
-      <SimpleBtn text="Log In" on:click={openLogin}/>
+      <SimpleBtn text="Log In"/>
     </a>
        <a href="/signIn" class="mx-2">   
-      <SimpleBtn text="Sign In" on:click={openRegistro}/>
+      <SimpleBtn text="Sign In"/>
     </a>
         
   </div>
@@ -58,13 +35,13 @@
       {/if}
     </button>
     {#if isOpen}
-      <div class="absolute mt-1 right-0 bg-[#2e2f31] w-full py-2 shadow-lg z-50">
+      <div class="absolute mt-1 right-0 bg-primaryBlue w-full py-2 shadow-lg z-50">
         <div class="w-full flex flex-col">
           <div class="w-fit my-2 ml-auto mr-6">
-            <SimpleBtn text="Sign In" on:click={openRegistro}/>
+            <SimpleBtn text="Sign In"/>
           </div>
-          <div class="w-fit my-2 ml-auto mr-4">
-            <SimpleBtn text="Log In" on:click={openLogin}/>
+          <div class="w-fit my-2 ml-auto mr-6">
+            <SimpleBtn text="Log In"/>
           </div>
           
         </div>
