@@ -12,6 +12,7 @@ class Deck(models.Model):
     cards_count = models.IntegerField(default=0)
     max_reviews = models.IntegerField(default=0)
     due_today = models.IntegerField(default=0)
+    owner = models.ForeignKey('userapp.CustomUser', related_name='deck_user',on_delete=models.CASCADE)
 
 
     def __str__(self):
@@ -20,4 +21,4 @@ class Deck(models.Model):
 
 def create_deck():
     if not Deck.objects.exists():
-        Deck.objects.create(name="Global")
+        Deck.objects.create(name="Global", owner_id=1)
