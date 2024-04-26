@@ -11,45 +11,27 @@
   }
 </script>
 
-<nav class="flex items-center justify-between px-6 py-2 bg-primaryBlue text-[#eaeaea]">
 
-  <div class="flex items-center">
-    <a href="/">
-      <img src={FavIcon} alt="Logo" class="w-12 mx-4 bg-[#2e2f31]">
-    </a>
-  </div>
-  
-  <div class="md:flex hidden">
-    <a href="/login" class="mx-2">
-      <SimpleBtn text="Log In"/>
-    </a>
-       <a href="/signIn" class="mx-2">   
-      <SimpleBtn text="Sign In"/>
-    </a>
-  </div>
-  
-<!-- Responsive Menu -->
-  <div class="md:hidden">
-    <button class="text-white" type="button" on:click={toggleMenu}>
-      {#if isOpen}
-        <img src={MenuToggle} alt="Menu icon" />
-      {:else}
-      <img src={MenuToggleHm} alt="Menu icon" />
-      {/if}
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark" >
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/landing">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    {#if isOpen}
-      <div class="absolute mt-1 right-0 bg-primaryBlue w-full py-2 shadow-lg z-50">
-        <div class="w-full flex flex-col">
-          <div class="w-fit my-2 ml-auto mr-6">
-            <SimpleBtn text="Sign In"/>
-          </div>
-          <div class="w-fit my-2 ml-auto mr-6">
-            <SimpleBtn text="Log In"/>
-          </div>
-          
-        </div>
-        
-      </div>
-    {/if}
+    <div class="collapse navbar-collapse" id="navbarColor02">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">Home
+            <span class="visually-hidden"></span>
+          </a>
+        </li>
+      </ul>
+
+
+    </div>
+    <div class="container-sm ms-auto" >
+      <button type="button" class="btn btn-outline-dark"><a href="/login">Login</a></button>
+      <button type="button" class="btn btn-outline-dark"><a href="/signIn">Sign In</a></button>
+    </div>
   </div>
 </nav>
