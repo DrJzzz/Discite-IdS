@@ -1,5 +1,5 @@
 <script>
-    import {NoteStore} from '../../note-store'
+    import {NoteStore} from '../../../note-store.js'
     import {onMount} from 'svelte'
 
     onMount(async function() {
