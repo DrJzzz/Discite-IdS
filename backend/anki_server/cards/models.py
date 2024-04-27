@@ -16,7 +16,9 @@ class Card(models.Model):
     tags = ArrayField(models.CharField(max_length=100), blank=True,null=True)
     modified = models.DateTimeField(blank=True, null=True)
     subject = models.CharField(max_length=100, blank=True, null=True)
-    data = models.JSONField(blank=True, null=True)
+    template = models.IntegerField(blank=True, null=True)
+    front = models.CharField(max_length=100, blank=True, null=True)
+    back = models.CharField(max_length=1000, blank=True, null=True)
     deck = models.ForeignKey('decks.Deck', related_name='card_deck',on_delete=models.CASCADE)
 
     def __str__(self):

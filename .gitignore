@@ -8,6 +8,8 @@ backend/.venv/
 
 migrations/
 
+.env
+
 
 # Environment Variables
 /backend/anki_server/anki_server/.env

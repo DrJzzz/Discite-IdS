@@ -1,15 +1,51 @@
 <script>
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
 
+
     let front = '';
     let back = '';
-    let deck = '';
+    let id_deck = "";
+    let template = "";
 
-    /* async function handleSubmit() {
-        const data = { front, back, deck };
+    let decks = [];
 
+
+
+
+    function resetTemplate(){
+        template = "";
+    }
+
+    async function getDecks() {
         try {
-            const response = await fetch('https://api.endpoint', {
+            const response = await fetch('http://127.0.0.1:8000/users/1/decks/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.ok) {
+                console.log('get decks!');
+
+                decks =await  response.json()
+                console.log(decks)
+            } else {
+                console.error('Failed decks');
+            }
+        } catch (error) {
+            console.error('An error occurred while getting decks: ', error);
+        }
+    }
+
+     async function handleSubmit() {
+        const deck = '/decks/'+id_deck+'/'
+         const date = new Date();
+         const modified = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+        const data = { front, back, deck ,modified};
+        console.log(JSON.stringify(data))
+        try {
+            const response = await fetch('http://127.0.0.1:8000/cards/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -25,37 +61,58 @@
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
         }
-    } */
+    }
+
+    getDecks()
 </script>
 
-<form class="flex flex-col mx-auto" on:submit|preventDefault={() => {}}>
-    <label
-        for="front"
-        class="text-lg font-semibold"
-    >
-        Content in the front of the card
-    </label>
-    <textarea class="w-4/5 max-w-[800px] mb-6" bind:value={front}></textarea>
-    
-    <label
-        for="front"
-        class="text-lg font-semibold mb-6"
-    >
-        Content in the back of the card
-    </label>
-    <textarea class="w-4/5 max-w-[800px] mb-6" bind:value={back}></textarea>
-    
-    <label
-        for="front"
-        class="text-lg font-semibold"
-    >
-        Select the deck where you want to add the card
-    </label>
-    <select class="w-4/5 max-w-[800px] mb-6" bind:value={deck}>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-    </select>
-    
-    <SimpleBtn width="w-4/5 max-w-[800px]" text="Create" type="submit" />
-</form>
+<div>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add card</h5>
+    </div>
+    <form on:submit|preventDefault={handleSubmit}>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="front-area" class="form-label">Template</label>
+                <select bind:value={template}  class="form-select" style="color:black" aria-label="Select template">
+                    <option value="" disabled selected>Open to select template</option>
+                    <option value="1">Basic</option>
+                </select>
+            </div>
+            {#if template != 0}
+                <div class="mb-3">
+                    <label for="front-area" class="form-label">Deck</label>
+                    <select bind:value={id_deck}  class="form-select" style="color:black" aria-label="Select template">
+                        <option value="" disabled selected>Open to select a deck</option>
+                        {#each decks.decks as deck}
+                        <option value="{deck.id}">{deck.name}</option>
+                            {/each}
+                    </select>
+                </div>
+            {/if}
+            {#if template == 1}
+
+                <div class="mb-3">
+                    <label for="front-area" class="form-label">Front Area</label>
+                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="back-area" class="form-label">Back Area</label>
+                    <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
+                </div>
+            {/if}
+
+
+        </div>
+
+        <div class="modal-footer">
+            <button on:click={resetTemplate()} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            {#if template != 0}
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+            {/if}
+        </div>
+    </form>
+
+
+
+</div>
