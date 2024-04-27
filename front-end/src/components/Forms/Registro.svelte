@@ -8,20 +8,22 @@
 
     let password1 = '';
     let password2 = '';
+    let phone_number = ""
+    let birthdate = ""
 
     async function handleSubmit() {
         const url = 'http://localhost:8000/rest-auth/registration/';
         const data = {
-            "name": name,
+            name,
             email,
-            "phone_number": "0000000000",
-            "birthdate": "1999-04-09",
+            phone_number,
+            birthdate,
             "max_reviews" : 0, 
             password1,
             password2,
   
         };
-
+        console.log(data)
         try {
             const response = await fetch(url, {
                 method: 'POST',
@@ -37,6 +39,7 @@
                 alert('Usuario creado exitosamente');
                 goto('/login')
             } else {
+                console.log(response.statusText)
                 alert('Tu usuairo o contraseña son incorrectos, por favor intenta de nuevo.');
             }
             
@@ -47,16 +50,34 @@
 </script>
 
 <main>
-    <h1 class="text-2xl text-black">Registro</h1>
+    <h1 class="">Registro</h1>
     <form on:submit|preventDefault={handleSubmit}>
-        <InputText label="Name" bind:value={name} placeholder="Name"/>
-
-        <InputText label="Email" bind:value={email} placeholder="Email"/>
+        <div class="mb-3" >
+            <label for="name" class="form-label">Name</label>
+            <input  bind:value={name} type="text" class="form-control" id="name" >
+        </div>
+        <div class="mb-3" >
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input  bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phoneNumber" bind:value={phone_number} placeholder="Enter your phone number">
+        </div>
+        <div class="mb-3">
+            <label for="dob" class="form-label">Birthdate</label>
+            <input type="date" class="form-control" id="dob" bind:value={birthdate}>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input  bind:value={password1} type="password" class="form-control" id="exampleInputPassword1">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
+            <input  bind:value={password2} type="password" class="form-control" id="exampleInputPassword2">
+        </div>
         
-        <InputPassword label="Password" bind:value={password1} placeholder="Password"/>
-        <InputPassword label="Confirm Password" bind:value={password2} placeholder="Confirm Password"/>
-        
-        <button type="submit">Sign in</button>
+        <button class="btn btn-primary" type="submit">Sign in</button>
     </form>
 </main>
 
@@ -67,11 +88,4 @@
         padding: 2rem;
     }
 
-    button {
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-    }
 </style>

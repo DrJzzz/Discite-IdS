@@ -2,6 +2,6 @@
     import Login from "../../components/Forms/Login.svelte";
 </script>
 
-    <div class="flex mx-auto">
+    <div class="container">
         <Login />
     </div>

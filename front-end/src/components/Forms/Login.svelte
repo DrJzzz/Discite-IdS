@@ -38,28 +38,29 @@
 </script>
 
 <main>
-    <h1 class="text-2xl text-black">Login</h1>
-    <form on:submit|preventDefault={handleSubmit}>
-        <InputText label="Email" bind:value={email} placeholder="Email" required/>
-        
-        <InputPassword label="Password" bind:value={password} placeholder="Password" required/>
-        
-        <button type="submit">Login</button>
-    </form>
+    <div class="container-fluid align-content-center " >
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <h1 >Login</h1>
+                <form on:submit|preventDefault={handleSubmit}>
+                    <div class="mb-3" >
+                        <label for="exampleInputEmail1" class="form-label">Email address</label>
+                        <input  bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input  bind:value={password} type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+
+    </div>
 </main>
-
-<style>
-    main {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
-
-    button {
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-    }
-</style>
