@@ -14,64 +14,41 @@
 </script>
 
 
-<!-- component -->
-<style>
-    #journal-scroll::-webkit-scrollbar {
-        width: 4px;
-        cursor: pointer;
-        /*background-color: rgba(229, 231, 235, var(--bg-opacity));*/
+<div>
+    <!-- Botón que activa el modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Agregar carta
+    </button>
 
-    }
-    #journal-scroll::-webkit-scrollbar-track {
-        background-color: rgba(229, 231, 235, var(--bg-opacity));
-        cursor: pointer;
-        /*background: red;*/
-    }
-    #journal-scroll::-webkit-scrollbar-thumb {
-        cursor: pointer;
-        background-color: #a0aec0;
-        /*outline: 1px solid slategrey;*/
-    }
-</style>
-
-<div class="container mx-auto py-10 flex justify-center h-screen">
-    <div class="w-4/12 pl-4  h-full flex flex-col">
-        <div class="bg-white text-sm text-gray-500 font-bold px-5 py-2 shadow border-b border-gray-300">
-            Card list
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Cabecera del modal -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Cuerpo del modal (aquí puedes agregar tu formulario) -->
+                <div class="modal-body">
+                    <form>
+                        <!-- Campos del formulario -->
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <!-- Pie del modal (opcional) -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
         </div>
-
-        <div class="w-full h-full overflow-auto shadow bg-white" id="journal-scroll">
-
-            <table class="w-full">
-
-
-                <tbody class="">
-
-                {#each $CardStore as card}
-
-
-                    <tr class="relative transform scale-100
-                                        text-xs py-1 border-b-2 border-blue-100 cursor-default
-
-                                bg-blue-500 bg-opacity-25">
-                        <td class="pl-5 pr-3 whitespace-no-wrap">
-                            <div class="text-gray-400">Last Modified</div>
-                            <div>{card.modified}</div>
-                        </td>
-
-                        <td class="px-2 py-2 whitespace-no-wrap">
-                            <div class="leading-5 text-gray-500 font-medium">Card {card.id}</div>
-                            <div class="leading-5 text-gray-900">
-                                <a class="text-blue-500 hover:underline" href="/card/{card.id}/">Watch card</a></div>
-                            <div class="leading-5 text-gray-800">{card.subject}</div>
-                        </td>
-
-                    </tr>
-                {/each}
-                </tbody>
-            </table>
-        </div>
-        ¿
-
     </div>
 </div>
