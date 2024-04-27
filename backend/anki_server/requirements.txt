@@ -13,3 +13,4 @@ bleach
 tzdata
 markdown
 psycopg2-binary
+django-environ
