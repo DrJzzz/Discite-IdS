@@ -3,7 +3,7 @@ from django.db import models
 from notes.models import Tag
 from datetime import datetime
 from typing import Optional
-from decks.models import get_default_deck, Deck
+from decks.models import *
 
 
 class State(models.IntegerChoices):
@@ -36,7 +36,8 @@ class Card(models.Model):
     deck = models.ForeignKey('decks.Deck', 
                              related_name='card_deck',
                              on_delete=models.CASCADE,
-                             default=get_default_deck)
+                             default=create_default_deck)
+    
     template = models.IntegerField(choices=Template, 
                                    default=1)    
 

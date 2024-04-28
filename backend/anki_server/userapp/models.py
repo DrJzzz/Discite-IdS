@@ -16,17 +16,40 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
     
-    def get_default_user():
-        return User.objects.get(email='admin@admin.com').id
-    
-def get_default_user():
+    def create_default_user():
         user, created = CustomUser.objects.get_or_create(
-            email='admin@admin.com',
-            name='admin', 
+            email='defaul@default.com',
+            name='default', 
             defaults=dict(birthdate='2001-01-01', 
                       password='password1234.', 
                       phone_number='0000000000')
         )
-        if created:
-            user.save()
-        return user
+
+        return user.id
+    
+    def get_default_user():
+        return User.objects.get(email='default@default.com').id
+    
+def get_default_user(sender, **kwargs):
+        user, created = CustomUser.objects.get_or_create(
+            email='defaul@default.com',
+            name='default', 
+            defaults=dict(birthdate='2001-01-01', 
+                      password='password1234.', 
+                      phone_number='0000000000')
+        )
+        
+        return user.id
+    
+def create_default_user():
+        user, created = CustomUser.objects.get_or_create(
+            email='default@default.com',
+            name='default', 
+            defaults=dict(birthdate='2001-01-01', 
+                      password='password1234.', 
+                      phone_number='0000000000')
+        )
+        return user.id-1
+    
+    
+    

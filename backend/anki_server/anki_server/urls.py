@@ -21,7 +21,7 @@ urlpatterns = [
     path('', include('userapp.urls')),
     path('', include('cards.urls')),
     path('', include('decks.urls')),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
