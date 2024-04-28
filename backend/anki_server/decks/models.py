@@ -16,7 +16,7 @@ class Deck(models.Model):
     owner = models.ForeignKey('userapp.CustomUser', 
                               related_name='deck_user',
                               on_delete=models.CASCADE,
-                              default=1)
+                              default=get_default_user)
 
     def __str__(self):
         return self.name
