@@ -1,5 +1,5 @@
 <script>
-	import Registro from "../../components/Forms/Registro.svelte";
+	import Registro from "../../../components/Forms/Registro.svelte";
 
 </script>
 

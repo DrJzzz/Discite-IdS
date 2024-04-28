@@ -1,5 +1,5 @@
 <script>
-    import {CardStore} from "../../../card-store.js"
+    import {CardStore} from "../../../../card-store.js"
     import {onMount} from "svelte";
     import {NoteStore} from "../../../note-store.js";
 
