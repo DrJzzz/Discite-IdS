@@ -18,28 +18,28 @@ class CustomUser(AbstractUser):
     
     def create_default_user():
         user, created = CustomUser.objects.get_or_create(
-            email='defaul@default.com',
+            email='default@default.com',
             name='default', 
             defaults=dict(birthdate='2001-01-01', 
                       password='password1234.', 
                       phone_number='0000000000')
         )
 
-        return user.id
+        return user
     
     def get_default_user():
         return User.objects.get(email='default@default.com').id
     
 def get_default_user(sender, **kwargs):
         user, created = CustomUser.objects.get_or_create(
-            email='defaul@default.com',
+            email='default@default.com',
             name='default', 
             defaults=dict(birthdate='2001-01-01', 
                       password='password1234.', 
                       phone_number='0000000000')
         )
         
-        return user.id
+        return user
     
 def create_default_user():
         user, created = CustomUser.objects.get_or_create(
@@ -49,7 +49,7 @@ def create_default_user():
                       password='password1234.', 
                       phone_number='0000000000')
         )
-        return user.id-1
+        return user
     
     
     

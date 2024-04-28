@@ -27,8 +27,6 @@ class Deck(models.Model):
             name='Default Deck', 
             defaults=dict(owner=get_default_user)
         )
-        if created:
-            deck.save()
         return deck.id
     
     # def get_default_deck():
@@ -40,8 +38,6 @@ def get_default_deck(sender, **kwargs):
             name='Default Deck', 
             defaults=dict(owner=create_default_user)
         )
-        if created:
-            deck.save()
         return deck.id
     
 def create_default_deck():    
@@ -49,6 +45,4 @@ def create_default_deck():
             name='Default Deck', 
             defaults=dict(owner=get_default_user)
         )
-        if created:
-            deck.save()
-        return deck
+        return deck.id
