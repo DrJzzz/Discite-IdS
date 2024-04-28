@@ -31,7 +31,7 @@ class Card(models.Model):
     last_review = models.DateTimeField(blank=True, null=True)
 
     # Relations    
-    tags = models.ManyToManyField("Tag", blank=True, null=True)
+    tags = models.ManyToManyField("notes.Tag", blank=True, null=True)
     deck = models.ForeignKey('decks.Deck', related_name='card_deck',on_delete=models.CASCADE, blank=True, null=True)
     template = models.IntegerField(choices=Template, default=1)
     
