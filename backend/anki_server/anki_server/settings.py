@@ -51,13 +51,14 @@ INSTALLED_APPS = [
     'rest_auth',
     'django.contrib.sites',
     'corsheaders',
+    'decks',
     'allauth',
     'allauth.account',
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
     'cards',
     'notes',
-    'decks',
+    
     
 ]
 

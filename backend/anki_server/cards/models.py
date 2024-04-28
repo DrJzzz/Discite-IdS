@@ -3,6 +3,7 @@ from django.db import models
 from notes.models import Tag
 from datetime import datetime
 from typing import Optional
+from decks.models import get_default_deck, Deck
 
 
 class State(models.IntegerChoices):
@@ -31,10 +32,13 @@ class Card(models.Model):
     last_review = models.DateTimeField(blank=True, null=True)
 
     # Relations    
-    tags = models.ManyToManyField("notes.Tag", blank=True, null=True)
-    deck = models.ForeignKey('decks.Deck', related_name='card_deck',on_delete=models.CASCADE, blank=True, null=True)
-    template = models.IntegerField(choices=Template, default=1)
-    
+    tags = models.ManyToManyField("notes.Tag", blank=True)
+    deck = models.ForeignKey('decks.Deck', 
+                             related_name='card_deck',
+                             on_delete=models.CASCADE,
+                             default=get_default_deck)
+    template = models.IntegerField(choices=Template, 
+                                   default=1)    
 
     def __str__(self):
         return self.id
@@ -66,6 +70,8 @@ class Card(models.Model):
             return (1 + FACTOR * elapsed_days / self.stability) ** DECAY
         else:
             return None
+
+
 
 
 

@@ -7,7 +7,7 @@ migrations/
 
 
 # Environment Variables
-/backend/anki_server/anki_server/.env
+./backend/anki_server/anki_server/.env
 env/
 backend/.venv/
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from userapp.models import get_default_user, CustomUser
 
 
 
@@ -12,13 +13,24 @@ class Deck(models.Model):
     cards_count = models.IntegerField(default=0)
     max_reviews = models.IntegerField(default=0)
     due_today = models.IntegerField(default=0)
-    owner = models.ForeignKey('userapp.CustomUser', related_name='deck_user',on_delete=models.CASCADE, null=True, blank=True)
-
+    owner = models.ForeignKey('userapp.CustomUser', 
+                              related_name='deck_user',
+                              on_delete=models.CASCADE,
+                              default=1)
 
     def __str__(self):
         return self.name
-
-
-def create_deck():
-    if not Deck.objects.exists():
-        Deck.objects.create(name="Global", owner=1)
+    
+    def get_default_deck():
+        return Deck.objects.get(name='Default Deck').id
+    
+    
+def get_default_deck():    
+        deck, created = Deck.objects.get_or_create(
+            name='Default Deck', 
+            defaults=dict(owner=get_default_user)
+        )
+        if created:
+            print("Created deck")
+            deck.save()
+        return deck

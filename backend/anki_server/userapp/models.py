@@ -15,3 +15,19 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+    def get_default_user():
+        return User.objects.get(email='admin@admin.com').id
+    
+def get_default_user():
+        user, created = CustomUser.objects.get_or_create(
+            email='admin@admin.com',
+            name='admin', 
+            defaults=dict(birthdate='2001-01-01', 
+                      password='password1234.', 
+                      phone_number='0000000000')
+        )
+        if created:
+            print("Created user ")
+            user.save()
+        return user
