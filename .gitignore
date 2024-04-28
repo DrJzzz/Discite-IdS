@@ -13,14 +13,14 @@ backend/.venv/
 
 
 # Migration and cache folders
-./anki_server/__pycache__
+anki_server/__pycache__
 
-./anki_server/userapp/__pycache__
-./anki_server/cards/__pycache__
-./anki_server/notes/__pycache__
-./anki_server/decks/__pycache__
+anki_server/userapp/__pycache__
+anki_server/cards/__pycache__
+anki_server/notes/__pycache__
+anki_server/decks/__pycache__
 
-./anki_server/userapp/migrations
-./anki_server/cards/migrations
-./anki_server/notes/migrations
-./anki_server/decks/migrations
+anki_server/userapp/migrations
+anki_server/cards/migrations
+anki_server/notes/migrations
+anki_server/decks/migrations
