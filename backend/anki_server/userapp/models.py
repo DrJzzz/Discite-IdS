@@ -28,6 +28,5 @@ def get_default_user():
                       phone_number='0000000000')
         )
         if created:
-            print("Created user ")
             user.save()
         return user
