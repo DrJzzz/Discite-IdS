@@ -1,22 +1,42 @@
-# Build django 
+# Build django
 
 Move to directory `anki_server`
 
-## Requirments
+## Requirements
 
-For install all the packages that need the project 
+Install all dependencies with:
 ```bash
 pip install -r requirements.txt
 ```
 
-
 ## Create database
 
-To setup all the tables in our app
-```bash
-python manage.py makemigrations snippets
+Define the file `./anki_server/anki_server/.env` with the following structure:
 
-python manage.py makemigrations
+```bash
+SECRET_KEY='secret_key'
+DB_NAME=db_name
+DB_USER=db_user
+DB_PASS=db_pass
+DB_HOST=127.0.0.1
+DB_PORT=5432
+```
+
+Use the PostgresSQL command line interface to run (based on the data contained
+in `./anki_server/anki_server/.env` for `DB_USER`, `DB_PASS` and `DB_NAME`):
+
+```bash
+CREATE USER DB_USER WITH PASSWORD DB_PASS;
+```
+
+```bash
+CREATE DATABASE DB_NAME OWNER DB_USER;
+```
+
+To setup all the tables in our app:
+
+```bash
+python manage.py makemigrations <appname>
 
 python manage.py migrate
 ```
@@ -27,15 +47,12 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-
 # Endpoints
 
 URL `http://127.0.0.1:8000`
 ## User
 
-### Register 
-
-
+### Register
 
 POST `/rest-auth/registration/`
 
@@ -47,10 +64,10 @@ Return a token
   "email": "johndoe@example.com",
   "phone_number": "0000000000",
   "birth_date": "YYYY-MM-DD",
-  "max_reviews" : 0, 
+  "max_reviews" : 0,
   "password1": "example",
   "password2": "example"
-  
+
 }
 ```
 ### Login
@@ -84,8 +101,6 @@ POST `/rest-auth/password/change/`
   "new_password2": ".lo,kimju"
 }
 ```
-
-
 
 ### References
 The algorithm for scheduling card review is obtained using the implementation of [Open Spaced Repetition](https://github.com/open-spaced-repetition/py-fsrs/tree/main).
