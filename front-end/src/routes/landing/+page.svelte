@@ -10,7 +10,7 @@
   <NavBar />
 
   <slot />
-<Footer/>
+
 
 
 
