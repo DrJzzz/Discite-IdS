@@ -22,12 +22,12 @@ class Deck(models.Model):
         return self.name
     
     
-    def create_default_deck():    
-        deck, created = Deck.objects.get_or_create(
-            name='Default Deck', 
-            defaults=dict(owner=get_default_user)
-        )
-        return deck
+    # def create_default_deck():    
+    #     deck, created = Deck.objects.get_or_create(
+    #         name='Default Deck', 
+    #         defaults=dict(owner=get_default_user)
+    #     )
+    #     return deck
     
     # def get_default_deck():
     #     return Deck.objects.get(name='Default Deck').id

@@ -36,7 +36,7 @@ class Card(models.Model):
     deck = models.ForeignKey('decks.Deck', 
                              related_name='card_deck',
                              on_delete=models.CASCADE,
-                             default=create_default_deck)
+                             default=get_default_deck)
     
     template = models.IntegerField(choices=Template, 
                                    default=1)    
