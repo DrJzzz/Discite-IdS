@@ -27,8 +27,8 @@ class CustomUser(AbstractUser):
 
         return user
     
-    def get_default_user():
-        return User.objects.get(email='default@default.com').id
+    # def get_default_user():
+    #     return User.objects.get(email='default@default.com').id
     
 def get_default_user(sender, **kwargs):
         user, created = CustomUser.objects.get_or_create(

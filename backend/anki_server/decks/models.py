@@ -27,7 +27,7 @@ class Deck(models.Model):
             name='Default Deck', 
             defaults=dict(owner=get_default_user)
         )
-        return deck.id
+        return deck
     
     # def get_default_deck():
     #     return Deck.objects.get(name='Default Deck').id
@@ -38,11 +38,11 @@ def get_default_deck(sender, **kwargs):
             name='Default Deck', 
             defaults=dict(owner=create_default_user)
         )
-        return deck.id
+        return deck
     
 def create_default_deck():    
         deck, created = Deck.objects.get_or_create(
             name='Default Deck', 
             defaults=dict(owner=get_default_user)
         )
-        return deck.id
+        return deck
