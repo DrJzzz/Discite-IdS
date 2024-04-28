@@ -2,6 +2,7 @@
     import {NoteStore} from '../../../../note-store.js'
     import { onMount } from "svelte";
     import SvelteMarkdown from 'svelte-markdown';
+    import {Pencil} from "phosphor-svelte";
 
     export let data;
     /**
@@ -23,21 +24,7 @@
         }
     })
 
-    const source = `
-  # This is a header
-
-This is a paragraph.
-
-* This is a list
-* With two items
-  1. And a sublist
-  2. That is ordered
-    * With another
-    * Sublist inside
-
-| And this is | A table |
-|-------------|---------|
-| With two    | columns |`
+    const title = `# Title:`
 
 
 
@@ -45,18 +32,33 @@ This is a paragraph.
 
     
 </script>
-<SvelteMarkdown {source} />
 
-<div class="row mt-4">
-    {#if note }
-        <h2 class="mb-4">{ note.title }</h2>
-        <div class="col-12 col-md-4">
-            
-        </div>
-        <div class="col-12 col-md-8">
-            <p>{ note.content }</p>
-        </div>
+{#if note}
+    <div class="container-md">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-flex align-items-center">
+                <Pencil/>
+                Edit note
+            </div>
+        </button>
+            <div>
+                <div class="card bg-secondary mb-3" style="max-width: 900px;max-height: 800px">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center">
+                            <SvelteMarkdown source="{title}" />
+                            <SvelteMarkdown source="{note.title}" />
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <SvelteMarkdown source="{note.content}" />
+                    </div>
+                </div>
+            </div>
+
+
+    </div>
     {:else }
-        <p>No film was found with ID {data.id}</p>
-    {/if }
-</div>
+        <h2>No se encontro la nota con id: {data.id}</h2>
+    {/if}
+

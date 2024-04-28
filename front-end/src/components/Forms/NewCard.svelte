@@ -14,6 +14,7 @@
 
     function resetTemplate(){
         template = "";
+        id_deck = "";
     }
 
     async function getDecks() {
@@ -42,7 +43,7 @@
         const deck = '/decks/'+id_deck+'/'
          const date = new Date();
          const modified = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-        const data = { front, back, deck ,modified};
+        const data = { front, back, deck ,modified,template};
         console.log(JSON.stringify(data))
         try {
             const response = await fetch('http://127.0.0.1:8000/cards/', {
@@ -106,7 +107,7 @@
         </div>
 
         <div class="modal-footer">
-            <button on:click={resetTemplate()} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button on:click={resetTemplate} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             {#if template != 0}
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
             {/if}

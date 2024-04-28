@@ -3,7 +3,12 @@
     import {onMount} from "svelte";
     import {NoteStore} from "../../../note-store.js";
     import NewCard from "../../../components/Forms/NewCard.svelte";
+    import {goto} from "$app/navigation";
+    function navigateToCard(id) {
+        goto(`/dashboard/decks/${id}`);
+    }
 
+    const id = "5";
 
     onMount(async function() {
         const endpoint = 'http://127.0.0.1:8000/cards/'
@@ -21,6 +26,9 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Agregar carta
     </button>
+    <div>
+        <a on:click={() => navigateToCard(id)} class="btn btn-primary" >View</a>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -1,6 +1,11 @@
 <script>
     import {NoteStore} from '../../../note-store.js'
     import {onMount} from 'svelte'
+    import { goto } from '$app/navigation';
+
+    function navigateToNote(id) {
+        goto(`/dashboard/notes/${id}`);
+    }
 
     onMount(async function() {
         const endpoint = 'http://127.0.0.1:8000/notes/'
@@ -32,7 +37,7 @@
                        
                     </div>
                     <div>
-                        <a href="/note/{note.id}/" class="btn btn-primary" >View</a>
+                        <a on:click={() => navigateToNote(note.id)} class="btn btn-primary" >View</a>
 					</div>
                 </div>
               </div>
