@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Optional
 
 
-
 class State(models.IntegerChoices):
     New = 0
     Learning = 1
@@ -14,11 +13,11 @@ class State(models.IntegerChoices):
 
 class Card(models.Model):
 
-    # class Template(models.IntegerChoices):
-    #     FLASHCARD = 1
+    class Template(models.IntegerChoices):
+        FLASHCARD = 1
  
 
-    #id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
 
     # Metadata
     due = models.DateTimeField(auto_now_add=True, null=True)
@@ -31,26 +30,11 @@ class Card(models.Model):
     state = models.IntegerField(choices=State, default=0)
     last_review = models.DateTimeField(blank=True, null=True)
 
-
-    # modified = models.DateTimeField(blank=True, null=True)
-    # lastAnswer = models.IntegerField(blank=True, null=True)
-    # lastStudied = models.IntegerField(blank=True, null=True)
-
-    # ease = models.FloatField(blank=True, null=True)
-    # interval = models.TimeField(blank=True, null=True)
-    # due = models.DateTimeField(blank=True, null=True)
-    # reviews = models.IntegerField(blank=True, null=True)
-    # lapses = models.IntegerField(blank=True, null=True)
-    # avgTime = models.TimeField(blank=True, null=True)
-
     # Relations    
-    # tags = models.ManyToManyField("Tag", blank=True)
-    # deck = models.ForeignKey('decks.Deck', related_name='card_deck',on_delete=models.CASCADE)
-    # template = models.IntegerField(choices=Template, default=1)
+    tags = models.ManyToManyField("Tag", blank=True, null=True)
+    deck = models.ForeignKey('decks.Deck', related_name='card_deck',on_delete=models.CASCADE, blank=True, null=True)
+    template = models.IntegerField(choices=Template, default=1)
     
-
-    # class Meta:
-    #     abstract = True
 
     def __str__(self):
         return self.id

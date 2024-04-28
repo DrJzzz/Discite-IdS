@@ -1,4 +1,5 @@
 from django.test import TestCase
+from notes.models import Tag
 
 from cards.fsrs import *
 from cards.fsrsmodels import Card as fsrscard

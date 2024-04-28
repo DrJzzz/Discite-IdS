@@ -39,7 +39,7 @@ class ReviewLog:
         self.review = review
         self.state = state
 
-
+# Kept in for testing purposes
 class Card:
     due: datetime
     stability: float
