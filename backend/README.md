@@ -84,3 +84,8 @@ POST `/rest-auth/password/change/`
   "new_password2": ".lo,kimju"
 }
 ```
+
+
+
+### References
+The algorithm for scheduling card review is obtained using the implementation of [Open Spaced Repetition](https://github.com/open-spaced-repetition/py-fsrs/tree/main).

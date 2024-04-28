@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'exarth_rest_auth.registration',
     'cards',
     'notes',
-    'decks'
+    'decks',
+    
 ]
 
 MIDDLEWARE = [
