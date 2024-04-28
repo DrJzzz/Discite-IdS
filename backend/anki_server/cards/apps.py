@@ -8,3 +8,4 @@ class CardsConfig(AppConfig):
     def ready(self):
         from decks.models import get_default_deck
         get_default_deck().save()
+        
