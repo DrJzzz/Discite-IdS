@@ -72,7 +72,7 @@
         <div class="row">
             <div class="container-sm col">
                 <div class="text-center mb-3"><p>Front</p></div>
-                <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;">
+                <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
                         <SvelteMarkdown source="{card.front}"/>
                     </div>
@@ -80,7 +80,7 @@
             </div>
             <div class="container-sm col">
                 <div class="text-center mb-3"><p>Back</p></div>
-                <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;">
+                <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
                         <SvelteMarkdown source="{card.back}"/>
                     </div>

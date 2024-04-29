@@ -2,6 +2,7 @@
     import {NoteStore} from '../../../note-store.js'
     import {onMount} from 'svelte'
     import { goto } from '$app/navigation';
+    import NewNote from "../../../components/Forms/NewNote.svelte";
 
     function navigateToNote(id) {
         goto(`/dashboard/notes/${id}`);
@@ -20,6 +21,11 @@
 </script>
 
 <h1> Displaying notes </h1>
+
+<!-- Botón que activa el modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Add note
+</button>
 
 <div>
     <h2>Notes List</h2>
@@ -46,4 +52,13 @@
         {/each}
     </div>
     
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <NewNote/>
+        </div>
+    </div>
 </div>
