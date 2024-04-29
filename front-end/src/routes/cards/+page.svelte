@@ -1,7 +1,6 @@
 <script>
     import {CardStore} from "../../card-store.js"
     import {onMount} from "svelte";
-    import {NoteStore} from "../../note-store.js";
 
 
     onMount(async function() {
@@ -10,6 +9,8 @@
         const data = await response.json()
         CardStore.set(data.results)
     });
+
+
 
 </script>
 

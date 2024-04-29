@@ -2,76 +2,76 @@
     import {CardStore} from "../../../card-store.js"
     import {onMount} from "svelte";
     import {NoteStore} from "../../../note-store.js";
+    import NewCard from "../../../components/Forms/NewCard.svelte";
+    import SvelteMarkdown from "svelte-markdown";
+    import {goto} from "$app/navigation";
+    import {Plus} from "phosphor-svelte";
+    import {S} from "../../../../.svelte-kit/output/client/_app/immutable/chunks/index.BBeg5s6H.js";
+    function navigateToCard(id) {
+        goto(`/dashboard/decks/${id}`);
+    }
 
+    const id = "5";
+
+    let decks;
 
     onMount(async function() {
-        const endpoint = 'http://127.0.0.1:8000/cards/'
+
+        
+
+        const endpoint = 'http://127.0.0.1:8000/decks/5/cards/'
         const response = await fetch(endpoint)
-        const data = await response.json()
-        CardStore.set(data.results)
+        decks = await response.json()
+        CardStore.set(decks.results)
     });
+
+
+
+
 
 </script>
 
-
-<!-- component -->
 <style>
-    #journal-scroll::-webkit-scrollbar {
-        width: 4px;
+    .card-view{
         cursor: pointer;
-        /*background-color: rgba(229, 231, 235, var(--bg-opacity));*/
-
-    }
-    #journal-scroll::-webkit-scrollbar-track {
-        background-color: rgba(229, 231, 235, var(--bg-opacity));
-        cursor: pointer;
-        /*background: red;*/
-    }
-    #journal-scroll::-webkit-scrollbar-thumb {
-        cursor: pointer;
-        background-color: #a0aec0;
-        /*outline: 1px solid slategrey;*/
     }
 </style>
 
-<div class="container mx-auto py-10 flex justify-center h-screen">
-    <div class="w-4/12 pl-4  h-full flex flex-col">
-        <div class="bg-white text-sm text-gray-500 font-bold px-5 py-2 shadow border-b border-gray-300">
-            Card list
+
+{#if decks}
+<div>
+    <!-- Botón que activa el modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <div class="d-flex align-items-center">
+            <Plus />
+            Add card
         </div>
+    </button>
 
-        <div class="w-full h-full overflow-auto shadow bg-white" id="journal-scroll">
-
-            <table class="w-full">
-
-
-                <tbody class="">
-
-                {#each $CardStore as card}
-
-
-                    <tr class="relative transform scale-100
-                                        text-xs py-1 border-b-2 border-blue-100 cursor-default
-
-                                bg-blue-500 bg-opacity-25">
-                        <td class="pl-5 pr-3 whitespace-no-wrap">
-                            <div class="text-gray-400">Last Modified</div>
-                            <div>{card.modified}</div>
-                        </td>
-
-                        <td class="px-2 py-2 whitespace-no-wrap">
-                            <div class="leading-5 text-gray-500 font-medium">Card {card.id}</div>
-                            <div class="leading-5 text-gray-900">
-                                <a class="text-blue-500 hover:underline" href="/card/{card.id}/">Watch card</a></div>
-                            <div class="leading-5 text-gray-800">{card.subject}</div>
-                        </td>
-
-                    </tr>
-                {/each}
-                </tbody>
-            </table>
-        </div>
-        ¿
-
+    <div>
+        <h3>{decks.deck.name}</h3>
     </div>
+    <div class="list-group">
+        {#each decks.cards as card}
+        <a on:click={() => navigateToCard(card.id)}    class="list-group-item list-group-item-action active card-view" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <SvelteMarkdown source="{card.front}"/>
+                <small class="text-light">{card.modified}</small>
+            </div>
+        </a>
+            {/each}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <NewCard/>
+            </div>
+        </div>
+    </div>
+
+
 </div>
+
+    {/if}
