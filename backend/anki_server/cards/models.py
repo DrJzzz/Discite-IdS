@@ -57,17 +57,6 @@ class Card(models.Model):
         newobject.__dict__.update(self.__dict__)
         return newobject
 
-    # def __init__(self) -> None:
-    #     self.due = datetime.now
-    #     self.stability = 0
-    #     self.difficulty = 0
-    #     self.elapsed_days = 0
-    #     self.scheduled_days = 0
-    #     self.reps = 0
-    #     self.lapses = 0
-    #     #self.state = State.New
-    #     #self.last_review = Null
-
 
     def get_retrievability(self, now: datetime) -> Optional[float]:
         DECAY = -0.5
@@ -98,7 +87,6 @@ class Card(models.Model):
 
 
 class FlashCard(Card):
-    #state = models.IntegerField(choices=State.choices, default=State.New)
     front = models.TextField(blank=True)
     back = models.TextField(blank=True)
 
