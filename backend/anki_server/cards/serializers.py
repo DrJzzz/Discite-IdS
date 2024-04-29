@@ -1,9 +1,12 @@
 from rest_framework import serializers
-from .models import Card
+from .models import Card, FlashCard
 
 class CardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Card
-        fields = ['id', 'lastAnswer', 'lastStudied', 'ease', 'interval', 
-                  'due', 'reviews', 'lapses', 'avgTime',
-                  'tags', 'modified', 'subject','data', 'deck']
+        fields = '__all__'
+        
+class FlashCardSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = FlashCard
+        fields = '__all__'

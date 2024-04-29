@@ -43,4 +43,7 @@ class SRTestCase(TestCase):
         anki_scheduling_cards = f.repeat(anki_card, now)
         print("fsrs {0} anki {1}".format(fsrs_scheduling_cards[Rating.Easy].card.due , 
                                          anki_scheduling_cards[Rating.Easy].card.due))
+        print(" last review fsrs {0} anki {1}".format(fsrs_scheduling_cards[Rating.Easy].card.last_review , 
+                                                       anki_scheduling_cards[Rating.Easy].card.last_review))
+
 

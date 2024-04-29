@@ -7,13 +7,13 @@ from rest_framework import routers, serializers, viewsets
 from userapp import views as userviews
 from notes import views as noteviews
 from userapp.models import CustomUser
-
+from cards.views import FlashCardViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', userviews.UserViewSet)
 router.register(r'groups', userviews.GroupViewSet)
 router.register(r'notes', noteviews.NoteViewSet)
-
+router.register(r'fcards', FlashCardViewSet)
 
 
 
@@ -27,5 +27,5 @@ urlpatterns = [
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
     re_path(r'^rest-auth/registration/', include('exarth_rest_auth.registration.urls')),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
-    path('notes/', include('notes.urls'))
+    path('', include('notes.urls'))
 ]

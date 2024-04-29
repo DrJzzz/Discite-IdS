@@ -4,7 +4,7 @@ from notes.models import Tag
 from datetime import datetime
 from typing import Optional
 from decks.models import *
-
+from rest_framework import serializers
 
 class State(models.IntegerChoices):
     New = 0
@@ -13,10 +13,13 @@ class State(models.IntegerChoices):
     Relearning = 3
 
 class Card(models.Model):
-
+    # class Meta:
+    #     abstract = True
+    
     class Template(models.IntegerChoices):
         FLASHCARD = 1
  
+    
 
     id = models.AutoField(primary_key=True)
 
@@ -40,6 +43,8 @@ class Card(models.Model):
     
     template = models.IntegerField(choices=Template, 
                                    default=1)    
+
+    
 
     def __str__(self):
         return self.id
@@ -71,8 +76,20 @@ class Card(models.Model):
             return (1 + FACTOR * elapsed_days / self.stability) ** DECAY
         else:
             return None
-
-
+   
+   
+    @classmethod
+    def get_serializer(cls):
+        class BaseSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = cls
+                fields = '__all__'
+                
+        return BaseSerializer
+        
+    def save(self, *args, **kwargs):
+        super(Card, self).save(*args, **kwargs)
+        
 
 
 
