@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Card, FlashCard
+from .models import Card, FlashCard, State
 
 class CardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -7,6 +7,8 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
         
 class FlashCardSerializer(serializers.HyperlinkedModelSerializer):
+    #state = serializers.ChoiceField(choices=State.choices)
     class Meta:
         model = FlashCard
         fields = '__all__'
+        # exclude = ('last_review', 'state')

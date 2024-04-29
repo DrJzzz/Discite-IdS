@@ -6,12 +6,13 @@ from typing import Optional
 from decks.models import *
 from rest_framework import serializers
 
+
 class State(models.IntegerChoices):
     New = 0
     Learning = 1
     Review = 2
     Relearning = 3
-
+    
 class Card(models.Model):
     # class Meta:
     #     abstract = True
@@ -19,7 +20,7 @@ class Card(models.Model):
     class Template(models.IntegerChoices):
         FLASHCARD = 1
  
-    
+
 
     id = models.AutoField(primary_key=True)
 
@@ -31,7 +32,7 @@ class Card(models.Model):
     scheduled_days = models.IntegerField(default=0)
     reps = models.IntegerField(default=0)
     lapses = models.IntegerField(default=0)
-    state = models.IntegerField(choices=State, default=0)
+    state = models.IntegerField(choices=State, default=State.New)
     last_review = models.DateTimeField(blank=True, null=True)
 
     # Relations    
@@ -56,15 +57,16 @@ class Card(models.Model):
         newobject.__dict__.update(self.__dict__)
         return newobject
 
-    def __init__(self) -> None:
-        self.due = datetime.now
-        self.stability = 0
-        self.difficulty = 0
-        self.elapsed_days = 0
-        self.scheduled_days = 0
-        self.reps = 0
-        self.lapses = 0
-        self.state = State.New
+    # def __init__(self) -> None:
+    #     self.due = datetime.now
+    #     self.stability = 0
+    #     self.difficulty = 0
+    #     self.elapsed_days = 0
+    #     self.scheduled_days = 0
+    #     self.reps = 0
+    #     self.lapses = 0
+    #     #self.state = State.New
+    #     #self.last_review = Null
 
 
     def get_retrievability(self, now: datetime) -> Optional[float]:
@@ -88,12 +90,15 @@ class Card(models.Model):
         return BaseSerializer
         
     def save(self, *args, **kwargs):
+        if not hasattr(self, 'state'):
+            self.state = State.New
         super(Card, self).save(*args, **kwargs)
         
 
 
 
 class FlashCard(Card):
+    #state = models.IntegerField(choices=State.choices, default=State.New)
     front = models.TextField(blank=True)
     back = models.TextField(blank=True)
 
