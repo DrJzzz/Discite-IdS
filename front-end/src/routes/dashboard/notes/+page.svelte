@@ -3,6 +3,8 @@
     import {onMount} from 'svelte'
     import { goto } from '$app/navigation';
     import NewNote from "../../../components/Forms/NewNote.svelte";
+    import SvelteMarkdown from "svelte-markdown";
+    import {Plus} from "phosphor-svelte";
 
     function navigateToNote(id) {
         goto(`/dashboard/notes/${id}`);
@@ -24,7 +26,10 @@
 
 <!-- Botón que activa el modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Add note
+    <div class="d-flex align-items-center">
+        <Plus />
+        Add note
+    </div>
 </button>
 
 <div>
@@ -39,7 +44,7 @@
             
                 <div class="card-body d-flex flex-column justify-content-between gap-4">
 					<div>
-                        <h5 class="card-title">{ note.title }</h5>
+                        <SvelteMarkdown source="{note.title}"/>
                        
                     </div>
                     <div>

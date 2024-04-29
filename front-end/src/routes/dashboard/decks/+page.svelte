@@ -3,31 +3,63 @@
     import {onMount} from "svelte";
     import {NoteStore} from "../../../note-store.js";
     import NewCard from "../../../components/Forms/NewCard.svelte";
+    import SvelteMarkdown from "svelte-markdown";
     import {goto} from "$app/navigation";
+    import {Plus} from "phosphor-svelte";
+    import {S} from "../../../../.svelte-kit/output/client/_app/immutable/chunks/index.BBeg5s6H.js";
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
     }
 
     const id = "5";
 
+    let decks;
+
     onMount(async function() {
-        const endpoint = 'http://127.0.0.1:8000/cards/'
+
+        
+
+        const endpoint = 'http://127.0.0.1:8000/decks/5/cards/'
         const response = await fetch(endpoint)
-        const data = await response.json()
-        CardStore.set(data.results)
+        decks = await response.json()
+        CardStore.set(decks.results)
     });
+
+
+
 
 
 </script>
 
+<style>
+    .card-view{
+        cursor: pointer;
+    }
+</style>
 
+
+{#if decks}
 <div>
     <!-- Botón que activa el modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Agregar carta
+        <div class="d-flex align-items-center">
+            <Plus />
+            Add card
+        </div>
     </button>
+
     <div>
-        <a on:click={() => navigateToCard(id)} class="btn btn-primary" >View</a>
+        <h3>{decks.deck.name}</h3>
+    </div>
+    <div class="list-group">
+        {#each decks.cards as card}
+        <a on:click={() => navigateToCard(card.id)}    class="list-group-item list-group-item-action active card-view" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <SvelteMarkdown source="{card.front}"/>
+                <small class="text-light">{card.modified}</small>
+            </div>
+        </a>
+            {/each}
     </div>
 
     <!-- Modal -->
@@ -38,4 +70,8 @@
             </div>
         </div>
     </div>
+
+
 </div>
+
+    {/if}
