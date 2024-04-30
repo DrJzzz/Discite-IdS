@@ -14,13 +14,11 @@ class State(models.IntegerChoices):
     Relearning = 3
     
 class Card(models.Model):
-    # class Meta:
-    #     abstract = True
+    class Meta:
+        abstract = True
     
     class Template(models.IntegerChoices):
         FLASHCARD = 1
- 
-
 
     id = models.AutoField(primary_key=True)
 
@@ -40,11 +38,10 @@ class Card(models.Model):
     deck = models.ForeignKey('decks.Deck', 
                              related_name='card_deck',
                              on_delete=models.CASCADE,
-                             default=get_default_deck)
+                             default=create_default_deck)
     
     template = models.IntegerField(choices=Template, 
                                    default=1)    
-
     
 
     def __str__(self):
@@ -82,6 +79,8 @@ class Card(models.Model):
         if not hasattr(self, 'state'):
             self.state = State.New
         super(Card, self).save(*args, **kwargs)
+        
+        
         
 
 

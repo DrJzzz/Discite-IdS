@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets, mixins, response, status
 from .models import Card, FlashCard
-from .serializers import CardSerializer, FlashCardSerializer
+from .serializers import  FlashCardSerializer
 
 
 class CardList(generics.ListCreateAPIView):
