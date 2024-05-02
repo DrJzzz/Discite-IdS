@@ -7,8 +7,6 @@ class DecksConfig(AppConfig):
     name = 'decks'
 
     def ready(self):
-        post_migrate.connect(create_registro_on_ready, sender=self)
-
-def create_registro_on_ready(sender, **kwargs):
-    from .models import create_deck
-    create_deck()
+        from userapp.models import get_default_user
+        post_migrate.connect(get_default_user, sender=self)
+        

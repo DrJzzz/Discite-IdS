@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'userapp',
     'rest_framework.authtoken',
     'rest_auth',
     'django.contrib.sites',
@@ -55,9 +54,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'exarth_rest_auth',
     'exarth_rest_auth.registration',
+    'userapp',
+    'decks',
     'cards',
     'notes',
-    'decks'
+    
+    
 ]
 
 MIDDLEWARE = [
