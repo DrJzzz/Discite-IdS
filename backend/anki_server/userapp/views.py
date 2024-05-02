@@ -43,6 +43,6 @@ def decks_user(request, pk):
 
     data = {
         'user': user.id,
-        'decks': list(decks.values('id')),
+        'decks': list(decks.values('id', 'name')),
     }
     return JsonResponse(data)
