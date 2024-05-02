@@ -5,6 +5,8 @@ __pycache__/
 
 migrations/
 
+.env
+
 
 # Environment Variables
 backend/anki_server/anki_server/.env

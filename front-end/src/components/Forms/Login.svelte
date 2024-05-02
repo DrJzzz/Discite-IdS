@@ -46,11 +46,11 @@
                 <form on:submit|preventDefault={handleSubmit}>
                     <div class="mb-3" >
                         <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input  bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <input  style="color: black;" bind:value={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input  bind:value={password} type="password" class="form-control" id="exampleInputPassword1">
+                        <input style="color: black;" bind:value={password} type="password" class="form-control" id="exampleInputPassword1">
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">

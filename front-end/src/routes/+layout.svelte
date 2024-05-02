@@ -6,7 +6,5 @@
       import Footer from "../components/Footer/Footer.svelte";
   </script>
 
-  <NavBar />
-
   <slot />
 <Footer/>
