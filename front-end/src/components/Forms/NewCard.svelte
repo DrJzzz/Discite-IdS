@@ -46,7 +46,7 @@
         const data = { front, back, deck ,modified,template};
         console.log(JSON.stringify(data))
         try {
-            const response = await fetch('http://127.0.0.1:8000/cards/', {
+            const response = await fetch('http://127.0.0.1:8000/fcards/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

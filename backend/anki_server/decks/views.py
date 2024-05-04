@@ -26,9 +26,6 @@ def cards_deck(request, pk):
             'max_reviews' : deck.max_reviews,
             'due_today' : deck.due_today
         },
-        'cards': list(cards.values('id','lastAnswer', 'lastStudied', 'ease',
-                                   'interval', 'due', 'reviews', 'lapses',
-                                   'avgTime', 'tags', 'modified', 'subject',
-                                   'data')),
+        'cards': list(cards.values('id','front'))
     }
     return JsonResponse(data)

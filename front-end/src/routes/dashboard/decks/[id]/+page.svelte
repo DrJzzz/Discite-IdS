@@ -14,14 +14,12 @@
 
     onMount(async function() {
         const id = data.id;
-        const endpoint = `http://localhost:8000/cards/${id}/`;
+        const endpoint = `http://localhost:8000/fcards/${id}/`;
         try {
             let response = await fetch(endpoint);
             if (response.status == 200) {
                 card = await response.json();
-                const nums = card.deck.match(/\d+/g);
-                id_deck = nums[0];
-                console.log(card);
+                console.log(card)
             } else {
                 card = null;
             }
@@ -38,7 +36,7 @@
         const modified = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
         console.log(JSON.stringify(card))
         try {
-            const response = await fetch(`http://127.0.0.1:8000/cards/${card.id}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/fcards/${data.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -96,7 +94,6 @@
                     </div>
                     <form on:submit|preventDefault={handleSubmit}>
                         <div class="modal-body">
-                            {#if card.template == 1}
 
                                 <div class="mb-3">
                                     <label for="front-area" class="form-label">Front Area</label>
@@ -106,7 +103,6 @@
                                     <label for="back-area" class="form-label">Back Area</label>
                                     <textarea bind:value={card.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
                                 </div>
-                            {/if}
 
 
                         </div>
