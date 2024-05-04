@@ -282,7 +282,7 @@
     </div>
     <div class="image-placeholder">
 
-        <img src="/lib/images/anki.png" alt="Descripción de la imagen">
+        <img src="images/anki.png" alt="Descripción de la imagen">
     </div>
 </div>
 
@@ -327,7 +327,7 @@
     </div>
     <div class="markdown-image">
 
-        <img src="../lib/images/att.png     " alt="Interfaz de usuario de markdown" />
+        <img src="images/md.png" alt="Interfaz de usuario de markdown" />
     </div>
 </div>
 
@@ -340,7 +340,7 @@
     </div>
     <div class="attachment-image">
         <!-- Coloca aquí tu imagen, esta es solo una referencia de ejemplo -->
-        <img src="att.png" alt="Editor Image">
+        <img src="images/att.png" alt="Editor Image">
     </div>
 </div>
 

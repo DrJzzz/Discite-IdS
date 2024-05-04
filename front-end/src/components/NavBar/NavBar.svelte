@@ -1,9 +1,4 @@
 <script lang="ts">
-	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
-  import FavIcon from "../../lib/images/favicon.png"
-  import MenuToggle from "../../lib/images/menu-toggle.svg"
-  import MenuToggleHm from "../../lib/images/menu-toggle-hm.svg"
-
   let isOpen = false;
 
   function toggleMenu() {
