@@ -51,7 +51,7 @@
 
 <div id="footer">
     <section>
-        <img src="favicon.png" width="40" height="40" alt="Mochi logo"/>
+        <img src="images/favicon.png" width="40" height="40" alt="Mochi logo"/>
     </section>
     <section class="about">
         <span class="h5">AnkiCards</span>
