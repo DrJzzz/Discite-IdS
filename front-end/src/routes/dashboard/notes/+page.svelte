@@ -1,6 +1,14 @@
 <script>
     import {NoteStore} from '../../../note-store.js'
     import {onMount} from 'svelte'
+    import { goto } from '$app/navigation';
+    import NewNote from "../../../components/Forms/NewNote.svelte";
+    import SvelteMarkdown from "svelte-markdown";
+    import {Plus} from "phosphor-svelte";
+
+    function navigateToNote(id) {
+        goto(`/dashboard/notes/${id}`);
+    }
 
     onMount(async function() {
         const endpoint = 'http://127.0.0.1:8000/notes/'
@@ -16,6 +24,14 @@
 
 <h1> Displaying notes </h1>
 
+<!-- Botón que activa el modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <div class="d-flex align-items-center">
+        <Plus />
+        Add note
+    </div>
+</button>
+
 <div>
     <h2>Notes List</h2>
     
@@ -28,11 +44,11 @@
             
                 <div class="card-body d-flex flex-column justify-content-between gap-4">
 					<div>
-                        <h5 class="card-title">{ note.title }</h5>
+                        <SvelteMarkdown source="{note.title}"/>
                        
                     </div>
                     <div>
-                        <a href="/note/{note.id}/" class="btn btn-primary" >View</a>
+                        <a on:click={() => navigateToNote(note.id)} class="btn btn-primary" >View</a>
 					</div>
                 </div>
               </div>
@@ -41,4 +57,13 @@
         {/each}
     </div>
     
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <NewNote/>
+        </div>
+    </div>
 </div>
