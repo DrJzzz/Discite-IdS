@@ -7,12 +7,14 @@ from rest_framework import routers, serializers, viewsets
 from userapp import views as userviews
 from notes.views import NoteViewSet
 from cards.views import FlashCardViewSet
+from images.views import ImageViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', userviews.UserViewSet)
 router.register(r'groups', userviews.GroupViewSet)
 router.register(r'notes', NoteViewSet)
 router.register(r'fcards', FlashCardViewSet)
+router.register(r'img', ImageViewSet)
 
 
 
@@ -21,6 +23,7 @@ urlpatterns = [
     path('', include('cards.urls')),
     path('', include('decks.urls')),
     path('', include('notes.urls')),
+    path('', include('images.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),

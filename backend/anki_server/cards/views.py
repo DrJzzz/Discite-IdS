@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, viewsets, mixins, response, status
 from .models import Card, FlashCard
 from .serializers import  FlashCardSerializer
+from datetime import datetime
 
 
 class CardList(generics.ListCreateAPIView):
@@ -43,3 +44,22 @@ class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
     def get_serializer_class(self):
         return Card.get_serializer()
     
+    
+def to_review(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+    decks = user.deck_user.all()
+    values = []
+    for deck in decks:
+        cards = deck.card_deck.filter(due__lt=datetime.today())
+        value = {
+            'deck' : deck.id,
+            'cards' : list(cards.values('id'))
+        }
+        values.append(values)
+        
+        
+    data = {
+        'user': user.id,
+        'values': list(values),
+    }
+    return JsonResponse(data)
