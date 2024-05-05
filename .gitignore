@@ -26,3 +26,6 @@ anki_server/userapp/migrations
 anki_server/cards/migrations
 anki_server/notes/migrations
 anki_server/decks/migrations
+
+# Media
+anki_server/media
