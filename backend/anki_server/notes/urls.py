@@ -10,6 +10,6 @@ router.register(r'notes', NoteViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('allnotes/', NoteList.as_view()),  # /notes/allnotes
+    #path('allnotes/', NoteList.as_view()),  # /notes/allnotes
     #path('note/<int:pk>/', NoteDetail.as_view())
 ]
