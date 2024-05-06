@@ -1,23 +1,22 @@
 from rest_framework import serializers
-from notes.models import Note, Tag
+from notes.models import Note, Tag, Notebook
 
 
-class NoteHyperLinkedRelatedField(serializers.HyperlinkedRelatedField):
-    lookup_field = 'id'
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
-        fields =['title', 'content', 'id', 'owner']
-        # extra_kwargs = {
-        #     "url": {"lookup_url_kwarg": "id"},
-        # }
+        # fields =['title', 'content', 'id', 'owner']
+        fields = '__all__'
         
-
-
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = Tag
+        fields = '__all__'
+        
+class NotebookSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Notebook
         fields = '__all__'

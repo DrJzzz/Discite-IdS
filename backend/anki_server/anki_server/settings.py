@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'decks',
     'cards',
     'notes',
-    'images',
+     'images',
     
 ]
 
