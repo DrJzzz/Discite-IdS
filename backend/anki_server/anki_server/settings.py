@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'decks',
     'cards',
     'notes',
-    
+    'images',
     
 ]
 
@@ -195,3 +195,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+
+# MEDIA STORAGE
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

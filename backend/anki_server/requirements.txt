@@ -13,4 +13,4 @@ markdown
 psycopg2-binary
 django-environ
 django-markdown
-fsrs
+pillow

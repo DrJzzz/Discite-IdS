@@ -7,7 +7,7 @@ from allauth.account.forms import SignupForm
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email','name', 'birthdate', 'max_reviews', 'phone_number']
+        fields = ['id', 'email','name', 'birthdate', 'max_reviews', 'phone_number', 'url']
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):

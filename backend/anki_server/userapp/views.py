@@ -1,13 +1,3 @@
-# from django.shortcuts import render, redirect
-# from django.contrib.auth import authenticate, login, logout 
-# from .forms import SignupForm, LoginForm
-
-
-# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
-# from rest_framework.views import APIView
-
 
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
