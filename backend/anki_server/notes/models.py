@@ -46,7 +46,7 @@ class Note(models.Model):
     
 class Notebook(models.Model):
     name = models.CharField(max_length=255)
-
+    notes = models.ManyToManyField('Note', blank=True)
     tags = models.ManyToManyField('Tag', blank=True)
     owner = models.ForeignKey('userapp.CustomUser', 
                               related_name='note_user',
