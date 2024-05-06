@@ -17,11 +17,11 @@ class ImageViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user = request.user 
         response = super(ImageViewSet, self).create(request, *args, **kwargs)
-        response.data = {'id-url': f'http://localhost:8000/img/{response.data['id']}/'}
+        response.data = {'id-url': f'http://localhost:8000/img/{response.data["id"]}/'}
         return response
     
 
     
     
 class ChangeAvatarAPIView(APIView):
-    permission_classes
+    permission_classes = [permissions.IsAuthenticated]

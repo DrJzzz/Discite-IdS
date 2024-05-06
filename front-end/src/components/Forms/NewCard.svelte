@@ -27,10 +27,8 @@
             });
 
             if (response.ok) {
-                console.log('get decks!');
 
                 decks =await  response.json()
-                console.log(decks)
             } else {
                 console.error('Failed decks');
             }

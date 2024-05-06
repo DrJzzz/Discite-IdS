@@ -6,7 +6,7 @@
     onMount(async function() {
         const token = localStorage.getItem('key');
         console.log(token);
-        const endpoint = `http://localhost:8000/rest-auth/user/`;
+        const endpoint = `http://localhost:8000/users/1`;
         try {
             let response = await fetch(endpoint, {
                 method: 'GET',
