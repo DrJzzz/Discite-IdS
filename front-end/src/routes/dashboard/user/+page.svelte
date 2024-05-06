@@ -10,7 +10,9 @@
         try {
             let response = await fetch(endpoint, {
                 method: 'GET',
-                credentials :'include'
+                headers: {
+                    'Authorization': 'Token ${token}' 
+                },
             });
 
             if (response.ok) {

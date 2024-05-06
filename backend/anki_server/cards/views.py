@@ -30,7 +30,7 @@ class FlashCardViewSet(viewsets.ModelViewSet):
     
     
 class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
-    queryset = FlashCard.objects.all()
+    queryset = FlashCard.objects.all() 
     serializer_class = CardSerializer
     
     # def get_queryset(self):
