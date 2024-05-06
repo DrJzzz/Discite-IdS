@@ -6,10 +6,8 @@ from notes.views import *
 
 router = routers.DefaultRouter()
 router.register(r'notes', NoteViewSet)
-
+router.register(r'notebooks', NotebookViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    #path('allnotes/', NoteList.as_view()),  # /notes/allnotes
-    #path('note/<int:pk>/', NoteDetail.as_view())
 ]
