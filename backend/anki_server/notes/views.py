@@ -26,9 +26,8 @@ class NotebookViewSet(viewsets.ModelViewSet):
     #     response = super(NotebookViewSet, self).create(request, *args, **kwargs)
     #     serializer = NotebookOwnerSerializer(instance=response.data, data=user)
     #     return response
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+    #def perform_create(self, serializer):
+     #   serializer.save(owner=self.request.user)
 
 
 def notes_notebook(request, pk):

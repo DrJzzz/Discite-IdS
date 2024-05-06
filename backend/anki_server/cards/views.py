@@ -1,8 +1,14 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets, mixins, response, status
 from .models import Card, FlashCard
-from .serializers import  FlashCardSerializer
-from datetime import datetime
+from cards.serializers import  FlashCardSerializer, CardSerializer
+from datetime import datetime, timedelta, timezone
+
+
+from cards.fsrs import *
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 
 
 class CardList(generics.ListCreateAPIView):
@@ -20,29 +26,41 @@ class FlashCardViewSet(viewsets.ModelViewSet):
     queryset = FlashCard.objects.all()
     serializer_class = FlashCardSerializer
     
-    # def retrieve(self, request, pk=None):
-    #     u = request.user
-    #     queryset = Card.objects.filter(id=pk)
-    #     if not queryset:
-    #         return Response(status=status)
+    
     
     
 class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
-    # queryset = Card.objects.all()
-    # serializer_class = CardSerializer
-    def get_queryset(self):
-        return Card.objects.all().order_by('id')
+    queryset = FlashCard.objects.all()
+    serializer_class = CardSerializer
     
+    def get_queryset(self):
+        return FlashCard.objects.all().order_by('id')
+
     def create(self, request, *args, **kwargs):
-        card_serializer = Card.get_serializer()
+        card_serializer = FlashCard.get_serializer()
         serializer = card_serializer(data=request.data)
-        
+
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def get_serializer_class(self):
-        return Card.get_serializer()
+        return FlashCard.get_serializer()
+
+    @action(detail=True, methods=['POST'])
+    def set_new_rating(self, request, pk):
+        # get data from route
+        card = self.get_object()
+        rating = int(request.data['rating'])
+
+        timezone_offset = -6.0
+        tzinfo = timezone(timedelta(hours=timezone_offset))
+        
+        fsrs_scheduling_cards = FSRS().repeat(card, datetime.now(tzinfo))
+        card = fsrs_scheduling_cards[rating].card
+        card.save()
+
+        return Response({'status': 'new rating set'})
     
     
 def to_review(request, pk):
