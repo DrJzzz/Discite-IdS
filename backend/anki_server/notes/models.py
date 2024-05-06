@@ -20,6 +20,10 @@ class Note(models.Model):
     # linkedTo =  models.ManyToManyField("self", blank=True)
     # linkedFrom = models.ManyToManyField("self", blank=True)
     
+    # notebook = models.ForeignKey('notes.Notebook', 
+    #                           related_name='note_notebook',
+    #                           on_delete=models.CASCADE,
+    #                           default=)
 
     def __str__(self):
         return self.title
@@ -28,8 +32,8 @@ class Note(models.Model):
     
 class Notebook(models.Model):
     name = models.CharField(max_length=255)
-    notes = models.ManyToManyField('Note', blank=True, null=True)
-    tags = models.ManyToManyField('Tag', blank=True, null=True)
+    notes = models.ManyToManyField('Note', blank=True)
+    tags = models.ManyToManyField('Tag', blank=True)
     owner = models.ForeignKey('userapp.CustomUser', 
                               related_name='note_user',
                               on_delete=models.CASCADE,

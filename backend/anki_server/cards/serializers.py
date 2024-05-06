@@ -9,5 +9,9 @@ from .models import Card, FlashCard, State
 class FlashCardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FlashCard
-        fields = ['front', 'back']
+        fields = ['front', 'back', 'deck']
         
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)        
+        
+ 

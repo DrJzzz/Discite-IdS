@@ -19,4 +19,15 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 class NotebookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Notebook
-        fields = '__all__'
+        fields = ['name', 'notes', 'tags']
+        
+        
+class NotebookOwnerSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Notebook
+        fields = 'owner'
+        
+    def update(self, instance, validated_data):
+        instance.owner = validated_data.get('owner', instance.owner)
+        instance.save()
+        return instance

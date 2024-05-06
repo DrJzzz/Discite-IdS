@@ -26,7 +26,7 @@ def get_default_user(sender, **kwargs):
             email='default@default.com',
             name='default', 
             defaults=dict(birthdate='2001-01-01', 
-                      password='password1234.', 
+                      password='pbkdf2_sha256$720000$gGKKPOvi9qRIZPSqeBJ2i3$+lg2RHb1upi9eMBLz+tgo9zqCgdYHsnktRNmHYOCzAM=', #1234
                       phone_number='0000000000')
         )
         
@@ -37,7 +37,7 @@ def create_default_user():
             email='default@default.com',
             name='default', 
             defaults=dict(birthdate='2001-01-01', 
-                      password='password1234.', 
+                      password='pbkdf2_sha256$720000$gGKKPOvi9qRIZPSqeBJ2i3$+lg2RHb1upi9eMBLz+tgo9zqCgdYHsnktRNmHYOCzAM=', 
                       phone_number='0000000000')
         )
         return user
