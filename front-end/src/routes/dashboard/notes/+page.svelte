@@ -18,10 +18,11 @@
         const endpoint = 'http://127.0.0.1:8000/users/1/notebooks/'
         const response = await fetch(endpoint)
         const data = await response.json()
-        if (data.decks.length > $NoteStore.length){
+        if (data.notebooks.length > $NoteStore.length){
             NoteStore.set([]);
 
             const notebooks = data.notebooks;
+            console.log(data)
             Object.keys(notebooks).forEach(key => {
                 note(notebooks[key].id)
             })
@@ -30,14 +31,18 @@
     } )
 
     async function note(id) {
-        const endpointCard = `http://localhost:8000/notebook/${id}/notes/`
+        const endpointCard = `http://localhost:8000/notebooks/${id}/notes/`
         const response = await fetch(endpointCard)
         const data = await response.json()
         $NoteStore.push(data)
     }
 
 </script>
-
+<style>
+    .card-view{
+        cursor: pointer;
+    }
+</style>
 <!-- Botón que activa el modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
     <div class="d-flex align-items-center">
@@ -53,7 +58,7 @@
 </button>
 {#if $isMounted}
     <div class="accordion" id="accordionPanelsStayOpenExample">
-        {#each $CardStore as data}
+        {#each $NoteStore as data}
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{data.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{data.notebook.id}">
@@ -70,7 +75,7 @@
                                         <SvelteMarkdown source="{note.title}"/>
                                         <small class="text-light">{note.modified}</small>
                                         -->
-                                        <p>Card {note.id}</p>
+                                        <p>Note {note.id}</p>
                                     </div>
                                 </a>
                             {/each}

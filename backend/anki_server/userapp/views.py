@@ -37,3 +37,15 @@ def decks_user(request, pk):
         'decks': list(decks.values('id', 'name')),
     }
     return JsonResponse(data)
+
+
+def notebooks_user(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+    notebooks = user.note_user.all()
+
+    data = {
+        'user': user.id,
+        'notebooks': list(notebooks.values('id', 'name')),
+    }
+    return JsonResponse(data)
+

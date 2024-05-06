@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
-from userapp.views import *
+from .views import *
 
 
 # Serializers define the API representation.
@@ -15,6 +15,7 @@ router.register(r'users', UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
-    path('users/<int:pk>/decks/', decks_user, name='decks-user')
+    path('users/<int:pk>/decks/', decks_user, name='decks-user'),
+    path('users/<int:pk>/notebooks/', notebooks_user, name='notebooks-user')
 ]
 

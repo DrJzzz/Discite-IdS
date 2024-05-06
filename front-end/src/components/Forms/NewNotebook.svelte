@@ -1,12 +1,12 @@
 <script>
     let name = '';
     async function handleSubmit() {
-        const owner = 1;
+        const owner = "/users/1/";
 
         const data = {name, owner };
         console.log(JSON.stringify(data))
         try {
-            const response = await fetch('http://127.0.0.1:8000/notebook/', {
+            const response = await fetch('http://127.0.0.1:8000/notebooks/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

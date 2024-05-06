@@ -6,7 +6,8 @@
     let id_notebook = "";
 
     async function handleSubmit() {
-        const data = { title, content};
+        const notebook_ref = '/notebooks/'+id_notebook+'/'
+        const data = { title, content, notebook_ref };
         console.log(JSON.stringify(data))
         try {
             const response = await fetch('http://127.0.0.1:8000/notes/', {
