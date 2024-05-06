@@ -39,7 +39,7 @@ def notes_notebook(request, pk):
             'id': notebook.id,
             'name': notebook.name,
         },
-        'notes': list(notes.values('id'))
+        'notes': list(notes.values('id', 'title'))
     }
 
     return JsonResponse(data)

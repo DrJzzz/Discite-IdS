@@ -34,6 +34,7 @@
         const endpointCard = `http://localhost:8000/notebooks/${id}/notes/`
         const response = await fetch(endpointCard)
         const data = await response.json()
+        console.log(data)
         $NoteStore.push(data)
     }
 
@@ -71,11 +72,7 @@
                             {#each data.notes as note}
                                 <a on:click={() => navigateToNote(note.id)}    class="list-group-item list-group-item-action active card-view" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
-                                        <!--
                                         <SvelteMarkdown source="{note.title}"/>
-                                        <small class="text-light">{note.modified}</small>
-                                        -->
-                                        <p>Note {note.id}</p>
                                     </div>
                                 </a>
                             {/each}

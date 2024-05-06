@@ -39,9 +39,7 @@
 
      async function handleSubmit() {
         const deck = '/decks/'+id_deck+'/'
-         const date = new Date();
-         const modified = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-        const data = { front, back, deck ,modified,template};
+        const data = { front, back, deck };
         console.log(JSON.stringify(data))
         try {
             const response = await fetch('http://127.0.0.1:8000/fcards/', {

@@ -6,7 +6,7 @@
     onMount(async function() {
         const token = localStorage.getItem('key');
         console.log(token);
-        const endpoint = `http://localhost:8000/users/1`;
+        const endpoint = `http://localhost:8000/rest-auth/user/`;
         try {
             let response = await fetch(endpoint, {
                 method: 'GET',
@@ -18,6 +18,7 @@
                 const userData = await response.json();
                 // Asignar los datos del usuario a la variable user
                 user = userData;
+                console.log(user)
             } else {
                 // Mostrar un mensaje de error si la solicitud no fue exitosa
                 console.error('Error al cargar el usuario:', response.statusText);
@@ -43,12 +44,9 @@
         console.log(JSON.stringify(user))
         try {
 
-            const response = await fetch(`http://127.0.0.1:8000/rest-auth/user/`, {
+            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/`, {
                 method: 'PUT',
                 credentials :'include',
-                headers: {
-                        'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(user)
             });
 
