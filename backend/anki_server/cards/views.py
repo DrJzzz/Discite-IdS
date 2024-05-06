@@ -33,8 +33,8 @@ class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
     queryset = FlashCard.objects.all()
     serializer_class = CardSerializer
     
-    def get_queryset(self):
-        return FlashCard.objects.all().order_by('id')
+    # def get_queryset(self):
+    #     return FlashCard.objects.all().order_by('id')
 
     def create(self, request, *args, **kwargs):
         card_serializer = FlashCard.get_serializer()

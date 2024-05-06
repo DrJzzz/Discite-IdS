@@ -15,7 +15,7 @@
         if ($NoteStore.length) {
             note = $NoteStore.find(film => film.id == data.id)
         } else {
-            const endpoint = `http://localhost:8000/notes/notes/${data.id}/`
+            const endpoint = `http://localhost:8000/notes/${data.id}/`
             let response = await fetch(endpoint)
             if (response.status == 200) {
                 note = await response.json()

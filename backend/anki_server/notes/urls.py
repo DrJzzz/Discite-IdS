@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers, viewsets
-from notes.views import *
+from .views import *
 
 
 
@@ -10,4 +10,5 @@ router.register(r'notebooks', NotebookViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('notebooks/<int:pk>/notes/', notes_notebook,name='notes-notebook'),
 ]

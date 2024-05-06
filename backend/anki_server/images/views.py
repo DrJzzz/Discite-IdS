@@ -19,4 +19,3 @@ class ImageViewSet(viewsets.ModelViewSet):
         response = super(ImageViewSet, self).create(request, *args, **kwargs)
         response.data = {'id-url': response.data['image']}
         return response
-    

@@ -14,8 +14,8 @@ class State(models.IntegerChoices):
     Relearning = 3
     
 class Card(models.Model):
-    # class Meta:
-    #     abstract = True
+    class Meta:
+        abstract = True
     
     class Template(models.IntegerChoices):
         FLASHCARD = 1
