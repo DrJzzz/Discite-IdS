@@ -20,8 +20,3 @@ class ImageViewSet(viewsets.ModelViewSet):
         response.data = {'id-url': f'http://localhost:8000/img/{response.data['id']}/'}
         return response
     
-
-    
-    
-class ChangeAvatarAPIView(APIView):
-    permission_classes
