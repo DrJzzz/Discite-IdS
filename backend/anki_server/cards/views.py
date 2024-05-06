@@ -62,22 +62,24 @@ class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
 
         return Response({'status': 'new rating set'})
     
+    # def to_review(request, pk):
+    #     user = get_object_or_404(CustomUser, pk=pk)
+    #     decks = user.deck_user.all()
+    #     values = []
+    #     for deck in decks:
+    #         cards = deck.card_deck.filter(due__lt=datetime.today())
+    #         value = {
+    #             'deck' : deck.id,
+    #             'cards' : list(cards.values('id'))
+    #         }
+    #         values.append(values)
+            
+            
+    #     data = {
+    #         'user': user.id,
+    #         'values': list(values),
+    #     }
+    #     return JsonResponse(data)
+
     
-def to_review(request, pk):
-    user = get_object_or_404(CustomUser, pk=pk)
-    decks = user.deck_user.all()
-    values = []
-    for deck in decks:
-        cards = deck.card_deck.filter(due__lt=datetime.today())
-        value = {
-            'deck' : deck.id,
-            'cards' : list(cards.values('id'))
-        }
-        values.append(values)
-        
-        
-    data = {
-        'user': user.id,
-        'values': list(values),
-    }
-    return JsonResponse(data)
+    
