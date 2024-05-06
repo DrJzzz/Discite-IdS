@@ -17,8 +17,6 @@
 
     onMount(async function() {
 
-        
-
         const endpoint = 'http://127.0.0.1:8000/decks/1/cards/'
         const response = await fetch(endpoint)
         decks = await response.json()
