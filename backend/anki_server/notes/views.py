@@ -7,6 +7,9 @@ from .models import Notebook
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
+from rest_framework.permissions import (AllowAny, IsAuthenticated)
+from rest_framework.response import Response
+
 
 
 class NoteViewSet(viewsets.ModelViewSet):
@@ -16,6 +19,16 @@ class NoteViewSet(viewsets.ModelViewSet):
 class NotebookViewSet(viewsets.ModelViewSet):
     queryset = Notebook.objects.all()
     serializer_class = NotebookSerializer
+
+    # def create(self, request, *args, **kwargs):
+    #     user = request.user
+    #     data = request.data
+    #     response = super(NotebookViewSet, self).create(request, *args, **kwargs)
+    #     serializer = NotebookOwnerSerializer(instance=response.data, data=user)
+    #     return response
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 def notes_notebook(request, pk):

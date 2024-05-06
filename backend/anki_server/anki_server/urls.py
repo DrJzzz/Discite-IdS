@@ -5,11 +5,12 @@ from django.contrib.auth import get_user_model
 from rest_framework import routers, serializers, viewsets
 
 from userapp import views as userviews
-from notes.views import NoteViewSet
+from notes.views import NoteViewSet, NotebookViewSet
 from cards.views import FlashCardViewSet
 from images.views import ImageViewSet
 from django.conf.urls.static import static
 from anki_server import settings
+
 
 router = routers.DefaultRouter()
 router.register(r'users', userviews.UserViewSet)
@@ -17,7 +18,7 @@ router.register(r'groups', userviews.GroupViewSet)
 router.register(r'notes', NoteViewSet)
 router.register(r'fcards', FlashCardViewSet)
 router.register(r'img', ImageViewSet)
-
+router.register(r'notebooks', NotebookViewSet)
 
 
 urlpatterns = [

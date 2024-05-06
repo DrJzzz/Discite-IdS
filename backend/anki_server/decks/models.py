@@ -3,16 +3,14 @@ from django.contrib.postgres.fields import ArrayField
 from userapp.models import get_default_user, CustomUser, create_default_user
 
 
-
-# Create your models here.
 class Deck(models.Model):
     id = models.AutoField(primary_key=True)
 
     tags = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     name = models.CharField(max_length=100)
-    # cards_count = models.IntegerField(default=0)
-    # max_reviews = models.IntegerField(default=0)
-    # due_today = models.IntegerField(default=0)
+    cards_count = models.IntegerField(default=0)
+    max_reviews = models.IntegerField(default=0)  
+    due_today = models.IntegerField(default=0)
     owner = models.ForeignKey('userapp.CustomUser', 
                               related_name='deck_user',
                               on_delete=models.CASCADE,
