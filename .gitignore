@@ -1,0 +1,31 @@
+.idea
+__pycache__/
+.DS_Store
+
+
+migrations/
+
+.env
+
+
+# Environment Variables
+backend/anki_server/anki_server/.env
+env/
+backend/.venv/
+
+
+# Migration and cache folders
+anki_server/__pycache__
+
+backend/anki_server/userapp/__pycache__
+backend/anki_server/cards/__pycache__
+backend/anki_server/notes/__pycache__
+backend/anki_server/decks/__pycache__
+
+backend/anki_server/userapp/migrations
+backend/anki_server/cards/migrations
+backend/anki_server/notes/migrations
+backend/anki_server/decks/migrations
+
+# Media
+backend/anki_server/media
