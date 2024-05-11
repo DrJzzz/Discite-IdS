@@ -1,7 +1,0 @@
-@tailwind base;
-@tailwind components;
-
-body {
-  height: 100vh;
-  color: #f3f4f6;
-}
