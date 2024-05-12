@@ -10,9 +10,7 @@
         try {
             let response = await fetch(endpoint, {
                 method: 'GET',
-                headers: {
-                    'Authorization': 'Token ${token}' 
-                },
+                credentials :'include'
             });
 
             if (response.ok) {
@@ -33,23 +31,13 @@
         }
     });
 
-    function getCookie(name) {
-        const cookieValue = document.cookie
-            .split('; ')
-            .find(row => row.startsWith(name))
-            .split('=')[1];
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
-    }
-
-
     async function handleSubmit() {
         console.log(JSON.stringify(user))
         try {
-
+            const token = localStorage.getItem('key');
             const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/`, {
                 method: 'PUT',
-                credentials :'include',
-                body: JSON.stringify(user)
+                credentials :'include'
             });
 
             if (response.ok) {
