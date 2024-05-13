@@ -1,35 +1,8 @@
 <script>
     import {onMount} from "svelte";
+    export let data;
 
-    let user;
-
-    onMount(async function() {
-        const token = localStorage.getItem('key');
-        console.log(token);
-        const endpoint = `http://localhost:8000/rest-auth/user/`;
-        try {
-            let response = await fetch(endpoint, {
-                method: 'GET',
-                credentials :'include'
-            });
-
-            if (response.ok) {
-                // Convertir la respuesta a JSON
-                const userData = await response.json();
-                // Asignar los datos del usuario a la variable user
-                user = userData;
-                console.log(user)
-            } else {
-                // Mostrar un mensaje de error si la solicitud no fue exitosa
-                console.error('Error al cargar el usuario:', response.statusText);
-                user = null;
-            }
-        } catch (error) {
-            // Mostrar un mensaje de error si hay un error en la solicitud
-            console.error('Error al cargar el usuario:', error);
-            user = null;
-        }
-    });
+    let user = data.user;
 
     async function handleSubmit() {
         console.log(JSON.stringify(user))
@@ -61,7 +34,7 @@
                     <div class="card-body text-center">
                         <div class="mt-3 mb-4" style="margin-left: 35%">
                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-                                 class="rounded-circle img-fluid" style="width: 100px;" />
+                                 class="rounded-circle img-fluid" style="width: 100px;" alt="profile" />
                         </div>
                         <h4 class="mb-2">{user.name}</h4>
                         <p class="text-muted mb-4">@Email <span class="mx-2">|</span> <a

@@ -9,34 +9,12 @@
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
     import {CardStore} from "../../../card-store.js";
 
-    let isMounted = writable(false);
+    /** @type {import('./$types').PageData} */
+    export let data;
     function navigateToNote(id) {
         goto(`/dashboard/notes/${id}`);
     }
 
-    onMount(async function() {
-        const endpoint = 'http://127.0.0.1:8000/users/1/notebooks/'
-        const response = await fetch(endpoint)
-        const data = await response.json()
-        if (data.notebooks.length > $NoteStore.length){
-            NoteStore.set([]);
-
-            const notebooks = data.notebooks;
-            console.log(data)
-            Object.keys(notebooks).forEach(key => {
-                note(notebooks[key].id)
-            })
-        }
-        isMounted.set(true);
-    } )
-
-    async function note(id) {
-        const endpointCard = `http://localhost:8000/notebooks/${id}/notes/`
-        const response = await fetch(endpointCard)
-        const data = await response.json()
-        console.log(data)
-        $NoteStore.push(data)
-    }
 
 </script>
 <style>
@@ -57,19 +35,19 @@
         Add notebook
     </div>
 </button>
-{#if $isMounted}
+{#if data}
     <div class="accordion" id="accordionPanelsStayOpenExample">
-        {#each $NoteStore as data}
+        {#each data.notes as info}
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{data.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{data.notebook.id}">
-                        {data.notebook.name}
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
+                        {info.notebook.name}
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapse{data.notebook.id}" class="accordion-collapse collapse">
+                <div id="panelsStayOpen-collapse{info.notebook.id}" class="accordion-collapse collapse">
                     <div class="accordion-body">
                         <div class="list-group">
-                            {#each data.notes as note}
+                            {#each info.notes as note}
                                 <a on:click={() => navigateToNote(note.id)}    class="list-group-item list-group-item-action active card-view" aria-current="true">
                                     <div class="d-flex w-100 justify-content-between">
                                         <SvelteMarkdown source="{note.title}"/>

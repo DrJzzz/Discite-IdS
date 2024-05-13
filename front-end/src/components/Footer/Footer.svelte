@@ -32,17 +32,6 @@
         margin-bottom: 0.25rem;
     }
 
-    .footer-links a {
-        display: block;
-        color: #007bff;
-        text-decoration: none;
-        margin-bottom: 0.25rem;
-    }
-
-    .footer-links a:hover {
-        text-decoration: underline;
-    }
-
     .copyright {
         font-size: 0.875rem;
         color: #6a747c;
