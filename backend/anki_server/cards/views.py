@@ -10,6 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
+from decks.models import Deck
+
 
 class CardList(generics.ListCreateAPIView):
     queryset = FlashCard.objects.all()
@@ -29,23 +31,19 @@ class FlashCardViewSet(viewsets.ModelViewSet):
     
     
     
-class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
+class CardViewSet(viewsets.ModelViewSet):
     queryset = FlashCard.objects.all() 
-    serializer_class = CardSerializer
+    serializer_class = FlashCardSerializer
     
-    # def get_queryset(self):
-    #     return FlashCard.objects.all().order_by('id')
-
-    def create(self, request, *args, **kwargs):
-        card_serializer = FlashCard.get_serializer()
-        serializer = card_serializer(data=request.data)
-
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+    def perform_create(self, serializer):
+      
+        card = serializer.save()
+        card.deck.card_count = card.deck.card_count + 1
+        card.deck.save()
+        
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def get_serializer_class(self):
-        return FlashCard.get_serializer()
+    
 
     @action(detail=True, methods=['POST'])
     def set_new_rating(self, request, pk):

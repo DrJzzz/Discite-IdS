@@ -6,10 +6,12 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
         model = Card
         fields = '__all__'
         
-class FlashCardSerializer(serializers.HyperlinkedModelSerializer):
+        
+        
+class FlashCardSerializer( serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FlashCard
-        fields = ['front', 'back', 'deck']
+        fields = '__all__'
         
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)        

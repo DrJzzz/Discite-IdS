@@ -8,9 +8,8 @@ class Deck(models.Model):
 
     tags = ArrayField(models.CharField(max_length=100), blank=True, null=True)
     name = models.CharField(max_length=100)
-    cards_count = models.IntegerField(default=0)
+    card_count = models.IntegerField(default=0)
     max_reviews = models.IntegerField(default=20)  
-    due_today = models.IntegerField(default=0)
     owner = models.ForeignKey('userapp.CustomUser', 
                               related_name='deck_user',
                               on_delete=models.CASCADE,

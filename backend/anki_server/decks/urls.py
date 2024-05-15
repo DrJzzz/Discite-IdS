@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import DeckList,DeckDetail,cards_deck, DeckViewSet
+from .views import DeckList,DeckDetail, DeckViewSet
 from rest_framework import routers, viewsets
 
 router = routers.DefaultRouter()
