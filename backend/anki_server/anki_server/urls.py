@@ -10,7 +10,7 @@ from cards.views import FlashCardViewSet
 from images.views import ImageViewSet
 from django.conf.urls.static import static
 from anki_server import settings
-
+from decks.views import DeckViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', userviews.UserViewSet)
@@ -19,7 +19,7 @@ router.register(r'notes', NoteViewSet)
 router.register(r'fcards', FlashCardViewSet)
 router.register(r'img', ImageViewSet)
 router.register(r'notebooks', NotebookViewSet)
-
+router.register(r'decks', DeckViewSet)
 
 urlpatterns = [
     path('', include('userapp.urls')),
