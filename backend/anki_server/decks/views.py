@@ -4,13 +4,16 @@ from .models import Deck
 from .serializers import DeckSerializer, DeckMaxReviewSerializer
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-
+from rest_framework.response import Response
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers  import FormParser
 from rest_framework.decorators import action
 from rest_framework import serializers, status
 
+
+from datetime import datetime
+ 
 class DeckList(generics.ListCreateAPIView):
     queryset = Deck.objects.all()
     serializer_class = DeckSerializer
@@ -50,3 +53,27 @@ class DeckViewSet(viewsets.ModelViewSet):
             'cards': list(cards.values('id'))
         }
         return JsonResponse(data)
+
+    
+    @action(detail=True, methods=['GET'])
+    def to_review(self, request, *args, **kwargs):
+        user = request.user
+        decks = Deck.objects.filter(owner=user.id)
+        
+        values = []
+        for deck in decks:
+            cards = deck.card_deck.filter(due__lte=datetime.today())
+            value = {
+                'deck' : deck.id,
+                'cards' : list(cards.values('id'))
+            }
+            values.append(value)
+            
+            
+        data = {
+            'user': user.id,
+            'values': list(values),
+        }
+        return JsonResponse(data)
+        
+    
