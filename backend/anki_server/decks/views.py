@@ -19,18 +19,7 @@ class DeckDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Deck.objects.all()
     serializer_class = DeckSerializer
 
-def cards_deck(request, pk):
-    deck = get_object_or_404(Deck, pk=pk)
-    cards = deck.card_deck.all()
 
-    data = {
-        'deck': {
-            'id': deck.id,
-            'name': deck.name,
-        },
-        'cards': list(cards.values('id'))
-    }
-    return JsonResponse(data)
 
 
 class DeckViewSet(viewsets.ModelViewSet):
@@ -47,13 +36,17 @@ class DeckViewSet(viewsets.ModelViewSet):
         
         serializer = DeckSerializer(instance=deck)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
-        
+    
+    @action(detail=True, methods=['GET'])
+    def cards(self, request, *args, **kwargs):
+        deck = self.get_object()
+        cards = deck.card_deck.all()
 
-# class ChangeMaxReviewAPIView(views.APIView):
-#     permission_classes = [IsAuthenticated]
-#     parser_classes = [FormParser]
-    
-    
-#     def post(self, request, format = None):
-#         user = request.user
-#         serializer
+        data = {
+            'deck': {
+                'id': deck.id,
+                'name': deck.name,
+            },
+            'cards': list(cards.values('id'))
+        }
+        return JsonResponse(data)
