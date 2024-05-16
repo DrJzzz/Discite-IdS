@@ -15,7 +15,8 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials : 'include'
             });
 
             if (response.ok) {
@@ -32,11 +33,12 @@
 
     async function getNotebooks() {
         try {
-            const response = await fetch('http://127.0.0.1:8000/users/1/notebooks/', {
+            const response = await fetch('http://127.0.0.1:8000/users/2/notebooks/', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials : 'include'
             });
 
             if (response.ok) {

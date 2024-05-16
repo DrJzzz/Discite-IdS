@@ -8,10 +8,19 @@
         console.log(JSON.stringify(user))
         try {
             const token = localStorage.getItem('key');
-            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/`, {
+            const name = data.user.name;
+            const email = data.user.email;
+            const info = { name, email}
+            console.log(info);
+            const response = await fetch(`http://127.0.0.1:8000/rest-auth/user/`, {
                 method: 'PUT',
-                credentials :'include'
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data.user)
             });
+
 
             if (response.ok) {
                 console.log('Form submitted successfully!');
