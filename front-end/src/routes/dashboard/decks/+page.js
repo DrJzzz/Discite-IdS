@@ -3,23 +3,14 @@ import {UserStore} from "../../../user-store.js";
 export async function load({ parent, fetch, params  }) {
 
     try {
-        let user;
-
-        // Suscribirse al UserStore para obtener el usuario actual
-        const unsubscribe = UserStore.subscribe(value => {
-            user = value;
-        });
-
-        // Detener la suscripción después de obtener el valor
-        unsubscribe();
-
+        const user = await parent();
         // Verificar si se obtuvo el usuario correctamente
         if (!user) {
             console.error("No se pudo obtener el usuario del UserStore");
             return;
         }
 
-        const endpoint = `http://127.0.0.1:8000/users/${user.id}/decks/`;
+        const endpoint = `http://127.0.0.1:8000/users/${user.user.id}/decks/`;
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
