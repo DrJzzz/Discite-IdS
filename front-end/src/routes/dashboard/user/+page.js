@@ -5,7 +5,14 @@ export async function load({ fetch, params }) {
         const endpoint = `http://localhost:8000/rest-auth/user/`;
 
         // Realiza la solicitud GET para obtener los datos de la carta
-        const res = await fetch(endpoint);
+        const res = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials : 'include',
+        });
+
 
         // Verifica si la solicitud fue exitosa (código de respuesta 200)
         if (res.ok) {

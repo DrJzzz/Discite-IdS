@@ -19,7 +19,8 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials : 'include',
             });
 
             const result = await response.json();
@@ -56,7 +57,7 @@
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
                         <label class="form-check-label" for="exampleCheck1">Check me out</label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <input id="submitPrediction" class="btn btn-primary w-100 my-4" type="submit" value="Submit">
                 </form>
             </div>
             <div class="col-md-4"></div>
