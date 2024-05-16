@@ -1,23 +1,26 @@
-
+import {UserStore} from "../../../user-store.js";
 /** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params }) {
-    const endpoint = 'http://127.0.0.1:8000/users/1/decks/';
-    const res = await fetch(endpoint, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        credentials : 'include',
-    });
+export async function load({ parent, fetch, params  }) {
 
-    const data = await res.json();
-    const decks = data.decks;
-    const cards = [];
+    try {
+        let user;
 
-    // Itera sobre cada cuaderno y carga las notas
-    for (const deck of decks) {
-        const cardsEndpoint = `http://localhost:8000/decks/${deck.id}/cards/`;
-        const cardsRes = await fetch(cardsEndpoint, {
+        // Suscribirse al UserStore para obtener el usuario actual
+        const unsubscribe = UserStore.subscribe(value => {
+            user = value;
+        });
+
+        // Detener la suscripción después de obtener el valor
+        unsubscribe();
+
+        // Verificar si se obtuvo el usuario correctamente
+        if (!user) {
+            console.error("No se pudo obtener el usuario del UserStore");
+            return;
+        }
+
+        const endpoint = `http://127.0.0.1:8000/users/${user.id}/decks/`;
+        const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -25,11 +28,29 @@ export async function load({ fetch, params }) {
             credentials : 'include',
         });
 
-        const cardsData = await cardsRes.json();
-        console.log(cardsData)
-        cards.push(cardsData);
+        const data = await res.json();
+        const decks = data.decks;
+        const cards = [];
+
+        // Itera sobre cada cuaderno y carga las notas
+        for (const deck of decks) {
+            const cardsEndpoint = `http://localhost:8000/decks/${deck.id}/cards/`;
+            const cardsRes = await fetch(cardsEndpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials : 'include',
+            });
+
+            const cardsData = await cardsRes.json();
+            cards.push(cardsData);
+        }
+
+        // Devuelve las notas cargadas
+        return { cards };
+    }catch (error){
+        return {cards : null}
     }
 
-    // Devuelve las notas cargadas
-    return { cards };
 }

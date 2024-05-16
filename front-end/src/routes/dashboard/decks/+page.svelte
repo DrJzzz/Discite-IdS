@@ -11,7 +11,6 @@
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
     }
-    console.log(data)
 
 
 </script>

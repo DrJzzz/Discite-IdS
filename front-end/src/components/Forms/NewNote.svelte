@@ -1,9 +1,17 @@
 <script>
     import {onMount} from "svelte";
+    import {UserStore} from "../../user-store.js";
 
     let title = '';
     let content = '';
     let id_notebook = "";
+
+    let user;
+
+    if (UserStore){
+
+        user = $UserStore;
+    }
 
     async function handleSubmit() {
         const notebook_ref = '/notebooks/'+id_notebook+'/'
@@ -33,7 +41,7 @@
 
     async function getNotebooks() {
         try {
-            const response = await fetch('http://127.0.0.1:8000/users/2/notebooks/', {
+            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/notebooks/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

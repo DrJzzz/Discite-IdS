@@ -1,7 +1,13 @@
 
 /** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params }) {
-    const endpoint = 'http://127.0.0.1:8000/users/2/notebooks/';
+export async function load({parent, fetch, params }) {
+    const user = await parent();
+    // Verificar si se obtuvo el usuario correctamente
+    if (!user) {
+        console.error("No se pudo obtener el usuario del UserStore");
+        return;
+    }
+    const endpoint = `http://127.0.0.1:8000/users/${user.user.id}/notebooks/`;
     const res = await fetch(endpoint, {
         method: 'GET',
         headers: {

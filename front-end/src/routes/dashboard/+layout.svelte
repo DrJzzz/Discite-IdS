@@ -1,5 +1,7 @@
 <script>
     import {House, CardsThree, Notebook} from "phosphor-svelte";
+    /** @type {import('./$types').LayoutData} */
+    export let data;
 
 </script>
 <div class="container-fluid vh-100">
