@@ -11,7 +11,7 @@ export async function load({ fetch, params }) {
 		if (res.ok) {
 			// Extrae los datos JSON de la respuesta
 			const card = await res.json();
-
+			console.log(card)
 			// Devuelve las cartas cargadas junto con su ID
 			return { card, id: params.id };
 		} else {

@@ -11,7 +11,6 @@
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
     }
-    console.log(data)
 
 
 </script>
@@ -63,11 +62,11 @@
                 </div>
             {/each}
             </div>
-        {:else }
+    {:else }
             <div>
                 <h3>Cargando..</h3>
             </div>
-        {/if}
+    {/if}
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -7,7 +7,6 @@
     import SvelteMarkdown from "svelte-markdown";
     import {Plus} from "phosphor-svelte";
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
-    import {CardStore} from "../../../card-store.js";
 
     /** @type {import('./$types').PageData} */
     export let data;

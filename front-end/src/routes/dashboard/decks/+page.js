@@ -12,7 +12,6 @@ export async function load({ fetch, params }) {
         const cardsEndpoint = `http://localhost:8000/decks/${deck.id}/cards/`;
         const cardsRes = await fetch(cardsEndpoint);
         const cardsData = await cardsRes.json();
-        console.log(cardsData)
         cards.push(cardsData);
     }
 

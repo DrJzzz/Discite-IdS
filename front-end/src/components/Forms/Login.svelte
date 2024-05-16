@@ -25,6 +25,7 @@
             const result = await response.json();
 
             if (response.ok) {
+                console.log(response.headers.getSetCookie());
                 localStorage.setItem('key', result.key);
                 goto('/dashboard');
             } else {

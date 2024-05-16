@@ -12,7 +12,7 @@
 
     let id_deck = "";
 
-    console.log(data.id)
+    console.log(data)
 
 
 
@@ -100,7 +100,6 @@
                 </div>
             </div>
         </div>
-
     </div>
-    {/if}
+{/if}
 
