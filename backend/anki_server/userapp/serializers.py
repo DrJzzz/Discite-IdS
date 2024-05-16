@@ -4,11 +4,17 @@ from userapp.models import CustomUser
 from exarth_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from allauth.account.forms import SignupForm
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['id', 'email','name', 'birthdate', 'phone_number', 'url']
 
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email','name']
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

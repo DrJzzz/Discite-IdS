@@ -53,3 +53,16 @@ class Notebook(models.Model):
                               on_delete=models.CASCADE,
                               default=create_default_user)
 
+def create_default_notebook(sender, **kwargs):    
+        deck, created = Notebook.objects.get_or_create(
+            name='Default Notebook', 
+            defaults=dict(owner=create_default_user)
+        )
+        return deck
+    
+def get_default_notebok():    
+        deck, created = Notebook.objects.get_or_create(
+            name='Default Notebook', 
+            defaults=dict(owner=get_default_user)
+        )
+        return deck
