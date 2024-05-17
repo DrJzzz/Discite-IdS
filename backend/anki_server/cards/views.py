@@ -9,9 +9,9 @@ from cards.fsrs import *
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from django.utils.timezone import make_aware
 
 from decks.models import Deck
-
 
 class CardList(generics.ListCreateAPIView):
     queryset = FlashCard.objects.all()
@@ -50,12 +50,16 @@ class CardViewSet(viewsets.ModelViewSet):
         # get data from route
         card = self.get_object()
         rating = int(request.data['rating'])
-
-        timezone_offset = -6.0
-        tzinfo = timezone(timedelta(hours=timezone_offset))
+        # print("Before offset : %s", str(datetime.now()))
+        timezone_offset = -60.0
+        tzinfo = timezone(-timedelta(hours=6))
         
-        fsrs_scheduling_cards = FSRS().repeat(card, datetime.now(tzinfo))
+        # print("After offset : %s", str(datetime.now(tzinfo)))
+        
+        # timedelta(hours=timezone_offset)
+        fsrs_scheduling_cards = FSRS().repeat(card, make_aware(datetime.now(tzinfo)))
         card = fsrs_scheduling_cards[rating].card
+        # print(str(card.due))
         card.save()
 
         return Response({'status': 'new rating set'})

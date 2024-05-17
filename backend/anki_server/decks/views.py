@@ -13,7 +13,8 @@ from rest_framework import serializers, status
 
 
 from datetime import datetime
- 
+from django.utils.timezone import make_aware 
+
 class DeckList(generics.ListCreateAPIView):
     queryset = Deck.objects.all()
     serializer_class = DeckSerializer
@@ -62,8 +63,9 @@ class DeckViewSet(viewsets.ModelViewSet):
         
         values = []
         for deck in decks:
-            cards = deck.card_deck.filter(due__lte=datetime.today())
+            cards = deck.card_deck.filter(due__lte=make_aware(datetime.today()))
             value = {
+                'count' : len(cards),
                 'deck' : deck.id,
                 'cards' : list(cards.values('id'))
             }

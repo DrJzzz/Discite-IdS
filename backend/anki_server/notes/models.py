@@ -60,7 +60,7 @@ def create_default_notebook(sender, **kwargs):
         )
         return deck
     
-def get_default_notebok():    
+def get_default_notebook():    
         deck, created = Notebook.objects.get_or_create(
             name='Default Notebook', 
             defaults=dict(owner=get_default_user)
