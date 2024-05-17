@@ -54,15 +54,15 @@ class Notebook(models.Model):
                               default=create_default_user)
 
 def create_default_notebook(sender, **kwargs):    
-        deck, created = Notebook.objects.get_or_create(
-            name='Default Notebook', 
+        notebook, created = Notebook.objects.get_or_create(
+            title='Default Notebook', 
             defaults=dict(owner=create_default_user)
         )
-        return deck
+        return notebook
     
 def get_default_notebook():    
-        deck, created = Notebook.objects.get_or_create(
-            name='Default Notebook', 
+        notebook, created = Notebook.objects.get_or_create(
+            title='Default Notebook', 
             defaults=dict(owner=get_default_user)
         )
-        return deck
+        return notebook

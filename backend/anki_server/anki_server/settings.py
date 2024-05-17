@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'cards',
     'notes',
      'images',
+     'shared',
     
 ]
 
