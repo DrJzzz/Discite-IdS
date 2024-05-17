@@ -52,17 +52,20 @@ class Notebook(models.Model):
                               related_name='note_user',
                               on_delete=models.CASCADE,
                               default=create_default_user)
+    
+    def __str__(self):
+        return self.name
 
 def create_default_notebook(sender, **kwargs):    
         notebook, created = Notebook.objects.get_or_create(
-            title='Default Notebook', 
+            name='Default Notebook', 
             defaults=dict(owner=create_default_user)
         )
         return notebook
     
 def get_default_notebook():    
         notebook, created = Notebook.objects.get_or_create(
-            title='Default Notebook', 
+            name='Default Notebook', 
             defaults=dict(owner=get_default_user)
         )
         return notebook
