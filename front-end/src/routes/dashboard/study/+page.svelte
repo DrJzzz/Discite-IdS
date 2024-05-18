@@ -21,20 +21,23 @@
         goto(`/dashboard`);
     }
 
-    async function handleSubmit(id, dificulty) {
+    async function handleSubmit(id, rating) {
 
         try {
-            const response = await fetch(`http://127.0.0.1:8000/cards/${id}/set_new_rating/${dificulty}/`, {
+
+            const info ={rating} ;
+            console.log(JSON.stringify(info))
+            const response = await fetch(`http://127.0.0.1:8000/cards/1/set_new_rating/`, {
                 method: 'POST',
-                credentials : 'include'
+                credentials : 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(info)
             });
 
             if (response.ok) {
                 console.log('Form submitted successfully!');
-
-            } else {
-                console.error('Failed to submit form');
-
                 if( i < data.cards.length-1){
                     i += 1;
                     watch = false;
@@ -45,6 +48,10 @@
                     alert("Your study has been finished");
                     navigateToHome();
                 }
+            } else {
+                console.error('Failed to submit form');
+
+
 
             }
         } catch (error) {
