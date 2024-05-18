@@ -35,6 +35,18 @@ export async function load({parent, fetch, params }) {
         notes.push(notesData);
     }
 
+    const usersEndpoint = 'http://127.0.0.1:8000/users/list_all/';
+    const usersRes = await fetch(usersEndpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials : 'include'
+    });
+
+    const usersJSON = await usersRes.json();
+    const users = usersJSON.users;
+
     // Devuelve las notas cargadas
-    return { notes };
+    return { notes, users };
 }

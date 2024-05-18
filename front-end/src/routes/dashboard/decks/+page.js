@@ -38,10 +38,23 @@ export async function load({ parent, fetch, params  }) {
             cards.push(cardsData);
         }
 
+        const usersEndpoint = 'http://127.0.0.1:8000/users/list_all/';
+        const usersRes = await fetch(usersEndpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials : 'include'
+        });
+
+        const usersJSON = await usersRes.json();
+        const users = usersJSON.users;
+        console.log(users)
+
         // Devuelve las notas cargadas
-        return { cards };
+        return { cards , users };
     }catch (error){
-        return {cards : null}
+        return {cards : null, users: null}
     }
 
 }

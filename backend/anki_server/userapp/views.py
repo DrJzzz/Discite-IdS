@@ -34,7 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     
     @action(detail=False, methods=['GET'])
