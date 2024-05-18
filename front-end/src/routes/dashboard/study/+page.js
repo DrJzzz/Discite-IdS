@@ -2,7 +2,7 @@
 export async function load({ fetch, params }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
-        const endpoint = `http://localhost:8000/decks/1/cards`;
+        const endpoint = `http://localhost:8000/decks/2/cards`;
 
         // Realiza la solicitud GET para obtener los datos de la carta
         const res = await fetch(endpoint, {

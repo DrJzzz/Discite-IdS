@@ -127,7 +127,7 @@
             Add deck
         </div>
     </button>
-    {#if data}
+    {#if data.cards}
             <div class="accordion" id="accordionPanelsStayOpenExample">
             {#each data.cards as info}
                 <div class="accordion-item">
@@ -225,4 +225,5 @@
             </div>
         </div>
     </div>
+
 </div>
