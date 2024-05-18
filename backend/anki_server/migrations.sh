@@ -5,6 +5,7 @@ rm -rf userapp/migrations
 rm -rf decks/migrations
 rm -rf notes/migrations
 rm -rf images/migrations
+rm -rf shared/migrations
 
 python manage.py makemigrations
 
@@ -13,5 +14,6 @@ python manage.py makemigrations userapp
 python manage.py makemigrations decks
 python manage.py makemigrations notes
 python manage.py makemigrations images
+python manage.py makemigrations shared
 
 python manage.py migrate

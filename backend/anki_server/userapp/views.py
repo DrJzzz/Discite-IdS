@@ -2,7 +2,7 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
 
-from userapp.serializers import GroupSerializer, UserSerializer
+from userapp.serializers import GroupSerializer, UserSerializer, SimpleUserSerializer
 from .models import CustomUser
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -13,6 +13,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import jwt, datetime
 
+
+from django.http import JsonResponse
+from rest_framework.decorators import action
 
 class RegisterView(APIView):
     def post(self, request):
@@ -33,7 +36,25 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     #permission_classes = [permissions.IsAuthenticated]
     
+    
+    @action(detail=False, methods=['GET'])
+    def list_all(self, request, *args, **kwargs):
+        users = CustomUser.objects.all()
+        values = []
+        for user in users:
+            item = {
+                'id' : user.id,
+                'name' : user.name,
+                'email' : user.email
+            }
+            values.append(item)
 
+        data = {
+            'count' : len(values),
+            'users' : list(values)
+        }
+        
+        return JsonResponse(data, safe=False)
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
