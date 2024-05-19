@@ -15,6 +15,7 @@
 
     if (data.cards){
         card = data.cards[i];
+        console.log(card)
     }
 
     function navigateToHome() {
@@ -27,7 +28,7 @@
 
             const info ={rating} ;
             console.log(JSON.stringify(info))
-            const response = await fetch(`http://127.0.0.1:8000/cards/1/set_new_rating/`, {
+            const response = await fetch(`http://127.0.0.1:8000/cards/${id}/set_new_rating/`, {
                 method: 'POST',
                 credentials : 'include',
                 headers: {

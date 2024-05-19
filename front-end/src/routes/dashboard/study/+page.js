@@ -29,7 +29,7 @@ export async function load({ fetch, params }) {
                     continue;
                 }
                 for (const cardtemp of value.cards){
-                    const cardsEndpoint = `http://localhost:8000/fcards/${cardtemp.id}/`;
+                    const cardsEndpoint = `http://localhost:8000/cards/${cardtemp.id}/`;
                     const cardsRes = await fetch(cardsEndpoint, {
                         method: 'GET',
                         headers: {

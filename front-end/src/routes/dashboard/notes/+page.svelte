@@ -84,7 +84,7 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Rename deck successfully!');
+                console.log('Rename notebook successfully!');
             } else {
                 console.error('Failed to delete deck');
             }
@@ -169,12 +169,12 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete deck successfully!');
+                console.log('Delete notebook successfully!');
             } else {
-                console.error('Failed to delete deck');
+                console.error('Failed to delete notebook');
             }
         } catch (error) {
-            console.error('An error occurred while deleting the deck:', error);
+            console.error('An error occurred while deleting the notebook:', error);
         }
     }
 
@@ -192,12 +192,12 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete deck successfully!');
+                console.log('Delete note successfully!');
             } else {
-                console.error('Failed to delete deck');
+                console.error('Failed to delete note');
             }
         } catch (error) {
-            console.error('An error occurred while deleting the deck:', error);
+            console.error('An error occurred while deleting the note:', error);
         }
     }
 </script>
@@ -273,13 +273,13 @@
         {/each}
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Rename, delete-->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 {#if is_rename}
                     <div class="modal-body text-center">
-                        <h3>Rename deck</h3>
+                        <h3>Rename Notebook</h3>
                     </div>
                     <form on:submit|preventDefault={handleSubmitRename}>
                         <div class="modal-body">

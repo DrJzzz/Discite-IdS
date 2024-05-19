@@ -23,6 +23,21 @@
         console.log(max_cards.length)
     });
 
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     export function createArrayWithSize(size, defaultValue) {
         return Array.from({ length: size }, () => defaultValue);
     }
@@ -47,11 +62,13 @@
         const url = `http://localhost:8000/decks/${deck.id}/update_review/`
         const max_reviews = max_cards[index];
         const info = {max_reviews}
+        const csrftoken = getCookie('csrftoken');
         try {
             const response = await fetch(url, {
                 method: 'PATCH',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
                 },
                 credentials : 'include',
                 body: JSON.stringify(info),
