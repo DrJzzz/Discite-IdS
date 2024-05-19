@@ -12804,8 +12804,6 @@ textarea.form-control-lg {
   color: #fff;
 }
 
-@tailwind base;
-@tailwind components;
 
 body {
   height: 100vh;

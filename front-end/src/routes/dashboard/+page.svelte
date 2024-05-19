@@ -15,7 +15,11 @@
 
     onMount(() =>{
        $DeckStore = data.decks;
-        max_cards = createArrayWithSize($DeckStore.length, 0);
+        max_cards = createArrayWithSize(0, 0);
+       if ($DeckStore){
+           max_cards = createArrayWithSize($DeckStore.length, 0);
+       }
+
         console.log(max_cards.length)
     });
 

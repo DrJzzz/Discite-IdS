@@ -1,7 +1,7 @@
 import {UserStore} from "../../user-store.js";
 
 /** @type {import('./$types').LayoutLoad} */
-export async function load() {
+export async function load({ fetch }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
         const endpoint = `http://localhost:8000/rest-auth/user/`;

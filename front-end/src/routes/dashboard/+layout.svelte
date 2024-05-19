@@ -1,5 +1,5 @@
 <script>
-    import {House, CardsThree, Notebook} from "phosphor-svelte";
+    import {House, CardsThree, Notebook, ShareFat} from "phosphor-svelte";
     /** @type {import('./$types').LayoutData} */
     export let data;
 
@@ -35,6 +35,14 @@
                         <div class="d-flex align-items-center">
                             <Notebook />
                             My notes
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/shares" class="nav-link text-white">
+                        <div class="d-flex align-items-center">
+                            <ShareFat />
+                            My Shares
                         </div>
                     </a>
                 </li>

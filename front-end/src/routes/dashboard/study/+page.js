@@ -2,7 +2,7 @@
 export async function load({ fetch, params }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
-        const endpoint = `http://localhost:8000/decks/2/cards`;
+        const endpoint = `http://localhost:8000/decks/1/to_review/`;
 
         // Realiza la solicitud GET para obtener los datos de la carta
         const res = await fetch(endpoint, {
@@ -18,23 +18,29 @@ export async function load({ fetch, params }) {
         if (res.ok) {
             // Extrae los datos JSON de la respuesta
             const data = await res.json();
-            const listCards = data.cards;
+            console.log(data)
+            const values = data.values;
 
             const cards = [];
 
             // Itera sobre cada cuaderno y carga las notas
-            for (const cardtemp of listCards) {
-                const cardsEndpoint = `http://localhost:8000/fcards/${cardtemp.id}/`;
-                const cardsRes = await fetch(cardsEndpoint, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials : 'include',
-                });
+            for (const value of values) {
+                if (value.count == 0){
+                    continue;
+                }
+                for (const cardtemp of value.cards){
+                    const cardsEndpoint = `http://localhost:8000/fcards/${cardtemp.id}/`;
+                    const cardsRes = await fetch(cardsEndpoint, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials : 'include',
+                    });
 
-                const cardsData = await cardsRes.json();
-                cards.push(cardsData);
+                    const cardsData = await cardsRes.json();
+                    cards.push(cardsData);
+                }
             }
 
 
