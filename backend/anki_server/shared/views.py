@@ -7,7 +7,6 @@ from rest_framework.decorators import action
 
 
 
-
 class SharedViewSet(viewsets.ModelViewSet):
     queryset = Shared.objects.all().order_by('id')
     serializer_class = SharedSerializer
