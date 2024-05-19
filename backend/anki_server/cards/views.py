@@ -57,7 +57,7 @@ class CardViewSet(viewsets.ModelViewSet):
         # print("After offset : %s", str(datetime.now(tzinfo)))
         
         # timedelta(hours=timezone_offset)
-        fsrs_scheduling_cards = FSRS().repeat(card, make_aware(datetime.now(tzinfo)))
+        fsrs_scheduling_cards = FSRS().repeat(card, datetime.now(tzinfo))
         card = fsrs_scheduling_cards[rating].card
         # print(str(card.due))
         card.save()
