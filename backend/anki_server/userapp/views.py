@@ -66,20 +66,18 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = PictureSerializer(instance=user, data=request.data )
         if serializer.is_valid():
             serializer.save()
-            return Response(data=serializer.data.image, status=200)
+            return Response(data=serializer.data, status=200)
         else:
             return Response(data=serializer.errors, status=500)
 
+
+    @action(detail=True, methods=['GET'])
+    def get_picture(self, request, *args, **kwargs):
+        user = request.user
+        serializer = PictureSerializer(user)
+        return Response(data=serializer.data, status=200)
     
     
-    
-# class ChangeUserPicture(APIView)    :
-#     permission_classes= [permissions.IsAuthenticated]
-#     parser_classes = [FormParser, MultiPartParser]
-    
-#     def post(self, request, format=None):
-#         user = request.user
-#         serializer = PictureSerializer()
 
 class GroupViewSet(viewsets.ModelViewSet):
     """

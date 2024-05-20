@@ -6,7 +6,7 @@ from userapp.managers import CustomUserManager
 import os 
 
 def get_upload_path(instance, filename):
-    return os.path.join('images', str(instance.owner.pk), filename)
+    return os.path.join('images', str(instance.pk), filename)
 
 
 class CustomUser(AbstractUser):
@@ -22,10 +22,7 @@ class CustomUser(AbstractUser):
     picture = models.ImageField(upload_to=get_upload_path,
                                      blank=True,
                                      null=True,
-                                     default='media/blank-user-picture.jpg')
-    
-
-    
+                                     default='blank-user-picture.jpg')
 
     def __str__(self):
         return self.email

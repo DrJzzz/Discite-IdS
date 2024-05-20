@@ -12,7 +12,7 @@ class PictureSerializer(serializers.ModelSerializer):
         
     def update(self, instance, validated_data):
         instance.picture = validated_data.get('picture', instance.picture)
-        intance.save()
+        instance.save()
         return instance
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
