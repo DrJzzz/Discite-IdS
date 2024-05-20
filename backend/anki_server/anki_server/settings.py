@@ -60,21 +60,18 @@ INSTALLED_APPS = [
     'notes',
      'images',
      'shared',
-    
+    'simple_history'
 ]
 
 MIDDLEWARE = [
-    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #'snippets.middleware.DisableCSRF',
-   # 'allauth.account.middleware.AccountMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'anki_server.urls'

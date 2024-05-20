@@ -10,26 +10,28 @@ from django.http import JsonResponse
 from rest_framework.permissions import (AllowAny, IsAuthenticated)
 from rest_framework.response import Response
 
-
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+    
+    @action(detail=True, methods=['GET'])
+    def get_history(self, request, *args, **kwargs):
+        history = self.get_object().history.all()
+        return Response()
 
 class NotebookViewSet(viewsets.ModelViewSet):
     queryset = Notebook.objects.all()
-    serializer_class = NotebookSerializer
-
-    # def create(self, request, *args, **kwargs):
-    #     user = request.user
-    #     data = request.data
-    #     response = super(NotebookViewSet, self).create(request, *args, **kwargs)
-    #     serializer = NotebookOwnerSerializer(instance=response.data, data=user)
-    #     return response
-    
+    serializer_class = NotebookSerializer    
     
     def perform_create(self, serializer):
        serializer.save(owner=self.request.user)
+
+
+
+
 
 
 def notes_notebook(request, pk):
