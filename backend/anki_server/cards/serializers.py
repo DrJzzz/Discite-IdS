@@ -27,7 +27,7 @@ class CardSerializer(serializers.HyperlinkedModelSerializer):
 class FlashCardSerializer( serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FlashCard
-        fields = ["id", "due", "stability", "difficulty", "elapsed_days",
+        fields = ["id", 'url', "due", "stability", "difficulty", "elapsed_days",
                   "scheduled_days", "reps", "lapses", "state", "last_review",
                   "template", "front", "back", "deck", "tags"]
         

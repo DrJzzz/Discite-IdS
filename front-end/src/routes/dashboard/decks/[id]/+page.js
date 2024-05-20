@@ -3,12 +3,13 @@ export async function load({ fetch, params }) {
 	try {
 		// Construye la URL del endpoint usando el parámetro de la carta ID
 		const endpoint = `http://localhost:8000/fcards/${params.id}/`;
-
+		const csrftoken = getCookie('csrftoken');
 		// Realiza la solicitud GET para obtener los datos de la carta
 		const res = await fetch(endpoint, {
 			method: 'GET',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'X-CSRFToken': `${csrftoken}`
 			},
 			credentials : 'include',
 		});
@@ -18,8 +19,29 @@ export async function load({ fetch, params }) {
 			// Extrae los datos JSON de la respuesta
 			const card = await res.json();
 
-			// Devuelve las cartas cargadas junto con su ID
-			return { card, id: params.id };
+			const endpointHistory = `http://localhost:8000/cards/${params.id}/get_history/`;
+
+			// Realiza la solicitud GET para obtener los datos de la carta
+			const resHistory = await fetch(endpointHistory, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRFToken': `${csrftoken}`
+				},
+				credentials : 'include',
+			});
+
+			if (resHistory.ok){
+				const history = await resHistory.json()
+				// Devuelve las cartas cargadas junto con su ID
+				return { card, id: params.id, history };
+			}else {
+				return { card, id: params.id, history : [] };
+			}
+
+
+
+
 		} else {
 			// Si la solicitud no fue exitosa, lanza un error con el mensaje de estado
 			throw new Error(`Failed to fetch card: ${res.status} ${res.statusText}`);
@@ -29,6 +51,21 @@ export async function load({ fetch, params }) {
 		console.error('Error loading card:', error);
 
 		// Devuelve un objeto vacío en caso de error
-		return { card: null, id: params.id };
+		return { card: [], id: params.id, history : [] };
 	}
+}
+
+function getCookie(name) {
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== '') {
+		const cookies = document.cookie.split(';');
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			if (cookie.substring(0, name.length + 1) === (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
 }
