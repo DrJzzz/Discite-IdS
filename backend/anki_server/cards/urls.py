@@ -10,5 +10,4 @@ router.register(r'fcards', FlashCardViewSet, basename='flashcard')
 
 urlpatterns = [
     path('', include(router.urls)),
-    re_path(r'^cards/(?P<pk>\d+)/set_new_rating/(?P<rating>\d+)/$', CardViewSet.set_new_rating),
 ]

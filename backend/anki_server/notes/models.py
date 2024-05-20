@@ -1,6 +1,9 @@
 from django.db import  models
 from userapp.models import CustomUser, create_default_user, get_default_user
 
+# for change history tracking
+from simple_history.models import HistoricalRecords
+
 
 def get_default_note(sender, **kwargs):
     notebook, created = Notebook.objects.get_or_create(
@@ -28,19 +31,14 @@ class Note(models.Model):
     title = models.CharField( max_length=255)
     content = models.TextField()
     tags = models.ManyToManyField("Tag", blank=True)
-    lastEdited = models.DateTimeField(auto_now_add=True, blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, blank=True)
-    notebook_ref = models.ForeignKey('notes.Notebook', related_name='notebook_ref', on_delete=models.CASCADE)
-    # linkedTo =  models.ManyToManyField("self", blank=True)
-    # linkedFrom = models.ManyToManyField("self", blank=True)
-    
-    # notebook = models.ForeignKey('notes.Notebook', 
-    #                           related_name='note_notebook',
-    #                           on_delete=models.CASCADE,
-    #                           default=)
+    notebook_ref = models.ForeignKey('notes.Notebook', 
+                                     related_name='notebook_ref', 
+                                     on_delete=models.CASCADE)
+    history = HistoricalRecords()
 
     def __str__(self):
-        return self.title
+        return self.title 
     
     
     
