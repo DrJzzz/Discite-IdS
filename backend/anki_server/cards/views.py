@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets, mixins, response, status
 from .models import Card, FlashCard
-from cards.serializers import  FlashCardSerializer, CardSerializer
+from cards.serializers import  *
 from datetime import datetime, timedelta, timezone
 
 
@@ -62,7 +62,13 @@ class CardViewSet(viewsets.ModelViewSet):
         # print(str(card.due))
         card.save()
 
-        return Response({'status': 'new rating set'})
+        return Response({'new_rating': request.data['rating']})
+    
+    @action(detail=True, methods=['GET'])
+    def get_history(self, request, *args, **kwargs):
+        card = self.get_object()
+        serializer = FlashcardHistorySerializer(card, context={'request': request})
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
     
     
     

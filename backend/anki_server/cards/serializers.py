@@ -1,10 +1,26 @@
 from rest_framework import serializers
 from .models import Card, FlashCard, State
 
+
+class CardHistoryField(serializers.ListField):
+    child = serializers.DictField()
+    
+    def to_representation(self, data):
+        return super().to_representation(data.values())
+
+class FlashcardHistorySerializer(serializers.HyperlinkedModelSerializer):
+    history = CardHistoryField(read_only=True)
+    class Meta:
+        model = FlashCard
+        fields = ['history']
+        
+
+
 class CardSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Card
         fields = '__all__'
+        abstract = True
         
         
         

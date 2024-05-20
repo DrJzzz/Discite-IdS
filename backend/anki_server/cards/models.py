@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Optional
 from decks.models import *
 from rest_framework import serializers
-
+from simple_history.models import HistoricalRecords
 
 class State(models.IntegerChoices):
     New = 0
@@ -43,9 +43,12 @@ class Card(models.Model):
     template = models.IntegerField(choices=Template, 
                                    default=1)    
     
+    
+ 
+
 
     def __str__(self):
-        return self.id
+        return str(self.id)
 
 
     def __deepcopy__(self, memo):
@@ -88,5 +91,9 @@ class Card(models.Model):
 class FlashCard(Card):
     front = models.TextField(blank=True)
     back = models.TextField(blank=True)
+    # Change history
+    history = HistoricalRecords()
+    
+    
 
 

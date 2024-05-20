@@ -25,8 +25,9 @@ class NoteViewSet(viewsets.ModelViewSet):
     
     # @action(detail=True, methods=['GET'])
     # def get_last_edited(self, request, *args, **kwargs):
-    #     history = self.get_object().history.most_recent()
-    #     return response.Response(history., status=status.HTTP_200_OK)
+    #     history = self.get_object().history.order_by('history_date')[:1].get()
+    #     serializer = HistoricalRecordsSerializer(history)
+    #     return response.Response(serializer.data, status=status.HTTP_200_OK)
     
     # @action(detail=True, methods=['GET'])
     # def get_created(self, request, *args, **kwargs):

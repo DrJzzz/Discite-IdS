@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from notes.models import Note, Tag, Notebook
+from simple_history.models import HistoricalRecords
+
 
 class NoteHistoryField(serializers.ListField):
     child = serializers.DictField()
@@ -19,9 +21,7 @@ class NoteSerializer(serializers.HyperlinkedModelSerializer):
         model = Note
         fields = '__all__'
         
-    
         
-
 class TagSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
