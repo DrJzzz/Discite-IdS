@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, response, status 
 from notes.models import *
 from notes.serializers import *
 from .models import Notebook
@@ -19,8 +19,20 @@ class NoteViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['GET'])
     def get_history(self, request, *args, **kwargs):
-        history = self.get_object().history.all()
-        return Response()
+        note = self.get_object()
+        serializer = NoteHistorySerializer(note, context={'request': request})
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
+    
+    # @action(detail=True, methods=['GET'])
+    # def get_last_edited(self, request, *args, **kwargs):
+    #     history = self.get_object().history.most_recent()
+    #     return response.Response(history., status=status.HTTP_200_OK)
+    
+    # @action(detail=True, methods=['GET'])
+    # def get_created(self, request, *args, **kwargs):
+    #     history = self.get_object().history.filter(comment='Created')
+    #     serializer = NoteHistoru
+    #     return response.Response(history, status=status.HTTP_200_OK)
 
 class NotebookViewSet(viewsets.ModelViewSet):
     queryset = Notebook.objects.all()

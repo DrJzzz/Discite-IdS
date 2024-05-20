@@ -31,9 +31,10 @@ class Note(models.Model):
     title = models.CharField( max_length=255)
     content = models.TextField()
     tags = models.ManyToManyField("Tag", blank=True)
-    lastEdited = models.DateTimeField(auto_now_add=True, blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, blank=True)
-    notebook_ref = models.ForeignKey('notes.Notebook', related_name='notebook_ref', on_delete=models.CASCADE)
+    notebook_ref = models.ForeignKey('notes.Notebook', 
+                                     related_name='notebook_ref', 
+                                     on_delete=models.CASCADE)
     history = HistoricalRecords()
 
     def __str__(self):

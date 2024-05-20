@@ -1,12 +1,25 @@
 from rest_framework import serializers
 from notes.models import Note, Tag, Notebook
 
+class NoteHistoryField(serializers.ListField):
+    child = serializers.DictField()
+    
+    def to_representation(self, data):
+        return super().to_representation(data.values())
+
+class NoteHistorySerializer(serializers.HyperlinkedModelSerializer):
+    history = NoteHistoryField(read_only=True)
+    class Meta:
+        model = Note
+        fields = ['history']
+
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
-        # fields =['title', 'content', 'id', 'owner']
         fields = '__all__'
+        
+    
         
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
