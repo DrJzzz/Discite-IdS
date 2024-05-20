@@ -36,6 +36,7 @@ class Note(models.Model):
                                      related_name='notebook_ref', 
                                      on_delete=models.CASCADE)
     history = HistoricalRecords()
+    public = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title 

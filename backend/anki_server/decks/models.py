@@ -14,6 +14,8 @@ class Deck(models.Model):
                               related_name='deck_user',
                               on_delete=models.CASCADE,
                               default=create_default_user)
+    
+    public = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
