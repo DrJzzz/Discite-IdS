@@ -56,6 +56,6 @@ export async function load({ fetch, params }) {
         console.error('Error loading cards list:', error);
 
         // Devuelve un objeto vacío en caso de error
-        return { cards: null };
+        return { cards: [] };
     }
 }

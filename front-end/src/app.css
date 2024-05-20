@@ -12,6 +12,8 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@import 'filepond/dist/filepond.css';
+@import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 :root,
 [data-bs-theme=light] {
   --bs-blue: #378dfc;
@@ -12803,6 +12805,7 @@ textarea.form-control-lg {
 [data-bs-theme=dark] .toast-header {
   color: #fff;
 }
+
 
 
 body {

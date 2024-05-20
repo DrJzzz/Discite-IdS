@@ -2,6 +2,7 @@
     import SvelteMarkdown from "svelte-markdown";
     import {Eye} from "phosphor-svelte";
     import {goto} from "$app/navigation";
+    import {CardStore} from "../../../card-store.js";
 
     export let data;
 
@@ -9,13 +10,12 @@
     const back = "# Prubea back"
     let watch = false;
 
-    let card;
 
     let i = 0;
 
     if (data.cards){
-        card = data.cards[i];
-        console.log(card)
+        CardStore.set(data.cards)
+        console.log($CardStore)
     }
 
     function navigateToHome() {
@@ -28,7 +28,7 @@
 
             const info ={rating} ;
             console.log(JSON.stringify(info))
-            const response = await fetch(`http://127.0.0.1:8000/cards/${id}/set_new_rating/`, {
+            const response = await fetch(`http://127.0.0.1:8000/cards/${$CardStore[i].id}/set_new_rating/`, {
                 method: 'POST',
                 credentials : 'include',
                 headers: {
@@ -42,8 +42,6 @@
                 if( i < data.cards.length-1){
                     i += 1;
                     watch = false;
-                    card = data.cards[i];
-
                 }
                 else {
                     alert("Your study has been finished");
@@ -66,14 +64,14 @@
     }
 </script>
 
-{#if data}
+{#if $CardStore.length > 0}
     <div>
         <div class="row">
             <div class="container-sm col">
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
-                        <SvelteMarkdown source="{card.front}"/>
+                        <SvelteMarkdown source="{$CardStore[i].front}"/>
                     </div>
                 </div>
             </div>
@@ -89,7 +87,7 @@
                                 </div>
                             </button>
                         {:else }
-                                <SvelteMarkdown source="{card.back}"/>
+                                <SvelteMarkdown source="{$CardStore[i].back}"/>
                         {/if}
 
                     </div>

@@ -84,6 +84,29 @@
             console.log(error)
         }
     }
+
+    // Datos de ejemplo para el usuario
+    let user = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        profileImage: 'https://via.placeholder.com/150'
+    };
+
+    let user2 = {
+        name: 'Nicholas Med',
+        email: 'nicholas@example.com',
+        profileImage: 'https://via.placeholder.com/150'
+    };
+    // Datos de ejemplo para Decks y Notebooks
+    let decks = [
+        { name: 'Deck 1', number: 10, tags: 'tag1, tag2' },
+        { name: 'Deck 2', number: 20, tags: 'tag3, tag4' }
+    ];
+
+    let notebooks = [
+        { name: 'Notebook 1', number: 5, tags: 'tag5, tag6' },
+        { name: 'Notebook 2', number: 15, tags: 'tag7, tag8' }
+    ];
 </script>
 
 
@@ -94,6 +117,159 @@
             Study cards
         </div>
     </button>
+    <div class="row">
+        <div class="card col" style="max-width: 720px">
+            <div class="card-header d-flex align-items-center">
+                <img src={user.profileImage} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                <div>
+                    <h5 class="card-title mb-0">{user.name}</h5>
+                    <p class="card-text"><small class="text-muted">{user.email}</small></p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Decks
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Cards</th>
+                                        <th scope="col">Tags</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each decks as deck}
+                                        <tr>
+                                            <td>{deck.name}</td>
+                                            <td>{deck.number}</td>
+                                            <td>{deck.tags}</td>
+                                            <td><button class="btn btn-primary btn-sm">Follow</button></td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Notebooks
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Notes</th>
+                                        <th scope="col">Tags</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each notebooks as notebook}
+                                        <tr>
+                                            <td>{notebook.name}</td>
+                                            <td>{notebook.number}</td>
+                                            <td>{notebook.tags}</td>
+                                            <td><button class="btn btn-primary btn-sm">Follow</button></td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card col" style="max-width: 720px">
+            <div class="card-header d-flex align-items-center">
+                <img src={user2.profileImage} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                <div>
+                    <h5 class="card-title mb-0">{user2.name}</h5>
+                    <p class="card-text"><small class="text-muted">{user2.email}</small></p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Decks
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Cards</th>
+                                        <th scope="col">Tags</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each decks as deck}
+                                        <tr>
+                                            <td>{deck.name}</td>
+                                            <td>{deck.number}</td>
+                                            <td>{deck.tags}</td>
+                                            <td><button class="btn btn-primary btn-sm">Follow</button></td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Notebooks
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Notes</th>
+                                        <th scope="col">Tags</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each notebooks as notebook}
+                                        <tr>
+                                            <td>{notebook.name}</td>
+                                            <td>{notebook.number}</td>
+                                            <td>{notebook.tags}</td>
+                                            <td><button class="btn btn-primary btn-sm">Follow</button></td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
