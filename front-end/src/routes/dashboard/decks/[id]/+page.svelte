@@ -69,16 +69,6 @@
         }
     }
 
-    // Lista de botones de ejemplo
-    let buttons = [
-        { id: 1, label: 'Button 1' },
-        { id: 2, label: 'Button 2' },
-        { id: 3, label: 'Button 3' },
-        { id: 4, label: 'Button 4' },
-        { id: 5, label: 'Button 5' }
-
-        // Añade más botones si es necesario
-    ];
 
     function changeIdHistory(id){
         id_history = id;
