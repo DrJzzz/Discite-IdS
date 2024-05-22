@@ -5,6 +5,16 @@ from exarth_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from allauth.account.forms import SignupForm
 
+class PictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['picture']
+        
+    def update(self, instance, validated_data):
+        instance.picture = validated_data.get('picture', instance.picture)
+        instance.save()
+        return instance
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CustomUser

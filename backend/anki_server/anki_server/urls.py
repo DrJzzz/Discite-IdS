@@ -30,7 +30,6 @@ urlpatterns = [
     path('', include('notes.urls')),
     path('', include('images.urls')),
     path('', include('shared.urls')),
-    #path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),

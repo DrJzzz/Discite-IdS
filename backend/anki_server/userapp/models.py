@@ -3,6 +3,12 @@ from django.contrib.auth.models import AbstractUser
 from userapp.managers import CustomUserManager
 
 
+import os 
+
+def get_upload_path(instance, filename):
+    return os.path.join('images', str(instance.pk), filename)
+
+
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(('email address'), unique=True)
@@ -13,7 +19,11 @@ class CustomUser(AbstractUser):
     birthdate = models.DateField( null=True)
     phone_number = models.CharField(default='00000000' ,max_length=12, null=True)
     
-
+    picture = models.ImageField(upload_to=get_upload_path,
+                                     blank=True,
+                                     null=True,
+                                     default='blank-user-picture.jpg')
+ 
     def __str__(self):
         return self.email
     

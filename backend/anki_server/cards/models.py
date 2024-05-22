@@ -6,6 +6,8 @@ from typing import Optional
 from decks.models import *
 from rest_framework import serializers
 from simple_history.models import HistoricalRecords
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 class State(models.IntegerChoices):
     New = 0
@@ -97,3 +99,8 @@ class FlashCard(Card):
     
 
 
+@receiver(pre_delete, sender=FlashCard)
+def decrement_deck_count(sender, instance, using, **kwargs):  
+    print('DELTED CARD')
+    instance.deck.card_count = instance.deck.card_count - 1
+    instance.deck.save()

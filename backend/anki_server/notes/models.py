@@ -5,6 +5,9 @@ from userapp.models import CustomUser, create_default_user, get_default_user
 from simple_history.models import HistoricalRecords
 
 
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+
 def get_default_note(sender, **kwargs):
     notebook, created = Notebook.objects.get_or_create(
         name='Default Notebook',
@@ -32,10 +35,11 @@ class Note(models.Model):
     content = models.TextField()
     tags = models.ManyToManyField("Tag", blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True, blank=True)
-    notebook_ref = models.ForeignKey('notes.Notebook', 
-                                     related_name='notebook_ref', 
-                                     on_delete=models.CASCADE)
+    notebook = models.ForeignKey('notes.Notebook', 
+                                related_name='notebook', 
+                                on_delete=models.CASCADE)
     history = HistoricalRecords()
+    
 
     def __str__(self):
         return self.title 
@@ -44,12 +48,13 @@ class Note(models.Model):
     
 class Notebook(models.Model):
     name = models.CharField(max_length=255)
-    notes = models.ManyToManyField('Note', blank=True)
     tags = models.ManyToManyField('Tag', blank=True)
     owner = models.ForeignKey('userapp.CustomUser', 
                               related_name='note_user',
                               on_delete=models.CASCADE,
                               default=create_default_user)
+    note_count = models.IntegerField(default=0)
+    public = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
@@ -67,3 +72,10 @@ def get_default_notebook():
             defaults=dict(owner=get_default_user)
         )
         return notebook
+    
+    
+
+@receiver(pre_delete, sender=Note)
+def decrement_deck_count(sender, instance, using, **kwargs):  
+    instance.notebook.note_count = instance.notebook.note_count - 1
+    instance.notebook.save()

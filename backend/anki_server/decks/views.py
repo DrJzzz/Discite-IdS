@@ -78,4 +78,25 @@ class DeckViewSet(viewsets.ModelViewSet):
         }
         return JsonResponse(data)
         
-    
+        
+    @action(detail=True)
+    def set_public(self, request, *args, **kwargs):
+        deck = self.get_object()
+        
+        if not deck.public :
+            deck.public = True
+            deck.save()
+            
+        serializer = DeckSerializer(deck, context={'request': request})
+        return Response(serializer.data, status=200)
+
+    @action(detail=True)
+    def set_private(self, request, *args, **kwargs):
+        deck = self.get_object()
+        
+        if deck.public :
+            deck.public = True
+            deck.save()
+            
+        serializer = DeckSerializer(deck, context={'request': request})
+        return Response(serializer.data, status=200)
