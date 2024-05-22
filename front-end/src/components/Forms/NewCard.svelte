@@ -1,5 +1,6 @@
 <script>
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
+    import {UserStore} from "../../user-store.js";
 
 
     let front = '';
@@ -17,9 +18,16 @@
         id_deck = "";
     }
 
+    let user;
+
+    if (UserStore){
+
+        user = $UserStore;
+    }
+
     async function getDecks() {
         try {
-            const response = await fetch('http://127.0.0.1:8000/users/1/decks/', {
+            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/decks/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

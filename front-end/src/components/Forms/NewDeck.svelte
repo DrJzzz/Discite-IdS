@@ -1,7 +1,15 @@
 <script>
+    import {UserStore} from "../../user-store.js";
+
     let name = '';
+    let user;
+
+    if (UserStore){
+
+        user = $UserStore;
+    }
     async function handleSubmit() {
-        const owner = 1;
+        const owner = user.id;
 
         const data = {name, owner };
         console.log(JSON.stringify(data))
