@@ -13,4 +13,5 @@ markdown
 psycopg2-binary
 django-environ
 django-markdown
-fsrs
+pillow
+django-simple-history

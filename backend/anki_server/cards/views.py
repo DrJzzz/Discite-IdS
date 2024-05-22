@@ -1,8 +1,17 @@
 from django.shortcuts import render
 from rest_framework import generics, viewsets, mixins, response, status
 from .models import Card, FlashCard
-from .serializers import  FlashCardSerializer
+from cards.serializers import  *
+from datetime import datetime, timedelta, timezone
 
+
+from cards.fsrs import *
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from django.utils.timezone import make_aware
+
+from decks.models import Deck
 
 class CardList(generics.ListCreateAPIView):
     queryset = FlashCard.objects.all()
@@ -19,27 +28,50 @@ class FlashCardViewSet(viewsets.ModelViewSet):
     queryset = FlashCard.objects.all()
     serializer_class = FlashCardSerializer
     
-    # def retrieve(self, request, pk=None):
-    #     u = request.user
-    #     queryset = Card.objects.filter(id=pk)
-    #     if not queryset:
-    #         return Response(status=status)
     
     
-class CardViewSet(viewsets.ModelViewSet, mixins.CreateModelMixin):
-    # queryset = Card.objects.all()
-    # serializer_class = CardSerializer
-    def get_queryset(self):
-        return Card.objects.all().order_by('id')
     
-    def create(self, request, *args, **kwargs):
-        card_serializer = Card.get_serializer()
-        serializer = card_serializer(data=request.data)
+class CardViewSet(viewsets.ModelViewSet):
+    queryset = FlashCard.objects.all() 
+    serializer_class = FlashCardSerializer
+    
+    def perform_create(self, serializer):
+      
+        card = serializer.save()
+        card.deck.card_count = card.deck.card_count + 1
+        card.deck.save()
         
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+
     
-    def get_serializer_class(self):
-        return Card.get_serializer()
+
+    @action(detail=True, methods=['POST'])
+    def set_new_rating(self, request, pk):
+        # get data from route
+        card = self.get_object()
+        rating = int(request.data['rating'])
+        # print("Before offset : %s", str(datetime.now()))
+        timezone_offset = -60.0
+        tzinfo = timezone(-timedelta(hours=6))
+        
+        # print("After offset : %s", str(datetime.now(tzinfo)))
+        
+        # timedelta(hours=timezone_offset)
+        fsrs_scheduling_cards = FSRS().repeat(card, datetime.now(tzinfo))
+        card = fsrs_scheduling_cards[rating].card
+        # print(str(card.due))
+        card.save()
+
+        return Response({'new_rating': request.data['rating']})
+    
+    @action(detail=True, methods=['GET'])
+    def get_history(self, request, *args, **kwargs):
+        card = self.get_object()
+        serializer = FlashcardHistorySerializer(card, context={'request': request})
+        return response.Response(serializer.data, status=status.HTTP_200_OK)
+    
+    
+    
+
+    
     

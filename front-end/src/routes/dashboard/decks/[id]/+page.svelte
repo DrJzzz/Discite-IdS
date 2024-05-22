@@ -12,38 +12,20 @@
 
     let id_deck = "";
 
-    onMount(async function() {
-        const id = data.id;
-        const endpoint = `http://localhost:8000/cards/${id}/`;
-        try {
-            let response = await fetch(endpoint);
-            if (response.status == 200) {
-                card = await response.json();
-                const nums = card.deck.match(/\d+/g);
-                id_deck = nums[0];
-                console.log(card);
-            } else {
-                card = null;
-            }
-        } catch (error) {
-            console.error('Error al cargar la carta:', error);
-            card = null;
-        }
-    });
+    console.log(data.id)
 
 
 
     async function handleSubmit() {
-        const date = new Date();
-        const modified = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-        console.log(JSON.stringify(card))
+
+        console.log(JSON.stringify(data.card))
         try {
-            const response = await fetch(`http://127.0.0.1:8000/cards/${card.id}/`, {
+            const response = await fetch(`http://127.0.0.1:8000/fcards/${data.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(card)
+                body: JSON.stringify(data.card)
             });
 
             if (response.ok) {
@@ -59,7 +41,7 @@
 
 </script>
 
-{#if card}
+{#if data}
     <div>
         <!-- Botón que activa el modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -74,7 +56,7 @@
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
-                        <SvelteMarkdown source="{card.front}"/>
+                        <SvelteMarkdown source="{data.card.front}"/>
                     </div>
                 </div>
             </div>
@@ -82,7 +64,7 @@
                 <div class="text-center mb-3"><p>Back</p></div>
                 <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
-                        <SvelteMarkdown source="{card.back}"/>
+                        <SvelteMarkdown source="{data.card.back}"/>
                     </div>
                 </div>
             </div>
@@ -96,17 +78,15 @@
                     </div>
                     <form on:submit|preventDefault={handleSubmit}>
                         <div class="modal-body">
-                            {#if card.template == 1}
 
                                 <div class="mb-3">
                                     <label for="front-area" class="form-label">Front Area</label>
-                                    <textarea bind:value={card.front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+                                    <textarea bind:value={data.card.front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="back-area" class="form-label">Back Area</label>
-                                    <textarea bind:value={card.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
+                                    <textarea bind:value={data.card.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
                                 </div>
-                            {/if}
 
 
                         </div>

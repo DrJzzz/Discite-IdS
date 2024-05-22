@@ -1,35 +1,49 @@
 <script>
     import {onMount} from "svelte";
+    export let data;
 
-    let user;
+    let user = data.user;
 
-    onMount(async function() {
-        const endpoint = `http://localhost:8000/users/1/`;
+    async function handleSubmit() {
+        console.log(JSON.stringify(user))
         try {
-            let response = await fetch(endpoint);
-            if (response.status == 200) {
-                user = await response.json();
-                console.log(user);
+            const token = localStorage.getItem('key');
+            const name = data.user.name;
+            const email = data.user.email;
+            const info = { name, email}
+            console.log(info);
+            const response = await fetch(`http://127.0.0.1:8000/rest-auth/user/`, {
+                method: 'PUT',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data.user)
+            });
+
+
+            if (response.ok) {
+                console.log('Form submitted successfully!');
+
             } else {
-                user = null;
+                console.error('Failed to submit form');
             }
         } catch (error) {
-            console.error('Error al cargar la carta:', error);
-            user = null;
+            console.error('An error occurred while submitting the form:', error);
         }
-    });
+    }
 </script>
 
 {#if user}
     <div class="container py-5 ">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-12 col-xl-4">
-
+                <a class="button-edit" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit profile</a>
                 <div class="card" style="border-radius: 15px;">
                     <div class="card-body text-center">
                         <div class="mt-3 mb-4" style="margin-left: 35%">
                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
-                                 class="rounded-circle img-fluid" style="width: 100px;" />
+                                 class="rounded-circle img-fluid" style="width: 100px;" alt="profile" />
                         </div>
                         <h4 class="mb-2">{user.name}</h4>
                         <p class="text-muted mb-4">@Email <span class="mx-2">|</span> <a
@@ -62,11 +76,46 @@
                         </div>
                     </div>
                 </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit card</h5>
+                            </div>
+                            <form on:submit|preventDefault={handleSubmit}>
+                                <div class="modal-body">
+
+                                    <div class="mb-3" >
+                                        <label for="name" class="form-label">Name</label>
+                                        <input style="color: black;" bind:value={user.name} type="text" class="form-control" id="name" >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                                        <input style="color: black;" type="tel" class="form-control" id="phoneNumber" bind:value={user.phone_number} placeholder="Enter your phone number">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="dob" class="form-label">Birthdate</label>
+                                        <input style="color: black;" type="date" class="form-control" id="dob" bind:value={user.birthdate}>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
             </div>
         </div>
     </div>
-    {:else }
+    </div>
+    {:else}
     <h3>User not found</h3>
-    {/if}
+{/if}
 

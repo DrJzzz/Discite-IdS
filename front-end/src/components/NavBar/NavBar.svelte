@@ -1,9 +1,4 @@
 <script lang="ts">
-	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
-  import FavIcon from "../../lib/images/favicon.png"
-  import MenuToggle from "../../lib/images/menu-toggle.svg"
-  import MenuToggleHm from "../../lib/images/menu-toggle-hm.svg"
-
   let isOpen = false;
 
   function toggleMenu() {
@@ -14,7 +9,7 @@
 
 <nav class="navbar navbar-expand-lg bg-dark" style="max-width: 1920px" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand col-auto" href="/landing">Navbar</a>
+    <a class="navbar-brand col-auto" href="/">Navbar</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor04" aria-controls="navbarColor04" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

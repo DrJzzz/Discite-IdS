@@ -9,21 +9,12 @@
     /**
 	 * @type {{ title: any; content: any; } | null}
 	 */
-    let note;
 
-    onMount(async function() {
-        if ($NoteStore.length) {
-            note = $NoteStore.find(film => film.id == data.id)
-        } else {
-            const endpoint = `http://localhost:8000/notes/notes/${data.id}/`
-            let response = await fetch(endpoint)
-            if (response.status == 200) {
-                note = await response.json()
-            } else {
-                note = null;
-            }
-        }
-    })
+
+    console.log(data)
+
+
+    const note = data.note;
 
 
     async function handleSubmit() {
