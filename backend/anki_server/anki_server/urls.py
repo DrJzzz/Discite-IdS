@@ -35,4 +35,5 @@ urlpatterns = [
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
     re_path(r'^rest-auth/registration/', include('exarth_rest_auth.registration.urls')),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
+     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
