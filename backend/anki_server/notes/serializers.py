@@ -3,6 +3,8 @@ from notes.models import Note, Tag, Notebook
 from simple_history.models import HistoricalRecords
 
 
+
+
 class NoteHistoryField(serializers.ListField):
     child = serializers.DictField()
     
@@ -31,7 +33,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 class NotebookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Notebook
-        fields = ['name', 'notes', 'tags']
+        fields = '__all__'
         
         
 class NotebookOwnerSerializer(serializers.HyperlinkedModelSerializer):

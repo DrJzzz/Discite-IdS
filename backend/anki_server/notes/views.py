@@ -30,6 +30,10 @@ class NoteViewSet(viewsets.ModelViewSet):
         note.notebook.save()
         
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    
+    
+    
 
     
 class NotebookViewSet(viewsets.ModelViewSet):
@@ -38,7 +42,30 @@ class NotebookViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+        
+        
+    @action(detail=True)
+    def set_public(self, request, *args, **kwargs):
+        notebook = self.get_object()
+        
+        if not notebook.public :
+            notebook.public = True
+            notebook.save()
+            
+        serializer = NotebookSerializer(notebook, context={'request': request})
+        return Response(serializer.data, status=200)
 
+    @action(detail=True)
+    def set_private(self, request, *args, **kwargs):
+        notebook = self.get_object()
+        
+        if notebook.public :
+            notebook.public = False
+            notebook.save()
+            
+        serializer = NotebookSerializer(notebook, context={'request': request})
+        return Response(serializer.data, status=200)
+    
 
 
 

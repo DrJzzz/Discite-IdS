@@ -39,7 +39,7 @@ class Note(models.Model):
                                 related_name='notebook', 
                                 on_delete=models.CASCADE)
     history = HistoricalRecords()
-    public = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return self.title 
@@ -54,6 +54,7 @@ class Notebook(models.Model):
                               on_delete=models.CASCADE,
                               default=create_default_user)
     note_count = models.IntegerField(default=0)
+    public = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name

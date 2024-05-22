@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
                                      blank=True,
                                      null=True,
                                      default='blank-user-picture.jpg')
-
+ 
     def __str__(self):
         return self.email
     
