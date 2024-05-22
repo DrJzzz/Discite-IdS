@@ -200,6 +200,35 @@
             console.error('An error occurred while deleting the note:', error);
         }
     }
+
+    async function changePublic(id, state){
+
+        try {
+            const csrftoken = getCookie('csrftoken');
+
+            let endpoint = '';
+            if (!state) {
+                endpoint = `http://localhost:8000/notebooks/${id}/set_public/`;
+            }else{
+                endpoint = `http://localhost:8000/notebooks/${id}/set_private/`;
+            }
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`  // Incluir el token CSRF en los encabezados
+                },
+                credentials: 'include'
+            });
+            if (response.ok) {
+                console.log('Change state deck successfully!');
+            } else {
+                console.error('Failed to change state deck');
+            }
+        } catch (error) {
+            console.error('An error occurred while change state of the deck:', error);
+        }
+    }
 </script>
 
 <style>
@@ -245,6 +274,11 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
                             <li><a class="dropdown-item" data-bs-toggle="modal"  role="button" href="#inviteModal" data-bs-target="#inviteModal" on:click={() => changeIdNotebook(info.notebook.id)} >Invite</a></li>
+                            {#if !info.notebook.public}
+                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, false)} >Public</a></li>
+                            {:else }
+                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, true)} >Private</a></li>
+                            {/if}
                             <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdNotebookRename(info.notebook.id)}>Rename</a></li>
                             <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNotebook(info.notebook.id)} >Delete</a></li>
                         </ul>

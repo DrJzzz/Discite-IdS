@@ -20,8 +20,8 @@
     }
 
     async function handleSubmit() {
-        const notebook_ref = '/notebooks/'+id_notebook+'/'
-        const data = { title, content, notebook_ref };
+        const notebook = '/notebooks/'+id_notebook+'/'
+        const data = { title, content, notebook };
         console.log(JSON.stringify(data))
         try {
             const csrftoken = getCookie('csrftoken');

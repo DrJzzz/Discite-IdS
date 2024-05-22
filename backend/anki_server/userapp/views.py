@@ -87,9 +87,9 @@ class UserViewSet(viewsets.ModelViewSet):
             if len(shared_decks) == 0 and len(shared_notebooks) == 0:
                 continue
             item = {
-                'user' : user.id,
-                'decks' : list(shared_decks.values('id', 'card_count', 'tags')),
-                'notebooks' : list(shared_notebooks.values('id', 'note_count', 'tags')),
+                'user' : {'id': user.id, 'name': user.name, 'email': user.email},
+                'decks' : list(shared_decks.values('id', 'name','card_count', 'tags')),
+                'notebooks' : list(shared_notebooks.values('id', 'name','note_count', 'tags')),
             }
             values.append(item)
         

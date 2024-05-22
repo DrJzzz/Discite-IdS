@@ -79,6 +79,7 @@ def notes_notebook(request, pk):
         'notebook': {
             'id': notebook.id,
             'name': notebook.name,
+            'public' : notebook.public
         },
         'notes': list(notes.values('id', 'title'))
     }
