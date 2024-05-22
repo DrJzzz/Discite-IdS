@@ -84,6 +84,8 @@ class UserViewSet(viewsets.ModelViewSet):
         for user in users :
             shared_decks = user.deck_user.filter(public=True)
             shared_notebooks = user.note_user.filter(public=True)
+            if len(shared_decks) == 0 and len(shared_notebooks) == 0:
+                continue
             item = {
                 'user' : user.id,
                 'decks' : list(shared_decks.values('id', 'card_count', 'tags')),
