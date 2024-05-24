@@ -17,5 +17,5 @@ class ImageViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         user = request.user 
         response = super(ImageViewSet, self).create(request, *args, **kwargs)
-        response.data = {'id-url': response.data['image']}
+        response.data = {'url': response.data['image']}
         return response

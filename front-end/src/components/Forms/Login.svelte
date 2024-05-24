@@ -14,13 +14,14 @@
         };
 
         try {
+            const csrfToken = getCookie('csrftoken');
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data),
-                credentials : 'include',
+                credentials : 'include'
             });
 
             const result = await response.json();
@@ -35,6 +36,11 @@
         } catch (error) {
             alert("Bip bop, algo salió mal. Por favor intenta de nuevo.")
         }
+    }
+
+    function getCookie(name) {
+        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return cookieValue ? cookieValue.pop() : '';
     }
 </script>
 

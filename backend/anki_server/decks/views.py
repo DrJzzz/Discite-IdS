@@ -50,8 +50,9 @@ class DeckViewSet(viewsets.ModelViewSet):
             'deck': {
                 'id': deck.id,
                 'name': deck.name,
+                'public': deck.public
             },
-            'cards': list(cards.values('id'))
+            'cards': list(cards.values('id', 'front'))
         }
         return JsonResponse(data)
 
@@ -95,7 +96,7 @@ class DeckViewSet(viewsets.ModelViewSet):
         deck = self.get_object()
         
         if deck.public :
-            deck.public = True
+            deck.public = False
             deck.save()
             
         serializer = DeckSerializer(deck, context={'request': request})

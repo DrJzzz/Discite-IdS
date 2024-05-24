@@ -1,5 +1,7 @@
-/** @type {import('./$types').PageLoad} */
-export async function load({ fetch, params }) {
+import {UserStore} from "../../user-store.js";
+
+/** @type {import('./$types').LayoutLoad} */
+export async function load({ fetch }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
         const endpoint = `http://localhost:8000/rest-auth/user/`;
@@ -10,7 +12,7 @@ export async function load({ fetch, params }) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials : 'include',
+            credentials : 'include'
         });
 
 
@@ -18,7 +20,7 @@ export async function load({ fetch, params }) {
         if (res.ok) {
             // Extrae los datos JSON de la respuesta
             const user = await res.json();
-
+            UserStore.set(user);
             // Devuelve las cartas cargadas junto con su ID
             return { user };
         } else {

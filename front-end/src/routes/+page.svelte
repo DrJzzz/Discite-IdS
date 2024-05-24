@@ -280,7 +280,7 @@
             <a class="link">Saber mas</a>
         </div>
     </div>
-    <div class="image-placeholder">
+    <div>
 
         <img src="images/anki.png" alt="Descripción de la imagen">
     </div>

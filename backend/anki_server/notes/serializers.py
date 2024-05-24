@@ -21,7 +21,7 @@ class NoteHistorySerializer(serializers.HyperlinkedModelSerializer):
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Note
-        fields = '__all__'
+        fields = ['id', 'title', 'content', 'dateCreated', 'notebook', 'tags']
         
         
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,7 +33,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 class NotebookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Notebook
-        fields = '__all__'
+        fields = ['id', 'url', 'name', 'note_count', 'public', 'owner', 'tags']
         
         
 class NotebookOwnerSerializer(serializers.HyperlinkedModelSerializer):
