@@ -9,6 +9,7 @@
     import {CardStore} from "../../../card-store.js";
     import {writable} from "svelte/store";
     import {onMount} from "svelte";
+    import {getCookie} from "../../../utils/csrf.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -26,23 +27,6 @@
         console.log($CardStore)
         UsersStore.set([]);
     });
-
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
 
     const addUsers = (id) => {
         const user = data.users.find(user => user.id === id);
@@ -90,6 +74,7 @@
 
     async function handleSubmitRename(){
         try {
+            const token = localStorage.getItem('key');
             const csrftoken = getCookie('csrftoken');
             console.log(csrftoken)
             const info = { name}
@@ -98,7 +83,8 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info),
                 credentials: 'include'
@@ -133,12 +119,16 @@
         const deck = `/decks/${id_deck}/`;
         const recipient = `/users/${user.id}/`
         try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const info = {sharer, deck_shared, recipient , deck}
             const endpoint = "http://localhost:8000/shared/"
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info),
                 credentials: 'include'
@@ -155,13 +145,14 @@
     async function deleteDeck() {
         try {
             const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken)
+            const token = localStorage.getItem('key');
             const endpoint = `http://localhost:8000/decks/${id_deck}/`;
             const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials: 'include'
             });
@@ -177,12 +168,14 @@
     async function deleteCard() {
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const endpoint = `http://localhost:8000/cards/${id_card}/`;
             const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials: 'include'
             });
@@ -200,7 +193,7 @@
 
             try {
                 const csrftoken = getCookie('csrftoken');
-
+                const token = localStorage.getItem('key');
                 let endpoint = '';
                 if (!state) {
                     endpoint = `http://localhost:8000/decks/${id}/set_public/`;
@@ -211,7 +204,8 @@
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': `${csrftoken}`  // Incluir el token CSRF en los encabezados
+                        'X-CSRFToken': `${csrftoken}`,  // Incluir el token CSRF en los encabezados
+                        'Authorization': `Token ${token}`
                     },
                     credentials: 'include'
                 });

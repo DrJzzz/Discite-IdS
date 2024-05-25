@@ -1,10 +1,11 @@
 import {UserStore} from "../../user-store.js";
+import {getCookie} from "../../utils/csrf.js";
 
 /** @type {import('./$types').LayoutLoad} */
 export async function load({ fetch }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
-        const token = localStorage.getItem('key');  // Asumiendo que has almacenado el token en localStorage
+        const token =typeof localStorage !== 'undefined' ? localStorage.getItem('key') : '';
         const csrftoken = getCookie('csrftoken');
         const endpoint = `http://localhost:8000/rest-auth/user/`;
 
@@ -38,19 +39,4 @@ export async function load({ fetch }) {
         // Devuelve un objeto vacío en caso de error
         return { user: null };
     }
-}
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 }

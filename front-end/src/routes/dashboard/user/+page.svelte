@@ -1,5 +1,6 @@
 <script>
     import {onMount} from "svelte";
+    import {getCookie} from "../../../utils/csrf.js";
     export let data;
 
     let user = data.user;
@@ -8,6 +9,7 @@
         console.log(JSON.stringify(user))
         try {
             const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const name = data.user.name;
             const email = data.user.email;
             const info = { name, email}
@@ -16,7 +18,9 @@
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data.user)
             });
