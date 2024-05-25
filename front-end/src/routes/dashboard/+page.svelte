@@ -111,7 +111,7 @@
                                         Decks
                                     </button>
                                 </h2>
-                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse show" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
+                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
                                     <div class="accordion-body">
                                         <table class="table">
                                             <thead>

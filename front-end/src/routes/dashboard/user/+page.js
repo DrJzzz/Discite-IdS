@@ -24,18 +24,32 @@ export async function load({ fetch, params }) {
         if (res.ok) {
             // Extrae los datos JSON de la respuesta
             const user = await res.json();
+            const endpointImg = `http://localhost:8000/users/${user.id}/get_picture/`;
+            const resImage = await fetch(endpointImg, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                credentials : 'include',
+            });
+
+            const imgJson = await resImage.json();
+            console.log(imgJson)
+            const img = imgJson.picture;
 
             // Devuelve las cartas cargadas junto con su ID
-            return { user };
+            return { user , img};
         } else {
             // Si la solicitud no fue exitosa, lanza un error con el mensaje de estado
-            return {user : []}
+            return {user : [], img : ""}
         }
     } catch (error) {
         // Maneja cualquier error que ocurra durante la carga de la carta
         console.error('Error loading user:', error);
 
         // Devuelve un objeto vacío en caso de error
-        return { user: [] };
+        return { user: [], img : '' };
     }
 }
