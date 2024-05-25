@@ -70,6 +70,14 @@ class CardViewSet(viewsets.ModelViewSet):
         serializer = FlashcardHistorySerializer(card, context={'request': request})
         return response.Response(serializer.data, status=status.HTTP_200_OK)
     
+    @action(detail=True, methods=['PUT'])
+    def revert_to(self, request, *args, **kwargs):
+        current = self.get_object()
+        revert_to = current.history.filter(history_id=request.data['id']).get()
+        new_current = revert_to.instance.save()
+        serializer = FlashCardSerializer(new_current, context={'request': request})
+        return response.Response(serializer.data)
+    
     
     
 
