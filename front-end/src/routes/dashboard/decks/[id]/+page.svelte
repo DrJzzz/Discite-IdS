@@ -6,7 +6,7 @@
     import {Pencil, ClockCounterClockwise} from "phosphor-svelte";
     import {HistoryStore} from "../../../../history-store.js";
     import {CardStore} from "../../../../card-store.js";
-
+    import {getCookie} from "../../../../utils/csrf.js";
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -16,8 +16,9 @@
     let id_deck = "";
 
     let id_history = 0;
+    let modalHistory;
 
-    let history = {id : 0 , front : '' , back : '', history_date : ""} ;
+    let history = {id : 0 , front : '' , back : '', history_date : "", history_id : 0} ;
 
     onMount(()=>{
         CardStore.set(data.card);
@@ -25,34 +26,26 @@
 
         history = $HistoryStore[id_history];
         console.log(history)
+        import('bootstrap').then(({ Modal }) => {
+            modalHistory = new Modal(document.getElementById('staticBackdrop'));
+        });
     })
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
-
+    const closeModal = () => {
+        modalHistory.hide();
+    };
     async function handleSubmit() {
 
         console.log(JSON.stringify($CardStore))
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const response = await fetch(`http://127.0.0.1:8000/fcards/${data.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
                 body: JSON.stringify($CardStore)
@@ -72,8 +65,42 @@
 
     function changeIdHistory(id){
         id_history = id;
-        history = $HistoryStore[id_history-1];
+        HistoryStore.subscribe(cards =>{
+            // Encontrar el objeto con el mismo history_id
+            history = cards.find(card => card.history_id === id);
+        });
     }
+
+    async function handleChangeHistory(){
+        try {
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            const id = history.id;
+            const history_id = history.history_id;
+            const info = {id, history_id};
+            console.log(JSON.stringify(info))
+            const response = await fetch(`http://127.0.0.1:8000/cards/${data.id}/revert_to/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
+                },
+                credentials : 'include',
+                body: JSON.stringify(info)
+            });
+
+            if (response.ok) {
+                console.log('Form submitted successfully!');
+                closeModal();
+            } else {
+                console.error('Failed to submit form');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+        }
+    }
+
 </script>
 <style>
     /* Hacer que la primera columna sea scrollable */
@@ -165,27 +192,26 @@
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">All history card</h1>
                     </div>
                     <div class="modal-body">
-                        {#if HistoryStore}
+                        {#if $HistoryStore}
                             <div class="container mt-3">
                                 <div class="row">
                                     <h4>List history</h4>
                                     <div class="col-3 scrollable-column">
-
                                         <div class="list-group">
                                             {#each $HistoryStore as info}
                                                 <button type="button" class="list-group-item list-group-item-action" on:click={() => changeIdHistory(info.history_id)}>{info.history_id}</button>
-                                                {/each}
+                                            {/each}
                                         </div>
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {history.history_date} </h4>
+                                            <h4>Date: {history.history_date}</h4>
                                         </div>
                                         <div class="container mb-3">
                                             <div class="row">
                                                 <h5 class="text-center">Front</h5>
                                                 <div class="col">
-                                                    <div class="card bg-secondary card-width ">
+                                                    <div class="card bg-secondary card-width">
                                                         <div class="card-body">
                                                             <SvelteMarkdown source="{history.front}"/>
                                                         </div>
@@ -194,7 +220,6 @@
                                             </div>
                                         </div>
                                         <div class="container mb-3">
-
                                             <div class="row">
                                                 <h5 class="text-center">Back</h5>
                                                 <div class="col">
@@ -209,18 +234,17 @@
                                     </div>
                                 </div>
                             </div>
-                            {:else}
-                                <p>Loading</p>
-                            {/if}
+                        {:else}
+                            <p>Loading</p>
+                        {/if}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Change</button>
+                        <button type="button" class="btn btn-primary" on:click={handleChangeHistory}>Change</button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     {/if}
 
