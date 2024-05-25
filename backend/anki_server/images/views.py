@@ -16,6 +16,10 @@ class ImageViewSet(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         user = request.user 
-        response = super(ImageViewSet, self).create(request, *args, **kwargs)
-        response.data = {'url': response.data['image']}
-        return response
+        image = Image(image=request.data['image'], owner=user)
+        image.save()
+        serializer = ImageSerializer(image, context={'request': request})
+        data = {'url': serializer.data['image']}
+        return Response(data)
+    
+
