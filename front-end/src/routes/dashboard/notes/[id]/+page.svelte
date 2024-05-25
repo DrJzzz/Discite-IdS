@@ -34,11 +34,13 @@
         console.log(JSON.stringify(note))
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const response = await fetch(`http://127.0.0.1:8000/notes/${note.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrftoken,
+                    'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
                 body: JSON.stringify(note)
