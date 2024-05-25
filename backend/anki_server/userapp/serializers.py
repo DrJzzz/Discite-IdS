@@ -4,16 +4,35 @@ from userapp.models import CustomUser
 from exarth_rest_auth.registration.serializers import RegisterSerializer
 from allauth.account.adapter import get_adapter
 from allauth.account.forms import SignupForm
+
+class PictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['picture']
+        
+    def update(self, instance, validated_data):
+        print(instance.id)
+        instance.picture = validated_data.get('picture', instance.picture)
+        instance.save()
+        return instance
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email','name', 'birthdate', 'max_reviews', 'phone_number', 'url']
+        fields = ['id', 'email','name', 'birthdate', 'phone_number', 'url', 'picture']
 
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email','name']
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
+        
+        
 class CustomRegisterSerializer(RegisterSerializer):
 
     name = serializers.CharField(max_length=100, required=True)
@@ -33,7 +52,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         cleaned_data.update({
             'name': self.validated_data.get('name', ''),
             'birthdate': self.validated_data.get('birthdate', ''),
-            'max_reviews': self.validated_data.get('max_reviews', 0),
             'phone_number': self.validated_data.get('phone_number', '')
         })
         return cleaned_data

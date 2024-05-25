@@ -7,8 +7,12 @@ export async function load({ fetch, params }) {
         // Realiza la solicitud GET para obtener los datos de la carta
         const res = await fetch(endpoint, {
             method: 'GET',
-            credentials :'include'
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials : 'include',
         });
+
 
         // Verifica si la solicitud fue exitosa (código de respuesta 200)
         if (res.ok) {
@@ -19,7 +23,7 @@ export async function load({ fetch, params }) {
             return { user };
         } else {
             // Si la solicitud no fue exitosa, lanza un error con el mensaje de estado
-            throw new Error(`Failed to fetch card: ${res.status} ${res.statusText}`);
+            throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);
         }
     } catch (error) {
         // Maneja cualquier error que ocurra durante la carga de la carta

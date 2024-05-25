@@ -4,7 +4,4 @@ from images.models import Image
 class ImageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Image
-        fields = [ 'id', 'url', 'image']
-        
-    
-        
+        fields = [ 'id', 'url', 'image'] 

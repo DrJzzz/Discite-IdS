@@ -28,4 +28,5 @@ backend/anki_server/notes/migrations
 backend/anki_server/decks/migrations
 
 # Media
-backend/anki_server/media
+backend/anki_server/media/*
+!backend/anki_server/media/blank-user-picture.jpg

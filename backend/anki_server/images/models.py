@@ -12,3 +12,7 @@ class Image(models.Model):
                               related_name='image_owner',
                               on_delete=models.CASCADE,
                               default=create_default_user)
+
+    
+    
+

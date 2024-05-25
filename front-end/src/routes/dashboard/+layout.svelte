@@ -1,5 +1,51 @@
 <script>
-    import {House, CardsThree, Notebook} from "phosphor-svelte";
+    import {House, CardsThree, Notebook, ShareFat} from "phosphor-svelte";
+    import {onMount} from "svelte";
+    import {UserStore} from "../../user-store.js";
+
+    /** @type {import('./$types').LayoutData} */
+    export let data;
+
+    onMount(()=>{
+        UserStore.set(data.user)
+    })
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    async function logout(){
+        try {
+            const csrftoken = getCookie('csrftoken');
+
+            const endpoint = `http://localhost:8000/rest-auth/logout/`;
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken // Incluir el token CSRF en los encabezados
+                },
+                credentials: 'include'
+            });
+            if (response.ok) {
+                console.log('Logout successfully!');
+            } else {
+                console.error('Failed to logout');
+            }
+        } catch (error) {
+            console.error('An error occurred while logout:', error);
+        }
+    }
 
 </script>
 <div class="container-fluid vh-100">
@@ -36,17 +82,29 @@
                         </div>
                     </a>
                 </li>
+                <li>
+                    <a href="/dashboard/shares" class="nav-link text-white">
+                        <div class="d-flex align-items-center">
+                            <ShareFat />
+                            My Shares
+                        </div>
+                    </a>
+                </li>
             </ul>
             <hr>
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                    <strong>User</strong>
+                    {#if UserStore}
+                        <strong>{$UserStore.name}</strong>
+                    {:else }
+                        <strong>Cargando..</strong>
+                    {/if}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
                     <li><a class="dropdown-item" href="/dashboard/user">Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="/">Sign out</a></li>
+                    <li><a class="dropdown-item" href="/" on:click={() =>logout()}>Sign out</a></li>
                 </ul>
             </div>
         </div>

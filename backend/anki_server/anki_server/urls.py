@@ -10,7 +10,8 @@ from cards.views import FlashCardViewSet
 from images.views import ImageViewSet
 from django.conf.urls.static import static
 from anki_server import settings
-
+from decks.views import DeckViewSet
+from shared.views import SharedViewSet
 
 router = routers.DefaultRouter()
 router.register(r'users', userviews.UserViewSet)
@@ -19,7 +20,8 @@ router.register(r'notes', NoteViewSet)
 router.register(r'fcards', FlashCardViewSet)
 router.register(r'img', ImageViewSet)
 router.register(r'notebooks', NotebookViewSet)
-
+router.register(r'decks', DeckViewSet)
+router.register(r'shared', SharedViewSet)
 
 urlpatterns = [
     path('', include('userapp.urls')),
@@ -27,10 +29,11 @@ urlpatterns = [
     path('', include('decks.urls')),
     path('', include('notes.urls')),
     path('', include('images.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('', include('shared.urls')),
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
     re_path(r'^rest-auth/registration/', include('exarth_rest_auth.registration.urls')),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
+     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
