@@ -60,10 +60,11 @@ class UserViewSet(viewsets.ModelViewSet):
         
         return JsonResponse(data, safe=False)
     
-    @action(detail=True, methods=['POST', 'PUT', 'PATCH'])
+    @action(detail=True, methods=['PUT', 'PATCH'], serializer_class=PictureSerializer)
     def set_user_picture(self, request, *args, **kwargs):
         user = request.user
-        serializer = PictureSerializer(instance=user, data=request.data )
+       
+        serializer = PictureSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=200)
@@ -73,8 +74,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['GET'])
     def get_picture(self, request, *args, **kwargs):
-        user = request.user
-        serializer = PictureSerializer(user)
+        user = self.get_object()
+        serializer = PictureSerializer(user, context={'request': request})
         return Response(data=serializer.data, status=200)
     
     @action(detail=False, methods=['GET'])

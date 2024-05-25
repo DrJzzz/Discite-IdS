@@ -28,9 +28,6 @@ class NoteViewSet(viewsets.ModelViewSet):
     def revert_to(self, request, *args, **kwargs):
         current = self.get_object()
         revert_to = current.history.filter(history_id=request.data['id']).get()
-        # if len(revert_to):
-        #     print(len(revert_to))
-        
         new_current = revert_to.instance.save()
         serializer = NoteSerializer(new_current, context={'request': request})
         return response.Response(serializer.data)

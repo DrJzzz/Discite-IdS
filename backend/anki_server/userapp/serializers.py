@@ -11,6 +11,7 @@ class PictureSerializer(serializers.ModelSerializer):
         fields = ['picture']
         
     def update(self, instance, validated_data):
+        print(instance.id)
         instance.picture = validated_data.get('picture', instance.picture)
         instance.save()
         return instance
@@ -18,7 +19,7 @@ class PictureSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'email','name', 'birthdate', 'phone_number', 'url']
+        fields = ['id', 'email','name', 'birthdate', 'phone_number', 'url', 'picture']
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
