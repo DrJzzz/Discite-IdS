@@ -4,13 +4,17 @@ import {UserStore} from "../../user-store.js";
 export async function load({ fetch }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
+        const token = localStorage.getItem('key');  // Asumiendo que has almacenado el token en localStorage
+        const csrftoken = getCookie('csrftoken');
         const endpoint = `http://localhost:8000/rest-auth/user/`;
 
         // Realiza la solicitud GET para obtener los datos de la carta
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'X-CSRFToken': `${csrftoken}`
             },
             credentials : 'include'
         });
@@ -34,4 +38,19 @@ export async function load({ fetch }) {
         // Devuelve un objeto vacío en caso de error
         return { user: null };
     }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
