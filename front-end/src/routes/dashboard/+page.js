@@ -30,7 +30,7 @@ export async function load({ parent, fetch, params  }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Token ${token}`,
                     'X-CSRFToken': `${csrftoken}`
                 },
                 credentials : 'include'
