@@ -40,11 +40,14 @@ export async function load({ parent, fetch, params }) {
         }
 
         const usersEndpoint = 'http://127.0.0.1:8000/users/list_all/';
+        const token = localStorage.getItem('key');
+        console.log(token)
         const usersRes = await fetch(usersEndpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken
+                'X-CSRFToken': `${csrftoken}`,
+                'Authorization': `Bearer ${token}`,
             },
             credentials: 'include'
         });

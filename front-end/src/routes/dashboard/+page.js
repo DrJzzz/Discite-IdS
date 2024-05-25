@@ -9,6 +9,7 @@ export async function load({ parent, fetch, params  }) {
             console.error("No se pudo obtener el usuario del UserStore");
             return;
         }
+        const token = localStorage.getItem('key');
         const csrftoken = getCookie('csrftoken');
         const endpoint = `http://127.0.0.1:8000/users/${user.user.id}/decks/`;
         const res = await fetch(endpoint, {
@@ -29,6 +30,7 @@ export async function load({ parent, fetch, params  }) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                     'X-CSRFToken': `${csrftoken}`
                 },
                 credentials : 'include'
