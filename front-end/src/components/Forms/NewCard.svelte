@@ -1,7 +1,7 @@
 <script>
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
     import {UserStore} from "../../user-store.js";
-
+    import {getCookie} from "../../utils/csrf.js";
 
     let front = '';
     let back = '';
@@ -27,10 +27,14 @@
 
     async function getDecks() {
         try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/decks/`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
             });
 
@@ -50,10 +54,14 @@
         const data = { front, back, deck };
         console.log(JSON.stringify(data))
         try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch('http://127.0.0.1:8000/fcards/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'

@@ -6,6 +6,7 @@
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {UsersStore} from "../../users-store.js";
+    import {getCookie} from "../../utils/csrf.js";
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -25,11 +26,13 @@
         console.log(JSON.stringify(data))
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const response = await fetch('http://127.0.0.1:8000/notes/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'
@@ -49,10 +52,14 @@
 
     async function getNotebooks() {
         try {
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/notebooks/`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials : 'include'
             });
@@ -82,21 +89,6 @@
     let name = 'filepond';
 
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const process = (fieldName, file, metadata, load, error, progress, abort) => {
 

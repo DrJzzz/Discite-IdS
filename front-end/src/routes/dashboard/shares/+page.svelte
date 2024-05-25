@@ -7,6 +7,7 @@
     import SvelteMarkdown from "svelte-markdown";
     import NewNote from "../../../components/Forms/NewNote.svelte";
     import NewCard from "../../../components/Forms/NewCard.svelte";
+    import {getCookie} from "../../../utils/csrf.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -46,10 +47,14 @@
         const data = { title, content, notebook_ref };
         console.log(JSON.stringify(data))
         try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch('http://127.0.0.1:8000/notes/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'
@@ -70,10 +75,14 @@
         const data = { front, back, deck };
         console.log(JSON.stringify(data))
         try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch('http://127.0.0.1:8000/fcards/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'

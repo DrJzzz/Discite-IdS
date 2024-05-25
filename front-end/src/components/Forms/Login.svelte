@@ -1,7 +1,6 @@
 <script>
     import { goto } from '$app/navigation';
-	import InputPassword from '../Inputs/InputPassword.svelte';
-	import InputText from '../Inputs/InputText.svelte';
+    import {getCookie} from "../../utils/csrf.js";
 
     let email = '';
     let password = '';
@@ -14,11 +13,12 @@
         };
 
         try {
-            const csrfToken = getCookie('csrftoken');
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'
@@ -38,10 +38,6 @@
         }
     }
 
-    function getCookie(name) {
-        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-        return cookieValue ? cookieValue.pop() : '';
-    }
 </script>
 
 <main>

@@ -4,7 +4,7 @@
 
     /** @type {import('./$types').PageData} */
     export let data;
-
+    import { getCookie } from '../../utils/csrf';
     import {DeckStore} from "../../deck-store.js";
     import {UsersStore} from "../../users-store.js";
     import {onMount} from "svelte";
@@ -25,20 +25,6 @@
         console.log($UsersStore)
     });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     export function createArrayWithSize(size, defaultValue) {
         return Array.from({ length: size }, () => defaultValue);
@@ -65,12 +51,14 @@
         const max_reviews = max_cards[index];
         const info = {max_reviews}
         const csrftoken = getCookie('csrftoken');
+        const token = localStorage.getItem('key');
         try {
             const response = await fetch(url, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
                 body: JSON.stringify(info),
@@ -123,7 +111,7 @@
                                         Decks
                                     </button>
                                 </h2>
-                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse show" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
+                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
                                     <div class="accordion-body">
                                         <table class="table">
                                             <thead>

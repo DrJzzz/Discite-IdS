@@ -3,6 +3,7 @@
     import {Eye} from "phosphor-svelte";
     import {goto} from "$app/navigation";
     import {CardStore} from "../../../card-store.js";
+    import {getCookie} from "../../../utils/csrf.js";
 
     export let data;
 
@@ -25,14 +26,17 @@
     async function handleSubmit(id, rating) {
 
         try {
-
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const info ={rating} ;
             console.log(JSON.stringify(info))
             const response = await fetch(`http://127.0.0.1:8000/cards/${$CardStore[i].id}/set_new_rating/`, {
                 method: 'POST',
                 credentials : 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info)
             });
