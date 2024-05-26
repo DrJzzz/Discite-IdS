@@ -228,6 +228,7 @@
     }
 
     .markdown-content {
+        margin: 8px 16px; /* Margen interno para el contenido */
         flex: 1; /* Ocupa el espacio disponible en proporción */
         max-width: 50%; /* Máximo de ancho para el contenido del texto */
     }
