@@ -8,6 +8,8 @@
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {HistoryStore} from "../../../../history-store.js";
+    import {getCookie} from "../../../../utils/csrf.js";
+
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
     /** @type {import('./$types').PageData} */
@@ -16,7 +18,7 @@
 
     let id_history = 0;
 
-    let history = {id : 0 , title : '' , content : '', history_date : ""} ;
+    let history = {id : 0 , title : '' , content : '', history_date : "", history_id : 0} ;
 
 
     const note = data.note;
@@ -39,7 +41,7 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,
+                    'X-CSRFToken': `${csrftoken}`,
                     'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
@@ -56,8 +58,13 @@
         }
     }
     function changeIdHistory(id){
+        console.log(id)
         id_history = id;
-        history = $HistoryStore[id_history-1];
+        HistoryStore.subscribe(notes =>{
+            // Encontrar el objeto con el mismo history_id
+            history = notes.find(note => note.history_id === id);
+
+        });
     }
 
     const title = `# Title:`
@@ -65,21 +72,6 @@
     // the name to use for the internal file input
     let name = 'filepond';
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const process = (fieldName, file, metadata, load, error, progress, abort) => {
 
@@ -141,6 +133,35 @@
         });
 
     };
+
+    async function handleChangeHistory(){
+        try {
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            const id = history.id;
+            const history_id = history.history_id;
+            const info = {id, history_id};
+            console.log(JSON.stringify(info))
+            const response = await fetch(`http://127.0.0.1:8000/notes/${note.id}/revert_to/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
+                },
+                credentials : 'include',
+                body: JSON.stringify(info)
+            });
+
+            if (response.ok) {
+                console.log('Form submitted successfully!');
+            } else {
+                console.error('Failed to submit form');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+        }
+    }
 
     
 </script>
@@ -283,7 +304,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Change</button>
+                        <button type="button" class="btn btn-primary" on:click={() => handleChangeHistory()}>Change</button>
                     </div>
                 </div>
             </div>
