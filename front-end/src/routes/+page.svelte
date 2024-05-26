@@ -70,58 +70,45 @@
 
 
 
-
 <style>
     .container {
-        display: flex; /* Flexbox para el contenedor */
-        justify-content: space-between; /* Espacio entre los elementos */
-        align-items: center; /* Alinear los ítems verticalmente */
-        padding: 100px; /* Espaciado alrededor del contenido */
-        background-color: #1c1c1c; /* Fondo oscuro */
-        color: white; /* Texto claro */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 100px;
+        background-color: #1c1c1c;
+        color: white;
         margin-bottom: 32px;
     }
-
     .header {
-        max-width: 50%; /* Máximo ancho para el contenido de texto */
+        max-width: 50%;
     }
-
     .title {
-        font-size: 48px; /* Tamaño de fuente grande para el título */
-        margin: 0; /* Remover el margen por defecto */
-        line-height: 1.2; /* Espaciado de línea para el título */
+        font-size: 48px;
+        margin: 0;
+        line-height: 1.2;
     }
-
     .subtitle {
-        font-size: 20px; /* Tamaño de fuente para el subtítulo */
-        margin: 20px 0; /* Espacio entre el título y los botones */
+        font-size: 20px;
+        margin: 20px 0;
     }
-
     .actions {
-        display: flex; /* Flexbox para los botones de acción */
-        align-items: center; /* Alinear los ítems verticalmente */
+        display: flex;
+        align-items: center;
     }
-
     .button {
-        padding: 10px 20px; /* Espaciado interno del botón */
-        margin-right: 10px; /* Espacio entre los botones */
-        background-color: #333; /* Fondo de los botones */
-        color: white; /* Color del texto del botón */
-        border: none; /* Sin bordes */
-        border-radius: 5px; /* Bordes redondeados */
-        cursor: pointer; /* Cursor tipo puntero */
-        text-transform: uppercase; /* Texto en mayúsculas */
-        font-weight: bold; /* Texto en negrita */
-    }
-
-    .button:hover {
-        background-color: #555; /* Cambio de color al pasar el ratón */
-    }
-
-    .link {
-        color: #4b8bec; /* Color para el enlace 'Try it online' */
-        text-decoration: none; /* Sin subrayado en el enlace */
+        padding: 10px 20px;
+        margin-right: 10px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    .button:hover {
+        background-color: #555;
     }
 
     .image-placeholder {
@@ -134,199 +121,80 @@
         width: 100%;
         height: auto;
     }
-
-    /* Agrega estilos responsivos si es necesario */
     @media (max-width: 768px) {
         .container {
-            flex-direction: column; /* Cambia a una columna para móviles */
+            flex-direction: column;
         }
-
         .header, .image-placeholder {
-            max-width: 100%; /* Ancho completo en móviles */
+            max-width: 100%;
         }
-
         .actions {
-            flex-direction: column; /* Botones en columna en móviles */
+            flex-direction: column;
         }
-
         .button {
-            margin-bottom: 10px; /* Espacio entre botones en móviles */
+            margin-bottom: 10px;
         }
     }
 
-    /* Asegúrate de que el contenedor de tu sección ocupa toda la altura de la ventana gráfica para que todo esté centrado verticalmente también */
-    .feature-section {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 70vh;
-        background-color: #1c1c1c; /* O el color exacto de tu diseño */
-        color: white;
-        font-family: 'Arial', sans-serif; /* Cambia esto por la fuente que estás utilizando */
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    /* Aplica un tamaño de fuente más grande y otros estilos para el título para destacarlo */
     .feature-title {
-        font-size: 4rem; /* Ajusta este tamaño según tus necesidades */
-        font-weight: 700; /* Fuente en negrita */
-        margin: 0 0 20px; /* Asegúrate de que no hay margen arriba del título y hay algo de espacio debajo */
+        font-size: 4rem;
+        font-weight: 700;
+        margin: 0 0 20px;
     }
-
-    /* Asegúrate de que la descripción también esté centrada y con un tamaño adecuado */
     .feature-description {
-        font-size: 1.25rem; /* Ajusta este tamaño según tus necesidades */
-        max-width: 800px; /* O el ancho máximo que prefieras */
-        text-align: justify; /* Esto centrará el texto */
+        font-size: 1.25rem;
+        max-width: 800px;
+        text-align: justify;
         margin: 0;
-        padding: 0 20px; /* Para evitar que el texto toque los bordes de la pantalla */
+        padding: 0 20px;
         text-justify: inter-word;
     }
-
     .dual-features {
-        display: flex; /* Usar flexbox para estructurar las dos columnas */
-        justify-content: space-between; /* Espacio igual entre las columnas */
-        background-color: #1c1c1c; /* El mismo fondo que la sección anterior */
-        padding: 40px; /* Espaciado similar al de la sección anterior */
+        display: flex;
+        justify-content: space-between;
+        background-color: #1c1c1c;
+        padding: 40px;
         color: white;
     }
-
     .feature {
-        width: 48%; /* Dar a cada característica el 48% del ancho para dejar espacio entre */
-    }
-
-    .feature-icon {
-        /* Estilos para los íconos, reemplazar con íconos reales */
-        margin-right: 10px; /* Margen a la derecha del ícono */
-        display: inline-block; /* Íconos en línea con el texto */
-        vertical-align: middle; /* Alinear verticalmente con el texto */
+        width: 48%;
     }
 
     .feature-title {
-        font-size: 24px; /* Tamaño del título */
-        margin: 0 0 10px 0; /* Margen debajo del título */
-        display: flex; /* Flexbox para título e ícono */
-        align-items: center; /* Alineación vertical del título e ícono */
+        font-size: 24px;
+        margin: 0 0 10px 0;
+        display: flex;
+        align-items: center;
     }
-
     .feature-description {
-        font-size: 16px; /* Tamaño para la descripción */
+        font-size: 16px;
     }
-
-
-
-    /* Estilos para la nueva sección */
     .markdown-enabled-section {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 40px;
-        background-color: #1a1a1a; /* O el color de fondo de tu elección */
+        background-color: #1a1a1a;
         color: white;
     }
-
     .markdown-content {
-        margin: 8px 16px; /* Margen interno para el contenido */
-        flex: 1; /* Ocupa el espacio disponible en proporción */
-        max-width: 50%; /* Máximo de ancho para el contenido del texto */
+        margin: 8px 16px;
+        flex: 1;
+        max-width: 50%;
     }
-
     .markdown-title {
-        font-size: 2rem; /* Tamaño de la fuente del título */
+        font-size: 2rem;
         margin-bottom: 0.5em;
     }
-
     .markdown-description {
         font-size: 1rem;
     }
-
-    .markdown-image {
-        flex: 1; /* Ocupa el espacio disponible en proporción */
-        max-width: 50%; /* Máximo de ancho para la imagen */
-        text-align: right; /* Alinea la imagen a la derecha */
-    }
-
-    .markdown-image img {
-        max-width: 100%; /* Hace que la imagen sea responsive */
-        height: auto; /* Mantiene la proporción de la imagen */
-    }
-
-
-
-    .attachment-section {
-        display: flex;
-        align-items: center; /* Alinea verticalmente el contenido */
-        justify-content: space-between; /* Espacia los elementos hijos */
-        padding: 40px;
-        background-color: #1c1c1c; /* Ajusta el color de fondo según tu diseño */
-        color: white; /* Ajusta el color del texto según tu diseño */
-    }
-
-    .attachment-content, .attachment-image {
-        flex: 1; /* Esto dividirá el espacio disponible por igual entre el contenido y la imagen */
-    }
-
-    .attachment-title {
-        font-size: 2rem; /* Ajusta el tamaño según necesites */
-        margin-bottom: 0.5rem;
-    }
-
-    .attachment-description {
-        font-size: 1rem; /* Ajusta el tamaño según necesites */
-    }
-
-    .attachment-image img {
-        max-width: 100%; /* Asegúrate de que la imagen no se desborde de su contenedor */
-        height: auto; /* Mantiene la proporción de la imagen */
-    }
-
-
-
-
-    .features-section {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); /* Cuatro columnas de igual ancho */
-        gap: 20px; /* Espacio entre los elementos del grid */
-        justify-content: center; /* Centra el grid en el contenedor */
-        align-items: start; /* Alinea los elementos al inicio de sus respectivas celdas */
-        padding: 40px 0;
-        background-color: #1c1c1c; /* El color de fondo de tu sección */
-        color: white;
-    }
-
-    .feature-item {
-        text-align: center; /* Centra el texto dentro de cada bloque */
-    }
-
-    .icon {
-        /* Añade estilos a tus íconos aquí. Asumiendo que usas emojis o texto como íconos */
-        display: block;
-        font-size: 2rem;
-        margin-bottom: 10px;
-    }
-
+  
     .feature-title {
-        font-size: 1.2rem;
         margin-bottom: 5px;
     }
-
     .feature-description {
         font-size: 0.9rem;
-    }
-
-    /* Asegúrate de que el contenido no es demasiado ancho en pantallas grandes */
-    @media (max-width: 1200px) {
-        .features-section {
-            grid-template-columns: repeat(2, 1fr); /* Dos columnas en pantallas medianas */
-        }
-    }
-
-    @media (max-width: 768px) {
-        .features-section {
-            grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
-        }
     }
 
 </style>
