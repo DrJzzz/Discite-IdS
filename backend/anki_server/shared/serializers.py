@@ -30,8 +30,7 @@ class SharedSerializer(serializers.HyperlinkedModelSerializer):
         
         if  deck_shared and notebook_shared :
             raise ValidationError(_("Cannot shared both deck and notebook")).as_json()
-            # return JsonResponse({'error': 'Cannot shared both deck and notebook'})
-            #list = Shared.objects.filter(sharer=sharer, recipient=recipient, deck=deck, notebook=notebook)
+            
         
         elif deck_shared:
             list = Shared.objects.filter(sharer=sharer, recipient=recipient, deck=deck)
@@ -53,7 +52,7 @@ class SharedSerializer(serializers.HyperlinkedModelSerializer):
                 values.append(json)
                 
             data = {'message': 'already shared',
-                    'data' : values #list.values_list('sharer', 'recipient', obj)
+                    'data' : values 
                     }
             raise  ValidationError(_("Invalid value: %(message)s, \n %(data)s"),
                                     code="invalid",
