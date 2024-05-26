@@ -6,8 +6,67 @@
 </script>
 
 <NavBar />
-
 <slot />
+
+<div class="container">
+    <div class="header">
+        <h1 class="title">Learning Made Simple</h1>
+        <p class="subtitle">
+            Take notes and create flashcards using Markdown,
+            then study them using spaced repetition.
+        </p>
+        <div class="actions">
+            <a href="/signIn">
+                <button class="button">Sign in</button>
+            </a>
+        </div>
+    </div>
+    <div class="image-placeholder">
+
+        <img src="./images/anki.png" alt="Anki Card">
+    </div>
+</div>
+
+<div class="dual-features">
+    <div class="feature">
+        <div class="feature-title">
+            Your Learning Companion, Anywhere all the time
+        </div>
+        <p class="feature-description">
+            Access your notes and flashcards from anywhere, all the time!
+            Accses from your phone, tablet or computer.
+        </p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-title">
+            Focus on what matters
+        </div>
+        <p class="feature-description">
+            Leave to us to remind you what to study and when, you just focus on learning.
+            Thanks to our spaced repetition algorithm, you'll maximize your learning.
+        </p>
+    </div>
+</div>
+
+<div class="markdown-enabled-section">
+    <div class="markdown-content">
+        <h2 class="markdown-title">Easy export and import</h2>
+        <p class="markdown-description">
+            Evrything will be written and stored as markdown, 
+            so you can easly export and import your notes and flashcards.
+        </p>
+    </div>
+
+    <div class="markdown-content">
+        <h2 class="markdown-title">Support for many formats</h2>
+        <p class="markdown-description">
+           Add images, videos and more easly to your notes and flashcards.
+        </p>
+    </div>
+</div>
+
+
 
 
 
@@ -20,6 +79,7 @@
         padding: 100px; /* Espaciado alrededor del contenido */
         background-color: #1c1c1c; /* Fondo oscuro */
         color: white; /* Texto claro */
+        margin-bottom: 32px;
     }
 
     .header {
@@ -65,10 +125,14 @@
     }
 
     .image-placeholder {
-        /* Reemplaza esto con tu imagen real */
-        width: 50%; /* Ancho para la imagen */
-        height: 300px; /* Altura para la imagen */
-        background-color: #333; /* Fondo de ejemplo para la imagen */
+        display: flex;
+        max-width: 600px;
+        width: 50%;
+        margin-left: 20px;
+    }
+    .image-placeholder img {
+        width: 100%;
+        height: auto;
     }
 
     /* Agrega estilos responsivos si es necesario */
@@ -265,115 +329,3 @@
     }
 
 </style>
-
-<div class="container">
-    <div class="header">
-        <h1 class="title">Un espacio comodo para Aprender </h1>
-        <p class="subtitle">
-            Toma notas y crea tarjetas didácticas usando Markdown,
-            luego estúdialos usando repeticiones espaciadas.
-
-        </p>
-        <div class="actions">
-            <button class="button">Registrarse</button>
-            <a> </a>
-            <a class="link">Saber mas</a>
-        </div>
-    </div>
-    <div>
-
-        <img src="images/anki.png" alt="Descripción de la imagen">
-    </div>
-</div>
-
-<div class="feature-section">
-    <h2 class="feature-title">Poder en la sencillez </h2>
-    <p class="feature-description">
-        Simple pero poderoso, como un lienzo en blanco listo para capturar
-        la complejidad de tus pensamientos e ideas.
-    </p>
-</div>
-
-<div class="dual-features">
-    <div class="feature">
-        <div class="feature-title">
-            <span class="feature-icon"> En linea</span>
-            --- Siempre disponible
-        </div>
-        <p class="feature-description">
-            Accede al conocimiento sin límites de tiempo o lugar, diseñado para acompañarte en cada paso
-            de tu aprendizaje continuo, estés donde estés.
-        </p>
-    </div>
-
-    <div class="feature">
-        <div class="feature-title">
-            <span class="feature-icon">Un Espacio Libre</span>
-            -- Diseña tu propio espacio
-        </div>
-        <p class="feature-description">
-            Disfruta creando tu espacio de estudio, segun tus necesidades, con ideas
-            y conceptos que te ayuden a aprender y recordar.
-        </p>
-    </div>
-</div>
-
-<div class="markdown-enabled-section">
-    <div class="markdown-content">
-        <h2 class="markdown-title">Habilitado para Markdown</h2>
-        <p class="markdown-description">
-            Anota rápidamente notas y tarjetas al ritmo de markdown. Controles de formato y atajos también están disponibles si los necesitas. Aprende más sobre markdown.
-        </p>
-    </div>
-    <div class="markdown-image">
-
-        <img src="images/md.png" alt="Interfaz de usuario de markdown" />
-    </div>
-</div>
-
-<div class="attachment-section">
-    <div class="attachment-content">
-        <h2 class="attachment-title">Archivos adjuntos</h2>
-        <p class="attachment-description">
-            Puedes insertar medios en sus notas o tarjetas, como imágenes, audio y video, arrastrándolos al editor.
-        </p>
-    </div>
-    <div class="attachment-image">
-        <!-- Coloca aquí tu imagen, esta es solo una referencia de ejemplo -->
-        <img src="images/att.png" alt="Editor Image">
-    </div>
-</div>
-
-
-
-
-<div class="features-section">
-    <div class="feature-item">
-        <span class="icon">🔠</span> <!-- Reemplaza con el ícono que prefieras -->
-        <h3 class="feature-title">Auto-translate</h3>
-        <p class="feature-description">
-            Mochi uses state-of-the-art machine translation to automatically provide translations for words and phrases.
-        </p>
-    </div>
-    <div class="feature-item">
-        <span class="icon">🖼️</span> <!-- Reemplaza con el ícono que prefieras -->
-        <h3 class="feature-title">Image search</h3>
-        <p class="feature-description">
-            Use the built-in image search to embed an image into your card based on some word or phrase.
-        </p>
-    </div>
-    <div class="feature-item">
-        <span class="icon">☁️</span> <!-- Reemplaza con el ícono que prefieras -->
-        <h3 class="feature-title">Cloud syncing</h3>
-        <p class="feature-description">
-            With a Pro account you can sync your content and use Mochi across all of your devices, including mobile.
-        </p>
-    </div>
-    <div class="feature-item">
-        <span class="icon">🔌</span> <!-- Reemplaza con el ícono que prefieras -->
-        <h3 class="feature-title">Full REST API</h3>
-        <p class="feature-description">
-            Mochi provides a robust REST API for interacting with your cards and decks. This allows for powerful integrations and custom workflows. Check out the API docs to get started.
-        </p>
-    </div>
-</div>
