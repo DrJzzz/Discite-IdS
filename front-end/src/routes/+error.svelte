@@ -18,8 +18,8 @@
     
 <style>
     h1 {
-        margin-top: 16px;
+        margin-top: 128px;
         text-align: center;
-        margin-bottom: auto;
+        margin-bottom: 128px;
     }
 </style>
