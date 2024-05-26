@@ -28,7 +28,7 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = ['url', 'id', 'name']
         
 class NotebookSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
