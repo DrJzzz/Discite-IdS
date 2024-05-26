@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework import serializers, status
 
 
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from django.utils.timezone import make_aware 
 
 class DeckList(generics.ListCreateAPIView):
@@ -57,14 +57,16 @@ class DeckViewSet(viewsets.ModelViewSet):
         return JsonResponse(data)
 
     
-    @action(detail=True, methods=['GET'])
+    @action(detail=False, methods=['GET'])
     def to_review(self, request, *args, **kwargs):
         user = request.user
         decks = Deck.objects.filter(owner=user.id)
         
+        tzinfo = timezone(timedelta(hours=6))
+        
         values = []
         for deck in decks:
-            cards = deck.card_deck.filter(due__lte=make_aware(datetime.today()))
+            cards = deck.card_deck.filter(due__lte=datetime.now(tzinfo))
             value = {
                 'count' : len(cards),
                 'deck' : deck.id,
