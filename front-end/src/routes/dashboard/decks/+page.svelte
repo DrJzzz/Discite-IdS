@@ -153,15 +153,13 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Form submitted successfully!');
                 alertSuccess(`Invitation send to ${user.name}`);
             } else {
-                console.error('Failed to submit form');
-                alertError(`Failed sending invitation to ${user.name}`)
+                alertError(`Failed sending invitation to ${user.name}`);
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
-            alertError('An error occurred while sending invitation')
+            alertError('An error occurred while sending invitation');
         }
     }
     async function deleteDeck() {

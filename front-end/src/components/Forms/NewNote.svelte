@@ -7,6 +7,9 @@
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {UsersStore} from "../../users-store.js";
     import {getCookie} from "../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
+    import {NotebookStore} from "../../notebook-store.js";
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -39,45 +42,20 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new note successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new note.');
         }
     }
 
     let notebooks = [];
 
-    async function getNotebooks() {
-        try {
-            const csrftoken = getCookie('csrftoken');
-            const token = localStorage.getItem('key');
-            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/notebooks/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`,
-                    'X-CSRFToken': `${csrftoken}`
-                },
-                credentials : 'include'
-            });
-
-            if (response.ok) {
-
-                const data =await  response.json()
-                notebooks = data.notebooks
-
-            } else {
-                console.error('Failed decks');
-            }
-        } catch (error) {
-            console.error('An error occurred while getting decks: ', error);
-        }
-    }
     onMount(() => {
-        getNotebooks();
         ImagesStore.set([]);
     });
     // a reference to the component, used to call FilePond methods
@@ -171,7 +149,7 @@
                 <label for="front-area" class="form-label">Notebooks</label>
                 <select bind:value={id_notebook}  class="form-select" style="color:black" aria-label="Select template">
                     <option value="" disabled selected>Open to select a notebook</option>
-                    {#each notebooks as notebook}
+                    {#each $NotebookStore as notebook}
                         <option value="{notebook.id}">{notebook.name}</option>
                     {/each}
                 </select>

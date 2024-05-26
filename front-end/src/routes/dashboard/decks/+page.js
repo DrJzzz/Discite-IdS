@@ -1,6 +1,7 @@
 import {getCookie} from "../../../utils/csrf.js";
 import {CardStore} from "../../../card-store.js";
 import {UsersStore} from "../../../users-store.js";
+import {DeckStore} from "../../../deck-store.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
@@ -60,6 +61,7 @@ export async function load({ parent, fetch, params }) {
         const users = usersJSON.users;
         CardStore.set(cards);
         UsersStore.set(users);
+        DeckStore.set(decks);
         return { cards, users };
     } catch (error) {
         console.error("Error fetching data:", error);

@@ -10,6 +10,8 @@
     import {UsersStore} from "../../../users-store.js";
     import {UserStore} from "../../../user-store.js";
     import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -67,6 +69,7 @@
             await invite(user);
         }
         UsersStore.set([]); // Reset after submission
+        await invalidateAll();
     }
 
     async function handleSubmitRename(){
@@ -87,12 +90,14 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Rename notebook successfully!');
+                alertSuccess('Rename notebook successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to delete deck');
+                alertError('Failed to rename notebook')
             }
         } catch (error) {
-            console.error('An error occurred while deleting the deck:', error);
+            console.error('An error occurred while renaming the notebook:', error);
+            alertError('An error occurred while renaming the notebook.')
         }
     }
 
@@ -136,12 +141,13 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess(`Invitation send to ${user.name}`);
             } else {
-                console.error('Failed to submit form');
+                alertError(`Failed sending invitation to ${user.name}`);
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while sending invitation');
         }
     }
 
@@ -161,12 +167,14 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete notebook successfully!');
+                alertSuccess('Delete notebook successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to delete notebook');
+                alertError('Failed to delete notebook');
             }
         } catch (error) {
             console.error('An error occurred while deleting the notebook:', error);
+            alertError('An error occurred while deleting the notebook.');
         }
     }
 
@@ -185,12 +193,14 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete note successfully!');
+                alertSuccess('Delete note successfully.');
+                await invalidateAll()
             } else {
-                console.error('Failed to delete note');
+                alertError('Failed to delete note');
             }
         } catch (error) {
             console.error('An error occurred while deleting the note:', error);
+            alertError('An error occurred while deleting the note.')
         }
     }
 
@@ -215,12 +225,14 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Change state deck successfully!');
+                alertSuccess('Change state deck successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to change state deck');
+                alertError('Failed to change state deck');
             }
         } catch (error) {
             console.error('An error occurred while change state of the deck:', error);
+            alertError('An error occurred while change state of the deck.');
         }
     }
 </script>
@@ -334,10 +346,10 @@
                     <div class="modal-footer" style="margin-right: 25%">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         {#if is_notebook}
-                            <button type="button" class="btn btn-primary"  on:click={() => deleteNotebook()}>Confirm</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => deleteNotebook()}>Confirm</button>
                         {:else }
-                            <button type="button" class="btn btn-primary"  on:click={() => deleteNote()}>Confirm</button>
-                            {/if}
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => deleteNote()}>Confirm</button>
+                        {/if}
                     </div>
                 {/if}
             </div>
