@@ -3,12 +3,13 @@
     import {UserStore} from "../../../user-store.js";
     import {getCookie} from "../../../utils/csrf.js";
     import {CameraPlus} from "phosphor-svelte";
+    import {invalidate, invalidateAll} from '$app/navigation';
 
     export let data;
     let img = 'http://localhost:8000/media/blank-user-picture.jpg';
     onMount(() => {
         UserStore.set(data.user)
-        img ='http://localhost:8000'+ data.img;
+        img = data.img;
         console.log(img)
     })
 
@@ -33,7 +34,7 @@
                 const token = localStorage.getItem('key');
                 const csrftoken = getCookie('csrftoken');
                 const response = await fetch('http://localhost:8000/users/4/set_user_picture/', {
-                    method: 'POST',
+                    method: 'PATCH',
                     headers: {
                         'Authorization': `Token ${token}`,
                         'X-CSRFToken': `${csrftoken}`
@@ -43,6 +44,7 @@
 
                 if (response.ok) {
                     console.log('Archivo subido exitosamente');
+                    await invalidateAll();
                 } else {
                     console.error('Error al subir el archivo');
                 }
@@ -57,6 +59,11 @@
         try {
             const token = localStorage.getItem('key');
             const csrftoken = getCookie('csrftoken');
+            const name = $UserStore.name;
+            const birthdate = $UserStore.birthdate;
+            const phone_number = $UserStore.phone_number;
+            const email = $UserStore.email;
+            const info = {name, birthdate, phone_number, email};
             const response = await fetch(`http://127.0.0.1:8000/rest-auth/user/`, {
                 method: 'PUT',
                 credentials: 'include',
@@ -65,12 +72,13 @@
                     'Authorization': `Token ${token}`,
                     'X-CSRFToken': `${csrftoken}`
                 },
-                body: JSON.stringify($UserStore)
+                body: JSON.stringify(info)
             });
 
 
             if (response.ok) {
                 console.log('Form submitted successfully!');
+                await invalidateAll();
 
             } else {
                 console.error('Failed to submit form');
@@ -131,7 +139,7 @@
                     <div class="card-body text-center">
                         <div class="profile-img-container">
                             <label for="uploadImage" >
-                                <img src="{img}"  alt="avatar"
+                                <img src="{$UserStore.picture}"  alt="avatar"
                                      class="rounded-circle img-fluid image" style="width: 200px;">
                                 <div class="midlle ">
                                     <div class="icon-img">

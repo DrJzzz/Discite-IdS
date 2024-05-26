@@ -75,9 +75,9 @@
         try {
             const csrftoken = getCookie('csrftoken');
             const token = localStorage.getItem('key');
-            const id = history.id;
-            const history_id = history.history_id;
-            const info = {id, history_id};
+
+            const id = history.history_id;
+            const info = {id};
             console.log(JSON.stringify(info))
             const response = await fetch(`http://127.0.0.1:8000/cards/${data.id}/revert_to/`, {
                 method: 'PUT',

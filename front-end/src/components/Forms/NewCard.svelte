@@ -56,7 +56,7 @@
         try {
             const token = localStorage.getItem('key');
             const csrftoken = getCookie('csrftoken');
-            const response = await fetch('http://127.0.0.1:8000/fcards/', {
+            const response = await fetch('http://127.0.0.1:8000/cards/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
