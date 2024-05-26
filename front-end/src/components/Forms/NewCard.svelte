@@ -1,7 +1,11 @@
 <script>
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
     import {UserStore} from "../../user-store.js";
+    import {CardStore} from "../../card-store.js";
     import {getCookie} from "../../utils/csrf.js";
+    import {alertError, alertSuccess} from "../../utils/alerts.js";
+    import {invalidate, invalidateAll} from "$app/navigation";
+    import {DeckStore} from "../../deck-store.js";
 
     let front = '';
     let back = '';
@@ -25,30 +29,6 @@
         user = $UserStore;
     }
 
-    async function getDecks() {
-        try {
-            const token = localStorage.getItem('key');
-            const csrftoken = getCookie('csrftoken');
-            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/decks/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`,
-                    'X-CSRFToken': `${csrftoken}`
-                },
-            });
-
-            if (response.ok) {
-
-                decks =await  response.json()
-            } else {
-                console.error('Failed decks');
-            }
-        } catch (error) {
-            console.error('An error occurred while getting decks: ', error);
-        }
-    }
-
      async function handleSubmit() {
         const deck = '/decks/'+id_deck+'/'
         const data = { front, back, deck };
@@ -56,7 +36,7 @@
         try {
             const token = localStorage.getItem('key');
             const csrftoken = getCookie('csrftoken');
-            const response = await fetch('http://127.0.0.1:8000/fcards/', {
+            const response = await fetch('http://127.0.0.1:8000/cards/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,16 +48,19 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new card successfully.');
+                await invalidateAll().then(() => {
+
+                });
+                await invalidate('/dashboard/decks');
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new card.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding a card.')
         }
     }
-
-    getDecks()
 </script>
 
 <div>
@@ -98,7 +81,7 @@
                     <label for="front-area" class="form-label">Deck</label>
                     <select bind:value={id_deck}  class="form-select" style="color:black" aria-label="Select template">
                         <option value="" disabled selected>Open to select a deck</option>
-                        {#each decks.decks as deck}
+                        {#each $DeckStore as deck}
                         <option value="{deck.id}">{deck.name}</option>
                             {/each}
                     </select>

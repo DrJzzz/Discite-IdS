@@ -1,6 +1,8 @@
 <script>
     import {UserStore} from "../../user-store.js";
     import {getCookie} from "../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
 
     let name = '';
 
@@ -30,12 +32,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new notebook successfully.');
+                invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new notebook.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new notebook.')
         }
     }
 

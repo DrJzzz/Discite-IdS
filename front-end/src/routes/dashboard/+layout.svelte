@@ -20,7 +20,7 @@
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': csrftoken // Incluir el token CSRF en los encabezados
+                    'X-CSRFToken': `${csrftoken}` // Incluir el token CSRF en los encabezados
                 },
                 credentials: 'include'
             });
@@ -80,14 +80,15 @@
             </ul>
             <hr>
             <div class="dropdown">
+                {#if UserStore}
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                    {#if UserStore}
-                        <strong>{$UserStore.name}</strong>
-                    {:else }
-                        <strong>Cargando..</strong>
-                    {/if}
-                </a>
+                    <img src="{$UserStore.picture}" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong>{$UserStore.name}</strong>
+                    </a>
+                {:else }
+                    <strong>Cargando..</strong>
+
+                {/if}
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
                     <li><a class="dropdown-item" href="/dashboard/user">Profile</a></li>
                     <li><hr class="dropdown-divider"></li>

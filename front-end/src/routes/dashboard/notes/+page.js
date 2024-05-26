@@ -1,4 +1,8 @@
 import { getCookie } from '../../../utils/csrf';
+import {NoteStore} from "../../../note-store.js";
+import {UsersStore} from "../../../users-store.js";
+import {NotebookStore} from "../../../notebook-store.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
     try {
@@ -56,7 +60,9 @@ export async function load({ parent, fetch, params }) {
 
         const usersJSON = await usersRes.json();
         const users = usersJSON.users;
-
+        NoteStore.set(notes);
+        UsersStore.set(users);
+        NotebookStore.set(notebooks);
         return { notes, users };
     } catch (error) {
         console.error("Error fetching data:", error);
