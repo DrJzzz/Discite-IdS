@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from shared.models import *
 from shared.serializers import *
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, serializers, viewsets, response, status
 from django.http import JsonResponse
 from rest_framework.decorators import action
 
@@ -42,6 +42,12 @@ class SharedViewSet(viewsets.ModelViewSet):
         
         return JsonResponse(data, safe=False)
         
+    @action(detail=False, methods=['GET'])
+    def shared_with(self, request, *args, **kwargs):
+        return response.Response()
+    
+    
+    
         
         
     
