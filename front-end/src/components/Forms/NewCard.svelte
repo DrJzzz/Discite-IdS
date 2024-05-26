@@ -1,7 +1,10 @@
 <script>
 	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
     import {UserStore} from "../../user-store.js";
+    import {CardStore} from "../../card-store.js";
     import {getCookie} from "../../utils/csrf.js";
+    import {alertError, alertSuccess} from "../../utils/alerts.js";
+    import {invalidate, invalidateAll} from "$app/navigation";
 
     let front = '';
     let back = '';
@@ -39,13 +42,14 @@
             });
 
             if (response.ok) {
-
                 decks =await  response.json()
+                alertSuccess('Decks updated.')
             } else {
-                console.error('Failed decks');
+                alertError('Failed to get decks.')
             }
         } catch (error) {
             console.error('An error occurred while getting decks: ', error);
+            alertError('An error occurred while getting decks.')
         }
     }
 
@@ -68,12 +72,17 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new card successfully.');
+                await invalidateAll().then(() => {
+
+                });
+                await invalidate('/dashboard/decks');
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new card.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding a card.')
         }
     }
 

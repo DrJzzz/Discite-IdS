@@ -10,6 +10,8 @@
     import {writable} from "svelte/store";
     import {onMount} from "svelte";
     import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -18,6 +20,7 @@
     let is_deck = false;
     let is_rename = false;
     let name = "";
+    let unsubscribe;
 
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
@@ -26,6 +29,15 @@
         CardStore.set(data.cards);
         console.log($CardStore)
         UsersStore.set([]);
+    });
+
+
+    unsubscribe = CardStore.subscribe(value => {
+        if (value) {
+            console.log('Received event:', value);
+            // Maneja el evento aquí
+        }
+        console.log("change")
     });
 
     const addUsers = (id) => {
@@ -69,7 +81,7 @@
             invite(user);
 
         });
-
+        await invalidateAll();
     }
 
     async function handleSubmitRename(){
@@ -90,12 +102,19 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Rename deck successfully!');
+                alertSuccess('Rename deck successfully.');
+                await invalidateAll().then(() => {
+                        CardStore.set(data.cards);
+                        console.log($CardStore)
+                        UsersStore.set([]);
+                });
             } else {
-                console.error('Failed to delete deck');
+                console.error('');
+                alertError('Something failed to rename deck');
             }
         } catch (error) {
             console.error('An error occurred while deleting the deck:', error);
+            alertError('An error occurred while renaming the deck');
         }
     }
 
@@ -135,11 +154,14 @@
             });
             if (response.ok) {
                 console.log('Form submitted successfully!');
+                alertSuccess(`Invitation send to ${user.name}`);
             } else {
                 console.error('Failed to submit form');
+                alertError(`Failed sending invitation to ${user.name}`)
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while sending invitation')
         }
     }
     async function deleteDeck() {
@@ -157,12 +179,18 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete deck successfully!');
+                alertSuccess('Delete deck successfully.');
+                await invalidateAll().then(() => {
+                    CardStore.set(data.cards);
+                    console.log($CardStore)
+                    UsersStore.set([]);
+                });
             } else {
-                console.error('Failed to delete deck');
+                alertError('Failed to delete deck');
             }
         } catch (error) {
             console.error('An error occurred while deleting the deck:', error);
+            alertError('An error occurred while deleting the deck');
         }
     }
     async function deleteCard() {
@@ -180,12 +208,18 @@
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete card successfully!');
+                alertSuccess('Delete card successfully.');
+                await invalidateAll().then(() => {
+                    CardStore.set(data.cards);
+                    console.log($CardStore)
+                    UsersStore.set([]);
+                });
             } else {
-                console.error('Failed to delete deck');
+                alertError('Failed to delete card.');
             }
         } catch (error) {
             console.error('An error occurred while deleting the deck:', error);
+            alertError('An error occurred while deleting the deck.')
         }
     }
 
@@ -210,12 +244,18 @@
                     credentials: 'include'
                 });
                 if (response.ok) {
-                    console.log('Change state deck successfully!');
+                    alertSuccess('Change state deck successfully.');
+                    await invalidateAll().then(() => {
+                        CardStore.set(data.cards);
+                        console.log($CardStore)
+                        UsersStore.set([]);
+                    });
                 } else {
-                    console.error('Failed to change state deck');
+                    alertError('Failed to change state deck.');
                 }
             } catch (error) {
                 console.error('An error occurred while change state of the deck:', error);
+                alertError('An error occurred while change state of the deck.')
             }
     }
 </script>
@@ -333,9 +373,9 @@
                         <div class="modal-footer" style="margin-right: 25%">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             {#if is_deck}
-                                <button type="button" class="btn btn-primary"  on:click={() => deleteDeck()}>Confirm</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  on:click={() => deleteDeck()}>Confirm</button>
                             {:else }
-                                <button type="button" class="btn btn-primary"  on:click={() => deleteCard()}>Confirm</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => deleteCard()}>Confirm</button>
                             {/if}
                         </div>
                     {/if}

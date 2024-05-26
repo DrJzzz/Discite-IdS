@@ -3,7 +3,9 @@
     import {UserStore} from "../../../user-store.js";
     import {getCookie} from "../../../utils/csrf.js";
     import {CameraPlus} from "phosphor-svelte";
-    import {invalidate, invalidateAll} from '$app/navigation';
+    import {invalidateAll} from '$app/navigation';
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
+
 
     export let data;
     let img = 'http://localhost:8000/media/blank-user-picture.jpg';
@@ -43,16 +45,18 @@
                 });
 
                 if (response.ok) {
-                    console.log('Archivo subido exitosamente');
                     await invalidateAll();
+                    alertSuccess('Change image successfully.');
                 } else {
                     console.error('Error al subir el archivo');
+                    alertError('Error changing the image.')
                 }
             } catch (error) {
                 console.error('Error al enviar el archivo:', error);
             }
         } else {
             console.error('No hay archivo seleccionado');
+            alertError('Image file was empty.')
         }
     }
     async function handleSubmit() {
@@ -77,14 +81,16 @@
 
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Updated user information.')
                 await invalidateAll();
 
             } else {
                 console.error('Failed to submit form');
+                alertError('Error updating user information.')
             }
         } catch (error) {
-            console.error('An error occurred while submitting the form:', error);
+            console.error('An error occurred while submitting the form.', error);
+            alertError('An error occurred while updating user information.')
         }
     }
 </script>
@@ -129,7 +135,6 @@
     }
 
 </style>
-
 {#if UserStore}
     <div class="container py-5 ">
         <div class="row d-flex justify-content-center align-items-center h-100">
