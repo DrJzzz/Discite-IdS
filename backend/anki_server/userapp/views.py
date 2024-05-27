@@ -116,7 +116,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     data = {
                         'id' : nb.id,
                         'name' : nb.name,
-                        'card_count' : nb.card_count,
+                        'note_count' : nb.note_count,
                         'tags' : notebook_tags
                         } 
                     
