@@ -101,20 +101,6 @@
     }
 
 </script>
-<style>
-    /* Hacer que la primera columna sea scrollable */
-    .scrollable-column {
-        height: 100%;
-        max-height: 500px; /* Ajusta según sea necesario */
-        overflow-y: auto;
-    }
-
-    .card-width{
-        width: 30rem;
-        margin-left: 20%;
-        min-height: 300px;
-    }
-</style>
 {#if SingleCardStore}
     <div>
         <!-- Botón que activa el modal edit-->

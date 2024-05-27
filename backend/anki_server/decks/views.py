@@ -52,7 +52,7 @@ class DeckViewSet(viewsets.ModelViewSet):
                 'name': deck.name,
                 'public': deck.public
             },
-            'cards': list(cards.values('id', 'front'))
+            'cards': list(cards.values('id', 'front', 'back', 'due'))
         }
         return JsonResponse(data)
 
