@@ -99,7 +99,6 @@ class UserViewSet(viewsets.ModelViewSet):
                     deck_tags =[]
                     deck_tags = [x['id'] for x in deck.tags.values('id')]
 
-                    print(deck_tags)
                     data = {
                         'id' : deck.id,
                         'name' : deck.name,
@@ -111,12 +110,17 @@ class UserViewSet(viewsets.ModelViewSet):
                 
                 list_notebooks = []
                 for nb in shared_notebooks:
-                    notebooks = list(nb.values('id', 'name','note_count'))
+                    notebook_tags =[]
+                    notebook_tags = [x['id'] for x in nb.tags.values('id')]
+
+                    data = {
+                        'id' : nb.id,
+                        'name' : nb.name,
+                        'card_count' : nb.card_count,
+                        'tags' : notebook_tags
+                        } 
                     
-                    notebook_tags = {'tags' : [x['tags'] for x in nb.values('tags')]}
-                    if len(notebooks) != 0 :
-                        notebooks[0]['tags'] = notebook_tags.get('tags')
-                    list_notebooks.append(notebooks)
+                    list_notebooks.append(data)
                
 
                 item = {
