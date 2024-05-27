@@ -129,7 +129,7 @@
 
                 <button  type="button" 
                 class="btn btn-secondary" 
-                data-bs-dismiss="modal"
+                
                 on:click={createTag}>
                 Add
                 </button>
