@@ -173,21 +173,6 @@
     
 </script>
 
-<style>
-    /* Hacer que la primera columna sea scrollable */
-    .scrollable-column {
-        height: 100%;
-        max-height: 500px; /* Ajusta según sea necesario */
-        overflow-y: auto;
-    }
-
-    .scrollable-column-note {
-        height: 100%;
-        max-height: 800px; /* Ajusta según sea necesario */
-        overflow-y: auto;
-    }
-</style>
-
 {#if SingleNoteStore}
     <div class="container-md" >
         <!-- Botón que activa el modal edit-->

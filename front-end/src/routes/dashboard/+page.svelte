@@ -7,10 +7,13 @@
     import {onMount} from "svelte";
     import SvelteMarkdown from "svelte-markdown";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
+    import {HistoryStore} from "../../history-store.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
 
+
+    let isDeck = true;
 
 
     function navigateToCard() {
@@ -25,6 +28,7 @@
        if ($DeckStore){
            max_cards = createArrayWithSize($DeckStore.length, 0);
        }
+       console.log($HomeStore)
     });
 
 
@@ -83,6 +87,7 @@
     };
 
     async function fetchDeck(id){
+        isDeck = true;
         try{
             const csrftoken = getCookie('csrftoken');
             const token = localStorage.getItem('key');
@@ -109,17 +114,58 @@
             alertError('An error occurred while getting deck data');
         }
     }
+
+    async function fetchNotebook(id){
+        isDeck = false;
+        try{
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            const cardsEndpoint = `http://localhost:8000/notebooks/${id}/notes/`;
+            const decksRes = await fetch(cardsEndpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
+                },
+                credentials: 'include'
+            });
+
+            if (decksRes.ok){
+                infoNotebook = await decksRes.json();
+                note = infoNotebook.notes[0];
+            }else {
+                alertError('Failed to load deck data');
+            }
+
+        }catch (error){
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while getting deck data');
+        }
+    }
     let deck = {
-        id : 0, name : '',  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' },
+        deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' },
             { id : 1, due : '2024-01-20', front : '', back: '' }]
     }
 
-    let card = deck.cards[0];
-
-    function changeCard(id) {
-        card =deck.cards.find(card => card.id === id)
+    let infoNotebook = {
+        notebook: {id : 0, name: ''},
+        notes : [{id: 0, title: '', content: '',dateCreated : ''}]
     }
 
+
+    let card = deck.cards[0];
+    let note = infoNotebook.notes[0];
+
+    function changeCard(id) {
+        card =deck.cards.find(card => card.id === id);
+    }
+
+    function changeNote(id){
+        note = infoNotebook.notes.find(note => note.id === id);
+    }
+
+    const title = '# Title:'
 </script>
 
 
@@ -168,7 +214,7 @@
                                                     <td>{deck.name}</td>
                                                     <td>{deck.card_count}</td>
                                                     <td>{deck.tags}</td>
-                                                    <td>        <!-- Botón que activa el modal history-->
+                                                    <td>
                                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => fetchDeck(deck.id)}>
                                                             <div class="d-flex align-items-center">
                                                                 <Eye/>
@@ -207,7 +253,7 @@
                                                     <td>{notebook.note_count}</td>
                                                     <td>{notebook.tags}</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={fetchNotebook(notebook.id)}>
                                                             <div class="d-flex align-items-center">
                                                                 <Eye/>
                                                                 View
@@ -230,11 +276,11 @@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
+                    {#if isDeck}
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{deck.name}</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{deck.deck.name}</h1>
                     </div>
                     <div class="modal-body">
-                        {#if deck}
                             <div class="container mt-3">
                                 <div class="row">
                                     <h4>List Cards</h4>
@@ -276,10 +322,42 @@
                                     </div>
                                 </div>
                             </div>
-                        {:else}
-                            <p>Loading</p>
-                        {/if}
+
                     </div>
+                    {:else}
+                        <div class="container mt-3">
+                            <div class="row">
+                                <h4>List history</h4>
+                                <div class="col-3 scrollable-column">
+
+                                    <div class="list-group">
+                                        {#each infoNotebook.notes as note}
+                                            <button type="button" class="list-group-item list-group-item-action" on:click={() => changeNote(note.id)}>{note.id}</button>
+                                        {/each}
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="row">
+                                        <h4>Date: {note.dateCreated} </h4>
+                                    </div>
+                                    <div>
+                                        <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
+                                            <div class="card-header">
+                                                <div class="d-flex align-items-center">
+                                                    <SvelteMarkdown source="{title}" />
+                                                    <SvelteMarkdown source="{note.title}" />
+                                                </div>
+
+                                            </div>
+                                            <div class="card-body">
+                                                <SvelteMarkdown source="{note.content}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
@@ -288,10 +366,6 @@
         </div>
 
     {/if}
-
-
-
-
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">Select cards to study of each deck</h5>
