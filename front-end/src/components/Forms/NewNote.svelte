@@ -10,6 +10,8 @@
     import {alertSuccess, alertError} from "../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
     import {NotebookStore} from "../../notebook-store.js";
+    import {Plus, X} from "phosphor-svelte";
+    import {TagStore} from "../../tag-store.js";
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -25,7 +27,10 @@
 
     async function handleSubmit() {
         const notebook = '/notebooks/'+id_notebook+'/'
-        const data = { title, content, notebook };
+        const tags = buttons
+            .filter(button => button.color === 'btn-danger')
+            .map(button => button.url);
+        const data = { title, content, notebook, tags };
         console.log(JSON.stringify(data))
         try {
             const csrftoken = getCookie('csrftoken');
@@ -126,8 +131,39 @@
             });
 
     };
-</script>
 
+
+    let buttons = [];
+
+    // Suscribirse a TagStore y actualizar los botones cuando cambie
+    const unsubscribe = TagStore.subscribe($TagStore => {
+        buttons = $TagStore.map(data => ({
+            ...data,
+            color: 'btn-primary', // Color azul de Bootstrap
+            icon: Plus // Icono de Phosphor Icons
+        }));
+    });
+
+
+    // Función para manejar el clic en los botones
+    function toggleButtonState(index) {
+        buttons = buttons.map((button, i) =>
+            i === index
+                ? {
+                    ...button,
+                    color: button.color === 'btn-primary' ? 'btn-danger' : 'btn-primary',
+                    icon: button.icon === Plus ? X : Plus
+                }
+                : button
+        );
+        console.log(buttons)
+    }
+
+
+</script>
+<style>
+
+</style>
 
 
 <div>
@@ -153,6 +189,27 @@
                         <option value="{notebook.id}">{notebook.name}</option>
                     {/each}
                 </select>
+            </div>
+
+            <div class="mb-3">
+                <h6>Tags list</h6>
+                <div class="scrollable">
+                    <div class="button-container">
+                        {#each buttons as button, index}
+                            <div class="button-item">
+                                <button
+                                        class="btn {button.color} my-1"
+                                        on:click={() => toggleButtonState(index)}
+                                        type="button"
+                                >
+                                    <svelte:component this={button.icon} size={24} />
+                                    {button.name}
+                                </button>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+
             </div>
             <div class="mb-3">
                 <h6> Links images in markdown</h6>

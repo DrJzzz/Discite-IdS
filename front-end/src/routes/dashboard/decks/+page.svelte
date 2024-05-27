@@ -12,6 +12,7 @@
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
+    import NewTag from "../../../components/Forms/NewTag.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -292,6 +293,12 @@
             Add deck
         </div>
     </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal">
+        <div class="d-flex align-items-center">
+            <Plus />
+            Add tag
+        </div>
+    </button>
     {#if CardStore}
             <div class="accordion" id="accordionPanelsStayOpenExample">
             {#each $CardStore as info}
@@ -397,6 +404,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <NewDeck/>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <NewTag/>
             </div>
         </div>
     </div>

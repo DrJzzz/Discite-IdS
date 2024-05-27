@@ -1,13 +1,11 @@
 <script>
-    import {onMount} from "svelte";
-    import {NoteStore} from "../../../note-store.js";
-    import {CardStore} from "../../../card-store.js";
+    import {SharedDeckStore} from '../../../shared-deck-store.js';
+    import {SharedNotebookStore} from '../../../shared-notebook-store.js';
     import {Plus} from "phosphor-svelte";
     import {goto} from "$app/navigation";
     import SvelteMarkdown from "svelte-markdown";
-    import NewNote from "../../../components/Forms/NewNote.svelte";
-    import NewCard from "../../../components/Forms/NewCard.svelte";
     import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -28,11 +26,6 @@
         id_deck = "";
     }
 
-    onMount(() =>{
-        $NoteStore = data.notes;
-        $CardStore = data.cards;
-        console.log($CardStore)
-    })
 
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
@@ -61,12 +54,13 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new note successfully.');
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new note');
         }
     }
     async function handleSubmitCard() {
@@ -89,12 +83,13 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new card successfully.');
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new card.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new card');
         }
     }
 
@@ -107,16 +102,19 @@
 <div>
     <h3>Decks shared</h3>
 
-    {#if CardStore}
-        <!-- Botón que activa el modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <div class="d-flex align-items-center">
-                <Plus />
-                Add card
-            </div>
-        </button>
+    {#if SharedDeckStore}
+
+        {#if $SharedDeckStore.length > 0}
+            <!-- Botón que activa el modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div class="d-flex align-items-center">
+                    <Plus />
+                    Add card
+                </div>
+            </button>
+        {/if}
         <div class="accordion" id="accordionPanelsStayOpenExample">
-            {#each $CardStore as info}
+            {#each $SharedDeckStore as info}
                 <div class="accordion-item">
                     <h2 class="accordion-header row">
                         <button class="col accordion-button" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
@@ -161,7 +159,7 @@
                                     <label for="front-area" class="form-label">Deck</label>
                                     <select bind:value={id_deck}  class="form-select" style="color:black" aria-label="Select template">
                                         <option value="" disabled selected>Open to select a deck</option>
-                                        {#each $CardStore as value}
+                                        {#each $SharedDeckStore as value}
                                             <option value="{value.deck.id}">{value.deck.name}</option>
                                         {/each}
                                     </select>
@@ -200,16 +198,19 @@
     <br/>
     <h3>Notebooks shared</h3>
 
-    {#if NoteStore}
-        <!-- Botón que activa el modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <div class="d-flex align-items-center">
-                <Plus />
-                Add note
-            </div>
-        </button>
+    {#if SharedNotebookStore}
+        {#if $SharedNotebookStore.length > 0}
+            <!-- Botón que activa el modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div class="d-flex align-items-center">
+                    <Plus />
+                    Add note
+                </div>
+            </button>
+        {/if}
+
         <div class="accordion" id="accordionPanelsStayOpenExample">
-            {#each $NoteStore as info}
+            {#each $SharedNotebookStore as info}
                 <div class="accordion-item">
                     <h2 class="accordion-header row">
                         <button style="max-width: 60%;"  class="col accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-note{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
@@ -253,7 +254,7 @@
                                 <label for="front-area" class="form-label">Notebooks</label>
                                 <select bind:value={id_notebook}  class="form-select" style="color:black" aria-label="Select template">
                                     <option value="" disabled selected>Open to select a notebook</option>
-                                    {#each $NoteStore as value}
+                                    {#each $SharedNotebookStore as value}
                                         <option value="{value.notebook.id}">{value.notebook.name}</option>
                                     {/each}
                                 </select>

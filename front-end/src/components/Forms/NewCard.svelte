@@ -1,11 +1,11 @@
 <script>
-	import SimpleBtn from "../Buttons/SimpleBtn.svelte";
     import {UserStore} from "../../user-store.js";
-    import {CardStore} from "../../card-store.js";
     import {getCookie} from "../../utils/csrf.js";
     import {alertError, alertSuccess} from "../../utils/alerts.js";
     import {invalidate, invalidateAll} from "$app/navigation";
     import {DeckStore} from "../../deck-store.js";
+    import {Plus, X} from "phosphor-svelte";
+    import {TagStore} from "../../tag-store.js";
 
     let front = '';
     let back = '';
@@ -31,7 +31,10 @@
 
      async function handleSubmit() {
         const deck = '/decks/'+id_deck+'/'
-        const data = { front, back, deck };
+         const tags = buttons
+             .filter(button => button.color === 'btn-danger')
+             .map(button => button.url);
+        const data = { front, back, deck, tags };
         console.log(JSON.stringify(data))
         try {
             const token = localStorage.getItem('key');
@@ -61,6 +64,32 @@
             alertError('An error occurred while adding a card.')
         }
     }
+
+    let buttons = [];
+
+    // Suscribirse a TagStore y actualizar los botones cuando cambie
+    const unsubscribe = TagStore.subscribe($TagStore => {
+        buttons = $TagStore.map(data => ({
+            ...data,
+            color: 'btn-primary', // Color azul de Bootstrap
+            icon: Plus // Icono de Phosphor Icons
+        }));
+    });
+
+
+    // Función para manejar el clic en los botones
+    function toggleButtonState(index) {
+        buttons = buttons.map((button, i) =>
+            i === index
+                ? {
+                    ...button,
+                    color: button.color === 'btn-primary' ? 'btn-danger' : 'btn-primary',
+                    icon: button.icon === Plus ? X : Plus
+                }
+                : button
+        );
+    }
+
 </script>
 
 <div>
@@ -99,6 +128,25 @@
                 </div>
             {/if}
 
+            <div class="mb-3">
+                <h6>Tags list</h6>
+                <div class="scrollable">
+                    <div class="button-container">
+                        {#each buttons as button, index}
+                            <div class="button-item">
+                                <button
+                                        class="btn {button.color} my-1"
+                                        on:click={() => toggleButtonState(index)}
+                                        type="button"
+                                >
+                                    <svelte:component this={button.icon} size={24} />
+                                    {button.name}
+                                </button>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            </div>
 
         </div>
 

@@ -1,4 +1,6 @@
 import {getCookie} from "../../../../utils/csrf.js";
+import {SingleCardStore} from "../../../../single-card-store.js";
+import {HistoryStore} from "../../../../history-store.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
@@ -38,9 +40,12 @@ export async function load({ fetch, params }) {
 
 			if (resHistory.ok){
 				const history = await resHistory.json()
+				SingleCardStore.set(card);
+				HistoryStore.set(history.history);
 				// Devuelve las cartas cargadas junto con su ID
 				return { card, id: params.id, history };
 			}else {
+				SingleCardStore.set(card);
 				return { card, id: params.id, history : [] };
 			}
 

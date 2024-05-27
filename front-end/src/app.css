@@ -12813,3 +12813,23 @@ body {
   height: 100vh;
   color: #f3f4f6;
 }
+
+
+.scrollable {
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.button-item {
+  flex: 1 1 50%; /* Dos columnas */
+  padding: 5px;
+}
+
+.button-item button {
+  width: 100%;
+}

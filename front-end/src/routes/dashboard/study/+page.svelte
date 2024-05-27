@@ -4,6 +4,8 @@
     import {goto} from "$app/navigation";
     import {CardStore} from "../../../card-store.js";
     import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError,alertEndStudy} from "../../../utils/alerts.js";
+    import {onMount} from "svelte";
 
     export let data;
 
@@ -14,10 +16,17 @@
 
     let i = 0;
 
-    if (data.cards){
-        CardStore.set(data.cards)
-        console.log($CardStore)
-    }
+    onMount(() => {
+        if (data.cards > 0){
+            CardStore.set(data.cards)
+            console.log($CardStore)
+        }else{
+            alertEndStudy('No more card to study, comeback later.', 'warning');
+            navigateToHome();
+        }
+    })
+
+
 
     function navigateToHome() {
         goto(`/dashboard`);
@@ -42,23 +51,22 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+
                 if( i < data.cards.length-1){
                     i += 1;
                     watch = false;
+                    alertSuccess('Study card successfully')
                 }
                 else {
-                    alert("Your study has been finished");
+                    alertEndStudy("No more cards to study", 'success');
                     navigateToHome();
                 }
             } else {
-                console.error('Failed to submit form');
-
-
-
+                alertError('Failed to study card, retry');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while studying the card');
         }
     }
 

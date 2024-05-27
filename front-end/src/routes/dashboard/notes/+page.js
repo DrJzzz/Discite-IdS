@@ -2,6 +2,7 @@ import { getCookie } from '../../../utils/csrf';
 import {NoteStore} from "../../../note-store.js";
 import {UsersStore} from "../../../users-store.js";
 import {NotebookStore} from "../../../notebook-store.js";
+import {TagStore} from "../../../tag-store.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
@@ -58,8 +59,22 @@ export async function load({ parent, fetch, params }) {
             credentials: 'include'
         });
 
+        const tagsEndpoint = 'http://localhost:8000/tags/';
+        const tagsRes = await fetch(tagsEndpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': `${csrftoken}`,
+                'Authorization': `Token ${token}`,
+            },
+            credentials: 'include'
+        });
+
         const usersJSON = await usersRes.json();
         const users = usersJSON.users;
+        const tagsJSON = await tagsRes.json();
+        const tags = tagsJSON.results;
+        TagStore.set(tags);
         NoteStore.set(notes);
         UsersStore.set(users);
         NotebookStore.set(notebooks);

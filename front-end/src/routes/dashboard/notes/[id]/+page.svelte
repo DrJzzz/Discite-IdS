@@ -1,5 +1,5 @@
 <script>
-    import {NoteStore} from '../../../../note-store.js'
+    import {SingleNoteStore} from "../../../../single-note-store.js";
     import { onMount } from "svelte";
     import SvelteMarkdown from 'svelte-markdown';
     import {ClockCounterClockwise, Pencil} from "phosphor-svelte";
@@ -9,6 +9,8 @@
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {HistoryStore} from "../../../../history-store.js";
     import {getCookie} from "../../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
 
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -25,7 +27,7 @@
 
     onMount(() =>{
         ImagesStore.set([]);
-        NoteStore.set(data.note);
+        SingleNoteStore.set(data.note);
         HistoryStore.set(data.history.history);
         history = $HistoryStore[id_history];
         console.log(history)
@@ -33,7 +35,6 @@
 
 
     async function handleSubmit() {
-        console.log(JSON.stringify(note))
         try {
             const csrftoken = getCookie('csrftoken');
             const token = localStorage.getItem('key');
@@ -49,12 +50,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Updated note successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to updated note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while updating note');
         }
     }
     function changeIdHistory(id){
@@ -97,11 +100,14 @@
                 try {
                     const urlImg = JSON.parse(request.response); // Convertir a JSON
                     addImageStore(urlImg);
+                    alertSuccess('Upload image successfuly.');
                 } catch (e) {
                     error('Error parsing response as JSON');
+                    alertError('Error parsing response as JSON');
                 }
             } else {
                 error('Error uploading file');
+                alertError('Error uploading file');
             }
         };
 
@@ -153,12 +159,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Change history successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to change history');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while changing history');
         }
     }
 
@@ -180,7 +188,7 @@
     }
 </style>
 
-{#if NoteStore}
+{#if SingleNoteStore}
     <div class="container-md" >
         <!-- Botón que activa el modal edit-->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -201,12 +209,12 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <SvelteMarkdown source="{title}" />
-                            <SvelteMarkdown source="{$NoteStore.title}" />
+                            <SvelteMarkdown source="{$SingleNoteStore.title}" />
                         </div>
 
                     </div>
                     <div class="card-body">
-                        <SvelteMarkdown source="{$NoteStore.content}" />
+                        <SvelteMarkdown source="{$SingleNoteStore.content}" />
                     </div>
                 </div>
             </div>
@@ -223,11 +231,11 @@
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title</label>
-                                <input type="text" bind:value={$NoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
+                                <input type="text" bind:value={$SingleNoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
                             </div>
                             <div class="mb-3">
                                 <label for="content" class="form-label">Content</label>
-                                <textarea bind:value={$NoteStore.content} style="color:black" class="form-control" id="content" rows="10" placeholder="Type in Markdown"></textarea>
+                                <textarea bind:value={$SingleNoteStore.content} style="color:black" class="form-control" id="content" rows="10" placeholder="Type in Markdown"></textarea>
                             </div>
                             <div class="mb-3">
                                 <h6> Links images in markdown</h6>
@@ -303,7 +311,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" on:click={() => handleChangeHistory()}>Change</button>
+                        <button type="button" class="btn btn-primary" on:click={() => handleChangeHistory()} data-bs-dismiss="modal">Change</button>
                     </div>
                 </div>
             </div>

@@ -5,8 +5,10 @@
     import NewCard from "../../../../components/Forms/NewCard.svelte";
     import {Pencil, ClockCounterClockwise} from "phosphor-svelte";
     import {HistoryStore} from "../../../../history-store.js";
-    import {CardStore} from "../../../../card-store.js";
+    import {SingleCardStore} from "../../../../single-card-store.js";
     import {getCookie} from "../../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -21,22 +23,17 @@
     let history = {id : 0 , front : '' , back : '', history_date : "", history_id : 0} ;
 
     onMount(()=>{
-        CardStore.set(data.card);
+        SingleCardStore.set(data.card);
         HistoryStore.set(data.history.history);
 
         history = $HistoryStore[id_history];
         console.log(history)
-        import('bootstrap').then(({ Modal }) => {
-            modalHistory = new Modal(document.getElementById('staticBackdrop'));
-        });
     })
 
-    const closeModal = () => {
-        modalHistory.hide();
-    };
+
     async function handleSubmit() {
 
-        console.log(JSON.stringify($CardStore))
+        console.log(JSON.stringify($SingleCardStore))
         try {
             const csrftoken = getCookie('csrftoken');
             const token = localStorage.getItem('key');
@@ -48,17 +45,18 @@
                     'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
-                body: JSON.stringify($CardStore)
+                body: JSON.stringify($SingleCardStore)
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
-
+                alertSuccess('Updated card successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to updated note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while updating note');
         }
     }
 
@@ -91,13 +89,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
-                closeModal();
+                alertSuccess('Change history successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to change history');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while changing history');
         }
     }
 
@@ -116,7 +115,7 @@
         min-height: 300px;
     }
 </style>
-{#if CardStore}
+{#if SingleCardStore}
     <div>
         <!-- Botón que activa el modal edit-->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -139,7 +138,7 @@
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
-                        <SvelteMarkdown source="{$CardStore.front}"/>
+                        <SvelteMarkdown source="{$SingleCardStore.front}"/>
                     </div>
                 </div>
             </div>
@@ -147,7 +146,7 @@
                 <div class="text-center mb-3"><p>Back</p></div>
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
-                        <SvelteMarkdown source="{$CardStore.back}"/>
+                        <SvelteMarkdown source="{$SingleCardStore.back}"/>
                     </div>
                 </div>
             </div>
@@ -164,11 +163,11 @@
 
                                 <div class="mb-3">
                                     <label for="front-area" class="form-label">Front Area</label>
-                                    <textarea bind:value={$CardStore.front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+                                    <textarea bind:value={$SingleCardStore.front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="back-area" class="form-label">Back Area</label>
-                                    <textarea bind:value={$CardStore.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
+                                    <textarea bind:value={$SingleCardStore.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
                                 </div>
 
 
@@ -240,7 +239,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" on:click={handleChangeHistory}>Change</button>
+                        <button type="button" class="btn btn-primary" on:click={handleChangeHistory} data-bs-dismiss="modal">Change</button>
                     </div>
                 </div>
             </div>
