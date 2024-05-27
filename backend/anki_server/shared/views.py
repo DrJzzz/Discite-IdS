@@ -44,6 +44,18 @@ class SharedViewSet(viewsets.ModelViewSet):
         
     @action(detail=False, methods=['GET'])
     def shared_with(self, request, *args, **kwargs):
+        user = request.data.get('user')
+        deck = request.data.get('deck')
+        notebook = request.data.get('notebook')
+        
+        if deck:
+            list = Shared.objects.filter(sharer=user, deck=deck)
+        
+        
+        values = []
+        for x in list:
+            user = CustomUser.objects.filter(id=user) 
+            
         return response.Response()
     
     
