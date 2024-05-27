@@ -76,6 +76,7 @@
     const process = (fieldName, file, metadata, load, error, progress, abort) => {
 
         const csrftoken = getCookie('csrftoken');
+        const token = localStorage.getItem('key');
         const formData = new FormData();
         formData.append('image', file); // Cambia 'file' al nombre deseado
         const request = new XMLHttpRequest();
@@ -83,6 +84,7 @@
 
 
         request.setRequestHeader('X-CSRFToken', csrftoken);
+        request.setRequestHeader('Authorization', `Token ${token}`);
         // Configura la solicitud para enviar cookies automáticamente
         request.withCredentials = true;
 
