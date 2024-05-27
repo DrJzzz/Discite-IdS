@@ -1,4 +1,6 @@
 import { getCookie } from '../../utils/csrf';
+import {HomeStore} from "../../home-stote.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {
 
@@ -38,17 +40,14 @@ export async function load({ parent, fetch, params  }) {
             });
 
             if (resUsers.ok){
-                const users = await resUsers.json()
+                const users = await resUsers.json();
+                HomeStore.set(users);
                 return {decks, users}
-            }
 
+            }
+            HomeStore.set([]);
             return { decks, users : []};
         }
-
-
-
-
-
         // Devuelve las notas cargadas
         return {decks: [], users: []}
     }catch (error){

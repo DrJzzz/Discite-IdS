@@ -6,7 +6,7 @@
     export let data;
     import { getCookie } from '../../utils/csrf';
     import {DeckStore} from "../../deck-store.js";
-    import {UsersStore} from "../../users-store.js";
+    import {HomeStore} from "../../home-stote.js";
     import {onMount} from "svelte";
 
     function navigateToCard() {
@@ -16,13 +16,11 @@
 
     onMount(() =>{
        $DeckStore = data.decks;
-       UsersStore.set(data.users);
+       HomeStore.set(data.users);
        max_cards = createArrayWithSize(0, 0);
        if ($DeckStore){
            max_cards = createArrayWithSize($DeckStore.length, 0);
        }
-
-        console.log($UsersStore)
     });
 
 
@@ -91,10 +89,10 @@
         </div>
     </button>
 
-    {#if UsersStore}
+    {#if HomeStore}
 
             <div class="row">
-                {#each $UsersStore as info}
+                {#each $HomeStore as info}
                 <div class="card col" style="max-width: 480px">
                     <div class="card-header d-flex align-items-center">
                         <img src={user.profileImage} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">

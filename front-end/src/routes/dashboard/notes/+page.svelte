@@ -311,7 +311,6 @@
                                         <X/>
                                     </button>
                                 </div>
-
                             {/each}
                         </div>
                     </div>
