@@ -19,7 +19,8 @@ export async function load({ parent, fetch, params  }) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': `${csrftoken}`
+                'X-CSRFToken': `${csrftoken}`,
+                'Authorization': `Token ${token}`,
             },
             credentials : 'include',
         });
