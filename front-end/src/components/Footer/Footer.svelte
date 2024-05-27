@@ -1,16 +1,10 @@
-<script>
-    // JavaScript
-    let currentYear = new Date().getFullYear();
-</script>
-
 <style>
     #footer {
         background-color: #333; /* Color de fondo*/
         padding: 2rem 0;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: flex-start;
+        align-self: baseline;
+        margin-top: 48px;
     }
 
     #footer section {
