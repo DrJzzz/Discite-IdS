@@ -4,7 +4,7 @@ from decks.models import *
 from notes.models import *
 
 class Shared(models.Model):
-    id = models.AutoField(primary_key=True)
+    #id = models.AutoField(primary_key=True)
     sharer = models.ForeignKey('userapp.CustomUser', 
                               related_name='sharer',
                               on_delete=models.CASCADE,
