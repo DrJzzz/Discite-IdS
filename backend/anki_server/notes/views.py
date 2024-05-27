@@ -32,6 +32,8 @@ class NoteViewSet(viewsets.ModelViewSet):
         serializer = NoteSerializer(new_current, context={'request': request})
         return response.Response(serializer.data)
     
+    
+    
     def perform_create(self, serializer):
         note = serializer.save()
         note.notebook.note_count = note.notebook.note_count + 1
@@ -78,7 +80,10 @@ class NotebookViewSet(viewsets.ModelViewSet):
     
     
 
-
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    
 
 
 
@@ -92,7 +97,7 @@ def notes_notebook(request, pk):
             'name': notebook.name,
             'public' : notebook.public
         },
-        'notes': list(notes.values('id', 'title'))
+        'notes': list(notes.values('id', 'title', 'content' , 'dateCreated'))
     }
 
     return JsonResponse(data)

@@ -1,3 +1,6 @@
+import { getCookie } from '../../utils/csrf';
+import {HomeStore} from "../../home-stote.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {
 
@@ -9,14 +12,15 @@ export async function load({ parent, fetch, params  }) {
             console.error("No se pudo obtener el usuario del UserStore");
             return;
         }
-        const token = localStorage.getItem('key');
+        const token =typeof localStorage !== 'undefined' ? localStorage.getItem('key') : '';
         const csrftoken = getCookie('csrftoken');
         const endpoint = `http://127.0.0.1:8000/users/${user.user.id}/decks/`;
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': `${csrftoken}`
+                'X-CSRFToken': `${csrftoken}`,
+                'Authorization': `Token ${token}`,
             },
             credentials : 'include',
         });
@@ -37,17 +41,14 @@ export async function load({ parent, fetch, params  }) {
             });
 
             if (resUsers.ok){
-                const users = await resUsers.json()
+                const users = await resUsers.json();
+                HomeStore.set(users);
                 return {decks, users}
-            }
 
+            }
+            HomeStore.set([]);
             return { decks, users : []};
         }
-
-
-
-
-
         // Devuelve las notas cargadas
         return {decks: [], users: []}
     }catch (error){
@@ -56,17 +57,3 @@ export async function load({ parent, fetch, params  }) {
 
 }
 
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}

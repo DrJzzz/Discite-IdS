@@ -1,13 +1,20 @@
 <script>
-    import {Brain} from "phosphor-svelte";
+    import {Brain, Eye} from "phosphor-svelte";
     import {goto} from "$app/navigation";
+    import { getCookie } from '../../utils/csrf';
+    import {DeckStore} from "../../deck-store.js";
+    import {HomeStore} from "../../home-stote.js";
+    import {onMount} from "svelte";
+    import SvelteMarkdown from "svelte-markdown";
+    import {alertSuccess, alertError} from "../../utils/alerts.js";
+    import {HistoryStore} from "../../history-store.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
 
-    import {DeckStore} from "../../deck-store.js";
-    import {UsersStore} from "../../users-store.js";
-    import {onMount} from "svelte";
+
+    let isDeck = true;
+
 
     function navigateToCard() {
         goto(`/dashboard/study`);
@@ -16,29 +23,14 @@
 
     onMount(() =>{
        $DeckStore = data.decks;
-       UsersStore.set(data.users);
+       HomeStore.set(data.users);
        max_cards = createArrayWithSize(0, 0);
        if ($DeckStore){
            max_cards = createArrayWithSize($DeckStore.length, 0);
        }
-
-        console.log($UsersStore)
+       console.log($HomeStore)
     });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     export function createArrayWithSize(size, defaultValue) {
         return Array.from({ length: size }, () => defaultValue);
@@ -65,12 +57,14 @@
         const max_reviews = max_cards[index];
         const info = {max_reviews}
         const csrftoken = getCookie('csrftoken');
+        const token = localStorage.getItem('key');
         try {
             const response = await fetch(url, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
                 body: JSON.stringify(info),
@@ -92,6 +86,86 @@
         profileImage: 'https://via.placeholder.com/150'
     };
 
+    async function fetchDeck(id){
+        isDeck = true;
+        try{
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            const cardsEndpoint = `http://localhost:8000/decks/${id}/cards/`;
+            const cardsRes = await fetch(cardsEndpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
+                },
+                credentials: 'include'
+            });
+
+            if (cardsRes.ok){
+                deck = await cardsRes.json();
+                card = deck.cards[0];
+            }else {
+                alertError('Failed to load deck data');
+            }
+
+        }catch (error){
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while getting deck data');
+        }
+    }
+
+    async function fetchNotebook(id){
+        isDeck = false;
+        try{
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            const cardsEndpoint = `http://localhost:8000/notebooks/${id}/notes/`;
+            const decksRes = await fetch(cardsEndpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
+                },
+                credentials: 'include'
+            });
+
+            if (decksRes.ok){
+                infoNotebook = await decksRes.json();
+                note = infoNotebook.notes[0];
+            }else {
+                alertError('Failed to load deck data');
+            }
+
+        }catch (error){
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while getting deck data');
+        }
+    }
+    let deck = {
+        deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' },
+            { id : 1, due : '2024-01-20', front : '', back: '' }]
+    }
+
+    let infoNotebook = {
+        notebook: {id : 0, name: ''},
+        notes : [{id: 0, title: '', content: '',dateCreated : ''}]
+    }
+
+
+    let card = deck.cards[0];
+    let note = infoNotebook.notes[0];
+
+    function changeCard(id) {
+        card =deck.cards.find(card => card.id === id);
+    }
+
+    function changeNote(id){
+        note = infoNotebook.notes.find(note => note.id === id);
+    }
+
+    const title = '# Title:'
 </script>
 
 
@@ -103,10 +177,10 @@
         </div>
     </button>
 
-    {#if UsersStore}
+    {#if HomeStore}
 
             <div class="row">
-                {#each $UsersStore as info}
+                {#each $HomeStore as info}
                 <div class="card col" style="max-width: 480px">
                     <div class="card-header d-flex align-items-center">
                         <img src={user.profileImage} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
@@ -123,7 +197,7 @@
                                         Decks
                                     </button>
                                 </h2>
-                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse show" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
+                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
                                     <div class="accordion-body">
                                         <table class="table">
                                             <thead>
@@ -140,7 +214,14 @@
                                                     <td>{deck.name}</td>
                                                     <td>{deck.card_count}</td>
                                                     <td>{deck.tags}</td>
-                                                    <td><button class="btn btn-primary btn-sm">Follow</button></td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => fetchDeck(deck.id)}>
+                                                            <div class="d-flex align-items-center">
+                                                                <Eye/>
+                                                                View
+                                                            </div>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             {/each}
                                             </tbody>
@@ -171,7 +252,14 @@
                                                     <td>{notebook.name}</td>
                                                     <td>{notebook.note_count}</td>
                                                     <td>{notebook.tags}</td>
-                                                    <td><button class="btn btn-primary btn-sm">Follow</button></td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={fetchNotebook(notebook.id)}>
+                                                            <div class="d-flex align-items-center">
+                                                                <Eye/>
+                                                                View
+                                                            </div>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             {/each}
                                             </tbody>
@@ -184,12 +272,100 @@
                 </div>
                 {/each}
             </div>
+        <!-- Modal Deck-->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    {#if isDeck}
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{deck.deck.name}</h1>
+                    </div>
+                    <div class="modal-body">
+                            <div class="container mt-3">
+                                <div class="row">
+                                    <h4>List Cards</h4>
+                                    <div class="col-3 scrollable-column">
+                                        <div class="list-group">
+                                            {#each deck.cards as info}
+                                                <button type="button" class="list-group-item list-group-item-action" on:click={() => changeCard(info.id)}>{info.id}</button>
+                                            {/each}
+                                        </div>
+                                    </div>
+                                    <div class="col-9">
+                                        <div class="row">
+                                            <h4>Date: {card.due}</h4>
+                                        </div>
+                                        <div class="container mb-3">
+                                            <div class="row">
+                                                <h5 class="text-center">Front</h5>
+                                                <div class="col">
+                                                    <div class="card bg-secondary card-width">
+                                                        <div class="card-body">
+                                                            <SvelteMarkdown source="{card.front}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="container mb-3">
+                                            <div class="row">
+                                                <h5 class="text-center">Back</h5>
+                                                <div class="col">
+                                                    <div class="card bg-secondary card-width">
+                                                        <div class="card-body">
+                                                            <SvelteMarkdown source="{card.back}"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-        {/if}
+                    </div>
+                    {:else}
+                        <div class="container mt-3">
+                            <div class="row">
+                                <h4>List history</h4>
+                                <div class="col-3 scrollable-column">
 
+                                    <div class="list-group">
+                                        {#each infoNotebook.notes as note}
+                                            <button type="button" class="list-group-item list-group-item-action" on:click={() => changeNote(note.id)}>{note.id}</button>
+                                        {/each}
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="row">
+                                        <h4>Date: {note.dateCreated} </h4>
+                                    </div>
+                                    <div>
+                                        <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
+                                            <div class="card-header">
+                                                <div class="d-flex align-items-center">
+                                                    <SvelteMarkdown source="{title}" />
+                                                    <SvelteMarkdown source="{note.title}" />
+                                                </div>
 
+                                            </div>
+                                            <div class="card-body">
+                                                <SvelteMarkdown source="{note.content}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {/if}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
+    {/if}
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasRightLabel">Select cards to study of each deck</h5>

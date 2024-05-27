@@ -1,6 +1,10 @@
+import {getCookie} from "../../../utils/csrf.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
     try {
+        const token =typeof localStorage !== 'undefined' ? localStorage.getItem('key') : '';
+        const csrftoken = getCookie('csrftoken');
         // Construye la URL del endpoint usando el parámetro de la carta ID
         const endpoint = `http://localhost:8000/rest-auth/user/`;
 
@@ -8,7 +12,9 @@ export async function load({ fetch, params }) {
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`,
+                'X-CSRFToken': `${csrftoken}`
             },
             credentials : 'include',
         });
@@ -18,18 +24,32 @@ export async function load({ fetch, params }) {
         if (res.ok) {
             // Extrae los datos JSON de la respuesta
             const user = await res.json();
+            const endpointImg = `http://localhost:8000/users/${user.id}/get_picture/`;
+            const resImage = await fetch(endpointImg, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                credentials : 'include',
+            });
+
+            const imgJson = await resImage.json();
+            console.log(imgJson)
+            const img = imgJson.picture;
 
             // Devuelve las cartas cargadas junto con su ID
-            return { user };
+            return { user , img};
         } else {
             // Si la solicitud no fue exitosa, lanza un error con el mensaje de estado
-            throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);
+            return {user : [], img : ""}
         }
     } catch (error) {
         // Maneja cualquier error que ocurra durante la carga de la carta
         console.error('Error loading user:', error);
 
         // Devuelve un objeto vacío en caso de error
-        return { user: null };
+        return { user: [], img : '' };
     }
 }

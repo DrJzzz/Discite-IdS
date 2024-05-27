@@ -1,14 +1,20 @@
+import {getCookie} from "../../../../utils/csrf.js";
+import {SingleNoteStore} from "../../../../single-note-store.js";
+import {HistoryStore} from "../../../../history-store.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
 
 	try{
 		const endpoint = `http://localhost:8000/notes/${params.id}/`;
 		const csrftoken = getCookie('csrftoken');
+		const token = localStorage.getItem('key');
 		const res = await fetch(endpoint, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				'X-CSRFToken': `${csrftoken}`
+				'X-CSRFToken': `${csrftoken}`,
+				'Authorization': `Token ${token}`
 			},
 			credentials : 'include'
 		});
@@ -20,7 +26,8 @@ export async function load({ fetch, params }) {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-CSRFToken': `${csrftoken}`
+					'X-CSRFToken': `${csrftoken}`,
+					'Authorization': `Token ${token}`
 				},
 				credentials: 'include'
 			});
@@ -28,8 +35,12 @@ export async function load({ fetch, params }) {
 			if (resHistory.ok) {
 				const history = await resHistory.json()
 				// Devuelve las cartas cargadas junto con su ID
+				SingleNoteStore.set(note);
+				HistoryStore.set(history.history);
+
 				return {note, id: params.id, history};
 			} else {
+				SingleNoteStore.set(note);
 				return {note, id: params.id, history: []};
 			}
 
@@ -47,19 +58,4 @@ export async function load({ fetch, params }) {
 		return { card: [], id: params.id, history : [] };
 	}
 
-}
-
-function getCookie(name) {
-	let cookieValue = null;
-	if (document.cookie && document.cookie !== '') {
-		const cookies = document.cookie.split(';');
-		for (let i = 0; i < cookies.length; i++) {
-			const cookie = cookies[i].trim();
-			if (cookie.substring(0, name.length + 1) === (name + '=')) {
-				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-				break;
-			}
-		}
-	}
-	return cookieValue;
 }

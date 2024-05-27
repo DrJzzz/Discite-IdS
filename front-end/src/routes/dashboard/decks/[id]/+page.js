@@ -1,15 +1,21 @@
+import {getCookie} from "../../../../utils/csrf.js";
+import {SingleCardStore} from "../../../../single-card-store.js";
+import {HistoryStore} from "../../../../history-store.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
 	try {
 		// Construye la URL del endpoint usando el parámetro de la carta ID
 		const endpoint = `http://localhost:8000/fcards/${params.id}/`;
+		const token = localStorage.getItem('key');
 		const csrftoken = getCookie('csrftoken');
 		// Realiza la solicitud GET para obtener los datos de la carta
 		const res = await fetch(endpoint, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				'X-CSRFToken': `${csrftoken}`
+				'X-CSRFToken': `${csrftoken}`,
+				'Authorization': `Token ${token}`
 			},
 			credentials : 'include',
 		});
@@ -26,16 +32,20 @@ export async function load({ fetch, params }) {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
-					'X-CSRFToken': `${csrftoken}`
+					'X-CSRFToken': `${csrftoken}`,
+					'Authorization': `Token ${token}`
 				},
 				credentials : 'include',
 			});
 
 			if (resHistory.ok){
 				const history = await resHistory.json()
+				SingleCardStore.set(card);
+				HistoryStore.set(history.history);
 				// Devuelve las cartas cargadas junto con su ID
 				return { card, id: params.id, history };
 			}else {
+				SingleCardStore.set(card);
 				return { card, id: params.id, history : [] };
 			}
 
@@ -50,19 +60,4 @@ export async function load({ fetch, params }) {
 		// Devuelve un objeto vacío en caso de error
 		return { card: [], id: params.id, history : [] };
 	}
-}
-
-function getCookie(name) {
-	let cookieValue = null;
-	if (document.cookie && document.cookie !== '') {
-		const cookies = document.cookie.split(';');
-		for (let i = 0; i < cookies.length; i++) {
-			const cookie = cookies[i].trim();
-			if (cookie.substring(0, name.length + 1) === (name + '=')) {
-				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-				break;
-			}
-		}
-	}
-	return cookieValue;
 }

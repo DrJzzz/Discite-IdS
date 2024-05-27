@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from userapp.models import get_default_user, CustomUser, create_default_user
-
+from notes.models import Tag
 
 class Deck(models.Model):
     id = models.AutoField(primary_key=True)
 
-    tags = ArrayField(models.CharField(max_length=100), blank=True, null=True)
+    tags = models.ManyToManyField('notes.Tag', blank=True)
     name = models.CharField(max_length=100)
     card_count = models.IntegerField(default=0)
     max_reviews = models.IntegerField(default=20)  
@@ -28,6 +28,7 @@ def get_default_deck(sender, **kwargs):
             defaults=dict(owner=create_default_user)
         )
         return deck
+    
     
 def create_default_deck():    
         deck, created = Deck.objects.get_or_create(

@@ -14,6 +14,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 @import 'filepond/dist/filepond.css';
 @import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+@import "sweetalert2/dist/sweetalert2.min.css";
 :root,
 [data-bs-theme=light] {
   --bs-blue: #378dfc;
@@ -12811,4 +12812,43 @@ textarea.form-control-lg {
 body {
   height: 100vh;
   color: #f3f4f6;
+}
+
+
+.scrollable {
+  max-height: 200px;
+  overflow-y: scroll;
+}
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.button-item {
+  flex: 1 1 50%; /* Dos columnas */
+  padding: 5px;
+}
+
+.button-item button {
+  width: 100%;
+}
+
+.card-width{
+  width: 30rem;
+  margin-left: 20%;
+  min-height: 300px;
+}
+
+/* Hacer que la primera columna sea scrollable */
+.scrollable-column {
+  height: 100%;
+  max-height: 500px; /* Ajusta según sea necesario */
+  overflow-y: auto;
+}
+
+.scrollable-column-note {
+  height: 100%;
+  max-height: 800px; /* Ajusta según sea necesario */
+  overflow-y: auto;
 }

@@ -10,6 +10,7 @@ get_last_edited = NoteViewSet.as_view({
 router = routers.DefaultRouter()
 router.register(r'notes', NoteViewSet)
 router.register(r'notebooks', NotebookViewSet)
+router.register(r'tags', TagViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

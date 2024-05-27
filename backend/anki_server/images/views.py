@@ -6,6 +6,8 @@ from images.models import Image
 from rest_framework.parsers import (MultiPartParser, FormParser)
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import JsonResponse
+from rest_framework.decorators import action
 
 from rest_framework.permissions import (AllowAny, IsAuthenticated)
 
@@ -22,4 +24,7 @@ class ImageViewSet(viewsets.ModelViewSet):
         data = {'url': serializer.data['image']}
         return Response(data)
     
+    # def get_file(self, request, *args, **kwargs):
+    #     user = request.user
+    #     return image
 

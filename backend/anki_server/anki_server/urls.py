@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import routers, serializers, viewsets
 
 from userapp import views as userviews
-from notes.views import NoteViewSet, NotebookViewSet
+from notes.views import NoteViewSet, NotebookViewSet, TagViewSet
 from cards.views import FlashCardViewSet
 from images.views import ImageViewSet
 from django.conf.urls.static import static
@@ -22,6 +22,7 @@ router.register(r'img', ImageViewSet)
 router.register(r'notebooks', NotebookViewSet)
 router.register(r'decks', DeckViewSet)
 router.register(r'shared', SharedViewSet)
+router.register(r'tags', TagViewSet)
 
 urlpatterns = [
     path('', include('userapp.urls')),
@@ -35,5 +36,5 @@ urlpatterns = [
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
     re_path(r'^rest-auth/registration/', include('exarth_rest_auth.registration.urls')),
     re_path(r'^rest-auth/', include('exarth_rest_auth.urls')),
-     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+   #  path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
