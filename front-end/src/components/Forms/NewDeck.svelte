@@ -70,6 +70,17 @@
                 : button
         );
     }
+
+
+    function changeIdHistory(id){
+        id_history = id;
+        HistoryStore.subscribe(cards =>{
+            // Encontrar el objeto con el mismo history_id
+            history = cards.find(card => card.history_id === id);
+        });
+    }
+
+    let tag_name = '';
 </script>
 
 <div>
@@ -82,8 +93,27 @@
                 <input bind:value={name} type="text" class="form-control" id="floatingInput" placeholder="name" style="color:black" >
                 <label for="floatingInput" style="color:black" >Name</label>
             </div>
+            
             <div class="mb-3">
-                <h6>Tags list</h6>
+                <h4>Tags</h4>
+                <hl>
+                    <div class="form-floating mb-3">
+                        <input bind:value={tag_name} type="text" 
+                        class="form-control" id="floatingInput" 
+                        placeholder="name" style="color:black" >
+                        <label for="floatingInput" style="color:black" >
+                            Tag Name
+                        </label>
+                    </div>
+
+                <button  type="button" 
+                class="btn btn-secondary" 
+                data-bs-dismiss="modal"
+                on:click={createTag}>
+                Add
+                </button>
+
+
                 <div class="scrollable">
                     <div class="button-container">
                         {#each buttons as button, index}
