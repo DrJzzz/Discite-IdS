@@ -18,25 +18,31 @@ class SharedSerializer(serializers.HyperlinkedModelSerializer):
         sharer = validated_data['sharer']
         recipient = validated_data['recipient']
         
-        deck_shared = validated_data['deck_shared']
-        notebook_shared = validated_data['notebook_shared']
-        
-        deck = validated_data['deck']
-        notebook = validated_data['notebook']
+        try:
+            deck_shared = validated_data['deck_shared']
+        except:
+            deck_shared = False      
+       
+        try:
+            notebook_shared = validated_data['notebook_shared']
+        except:
+            notebook_shared = False      
+       
 
         obj = 'deck'
         
-        print(sharer, recipient, deck_shared, notebook_shared, deck, notebook)
         
         if  deck_shared and notebook_shared :
             raise ValidationError(_("Cannot shared both deck and notebook")).as_json()
             
         
         elif deck_shared:
+            deck = validated_data['deck']
             list = Shared.objects.filter(sharer=sharer, recipient=recipient, deck=deck)
            
         
         elif notebook_shared:
+            notebook = validated_data['notebook']
             obj = 'notebook'
             list = Shared.objects.filter(sharer=sharer, recipient=recipient, notebook=notebook)
             

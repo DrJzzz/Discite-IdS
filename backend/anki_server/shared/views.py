@@ -44,7 +44,40 @@ class SharedViewSet(viewsets.ModelViewSet):
         
     @action(detail=False, methods=['GET'])
     def shared_with(self, request, *args, **kwargs):
-        return response.Response()
+        user = request.data.get('user')
+        
+        try:
+            deck = request.data.get('deck')
+        except:
+            deck = None
+        try:            
+            notebook = request.data.get('notebook')
+        except:
+            notebook = None
+        
+        list = []
+
+        if deck is not None:
+            list = Shared.objects.filter(sharer=user, deck=deck)
+        
+        if notebook is not None:
+            list = Shared.objects.filter(sharer=user, notebook=notebook)
+            
+            
+            
+        values = []
+        
+        for x in list:
+            user = x.recipient
+            #user = CustomUser.objects.filter(id=recipient)
+            item = {
+                'id' : user.id,
+                'name' : user.name,
+                'email' : user.email
+            }
+            values.append(item)
+            
+        return response.Response(data=values)
     
     
     
