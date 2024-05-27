@@ -1,5 +1,5 @@
 <script>
-    import {NoteStore} from '../../../../note-store.js'
+    import {SingleNoteStore} from "../../../../single-note-store.js";
     import { onMount } from "svelte";
     import SvelteMarkdown from 'svelte-markdown';
     import {ClockCounterClockwise, Pencil} from "phosphor-svelte";
@@ -25,7 +25,7 @@
 
     onMount(() =>{
         ImagesStore.set([]);
-        NoteStore.set(data.note);
+        SingleNoteStore.set(data.note);
         HistoryStore.set(data.history.history);
         history = $HistoryStore[id_history];
         console.log(history)
@@ -33,7 +33,6 @@
 
 
     async function handleSubmit() {
-        console.log(JSON.stringify(note))
         try {
             const csrftoken = getCookie('csrftoken');
             const token = localStorage.getItem('key');
@@ -180,7 +179,7 @@
     }
 </style>
 
-{#if NoteStore}
+{#if SingleNoteStore}
     <div class="container-md" >
         <!-- Botón que activa el modal edit-->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -201,12 +200,12 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <SvelteMarkdown source="{title}" />
-                            <SvelteMarkdown source="{$NoteStore.title}" />
+                            <SvelteMarkdown source="{$SingleNoteStore.title}" />
                         </div>
 
                     </div>
                     <div class="card-body">
-                        <SvelteMarkdown source="{$NoteStore.content}" />
+                        <SvelteMarkdown source="{$SingleNoteStore.content}" />
                     </div>
                 </div>
             </div>
@@ -223,11 +222,11 @@
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title</label>
-                                <input type="text" bind:value={$NoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
+                                <input type="text" bind:value={$SingleNoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
                             </div>
                             <div class="mb-3">
                                 <label for="content" class="form-label">Content</label>
-                                <textarea bind:value={$NoteStore.content} style="color:black" class="form-control" id="content" rows="10" placeholder="Type in Markdown"></textarea>
+                                <textarea bind:value={$SingleNoteStore.content} style="color:black" class="form-control" id="content" rows="10" placeholder="Type in Markdown"></textarea>
                             </div>
                             <div class="mb-3">
                                 <h6> Links images in markdown</h6>

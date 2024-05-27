@@ -21,12 +21,13 @@
     async function logout(){
         try {
             const csrftoken = getCookie('csrftoken');
-
+            const token = localStorage.getItem('key');
             const endpoint = `http://localhost:8000/rest-auth/logout/`;
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': `${csrftoken}` // Incluir el token CSRF en los encabezados
+                    'X-CSRFToken': `${csrftoken}`, // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
                 },
                 credentials: 'include'
             });

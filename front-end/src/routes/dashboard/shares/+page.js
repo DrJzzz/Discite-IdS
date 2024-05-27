@@ -1,5 +1,6 @@
 import {getCookie} from "../../../utils/csrf.js";
-
+import {SharedDeckStore} from '../../../shared-deck-store.js';
+import {SharedNotebookStore} from '../../../shared-notebook-store.js';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {
 
@@ -56,7 +57,8 @@ export async function load({ parent, fetch, params  }) {
 
         }
 
-
+        SharedDeckStore.set(cards);
+        SharedNotebookStore.set(notes);
         // Devuelve las notas cargadas
         return { cards, notes };
     }catch (error){
