@@ -36,6 +36,7 @@ export function alertEndStudy(message, icon){
         timer: 2000,
         icon: icon,
         timerProgressBar: true,
+        showConfirmButton: false,
         didOpen: () => {
             Swal.showLoading();
             const timer = Swal.getPopup().querySelector("b");
@@ -53,3 +54,27 @@ export function alertEndStudy(message, icon){
     });
 }
 
+
+export function alertCenter(message, icon){
+    let timerInterval;
+    Swal.fire({
+        title: message,
+        timer: 2000,
+        icon: icon,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+    }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+        }
+    });
+}

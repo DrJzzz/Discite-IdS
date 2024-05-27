@@ -1,6 +1,7 @@
 <script>
     import { goto } from '$app/navigation';
     import {getCookie} from "../../utils/csrf.js";
+    import {alertCenter} from "../../utils/alerts.js";
 
     let name = '';
     let email = '';
@@ -36,16 +37,16 @@
 
             const result = await response.json();
             
-            if (response.ok) {    
-                alert('Usuario creado exitosamente');
+            if (response.ok) {
+                alertCenter('Register successfully', 'success');
                 goto('/login')
             } else {
                 console.log(response.statusText)
-                alert('Tu usuairo o contraseña son incorrectos, por favor intenta de nuevo.');
+                alertCenter('Error submitted data, verify data is correct', 'error');
             }
             
         } catch (error) {
-            alert("Bip bop, algo salió mal. Por favor intenta de nuevo.")
+            alertCenter('Something went wrong while register, try again.');
         }
     }
 </script>
