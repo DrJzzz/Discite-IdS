@@ -49,7 +49,8 @@ class UserViewSet(viewsets.ModelViewSet):
             item = {
                 'id' : user.id,
                 'name' : user.name,
-                'email' : user.email
+                'email' : user.email,
+                'picture' : user.picture.url
             }
             values.append(item)
 
@@ -127,6 +128,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     'user' : {'id': user.id, 'name': user.name, 'email': user.email},
                     'decks' : list_decks,
                     'notebooks' : list_notebooks,
+                    'picture' : user.picture.url
                 }
                 values.append(item)
         
