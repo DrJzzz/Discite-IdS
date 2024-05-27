@@ -2,7 +2,7 @@ import {getCookie} from "../../../utils/csrf.js";
 import {CardStore} from "../../../card-store.js";
 import {UsersStore} from "../../../users-store.js";
 import {DeckStore} from "../../../deck-store.js";
-
+import {TagStore} from "../../../tag-store.js";
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
     try {
@@ -57,8 +57,22 @@ export async function load({ parent, fetch, params }) {
             credentials: 'include'
         });
 
+        const tagsEndpoint = 'http://localhost:8000/tags/';
+        const tagsRes = await fetch(tagsEndpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': `${csrftoken}`,
+                'Authorization': `Token ${token}`,
+            },
+            credentials: 'include'
+        });
+
         const usersJSON = await usersRes.json();
         const users = usersJSON.users;
+        const tagsJSON = await tagsRes.json();
+        const tags = tagsJSON.results;
+        TagStore.set(tags);
         CardStore.set(cards);
         UsersStore.set(users);
         DeckStore.set(decks);

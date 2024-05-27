@@ -162,24 +162,7 @@
 
 </script>
 <style>
-    .scrollable {
-        max-height: 200px;
-        overflow-y: scroll;
-    }
 
-    .button-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .button-item {
-        flex: 1 1 50%; /* Dos columnas */
-        padding: 5px;
-    }
-
-    .button-item button {
-        width: 100%;
-    }
 </style>
 
 

@@ -74,7 +74,6 @@ export async function load({ parent, fetch, params }) {
         const users = usersJSON.users;
         const tagsJSON = await tagsRes.json();
         const tags = tagsJSON.results;
-        console.log(tags);
         TagStore.set(tags);
         NoteStore.set(notes);
         UsersStore.set(users);
