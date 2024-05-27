@@ -9,6 +9,8 @@
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {HistoryStore} from "../../../../history-store.js";
     import {getCookie} from "../../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
 
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -48,12 +50,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Updated note successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to updated note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while updating note');
         }
     }
     function changeIdHistory(id){
@@ -96,11 +100,14 @@
                 try {
                     const urlImg = JSON.parse(request.response); // Convertir a JSON
                     addImageStore(urlImg);
+                    alertSuccess('Upload image successfuly.');
                 } catch (e) {
                     error('Error parsing response as JSON');
+                    alertError('Error parsing response as JSON');
                 }
             } else {
                 error('Error uploading file');
+                alertError('Error uploading file');
             }
         };
 
@@ -152,12 +159,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Change history successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to change history');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while changing history');
         }
     }
 
@@ -302,7 +311,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" on:click={() => handleChangeHistory()}>Change</button>
+                        <button type="button" class="btn btn-primary" on:click={() => handleChangeHistory()} data-bs-dismiss="modal">Change</button>
                     </div>
                 </div>
             </div>

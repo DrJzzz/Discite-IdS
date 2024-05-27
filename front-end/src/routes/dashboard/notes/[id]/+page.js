@@ -1,4 +1,6 @@
 import {getCookie} from "../../../../utils/csrf.js";
+import {SingleNoteStore} from "../../../../single-note-store.js";
+import {HistoryStore} from "../../../../history-store.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
@@ -33,8 +35,12 @@ export async function load({ fetch, params }) {
 			if (resHistory.ok) {
 				const history = await resHistory.json()
 				// Devuelve las cartas cargadas junto con su ID
+				SingleNoteStore.set(note);
+				HistoryStore.set(history.history);
+
 				return {note, id: params.id, history};
 			} else {
+				SingleNoteStore.set(note);
 				return {note, id: params.id, history: []};
 			}
 

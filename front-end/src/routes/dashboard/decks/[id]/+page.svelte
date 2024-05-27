@@ -7,6 +7,8 @@
     import {HistoryStore} from "../../../../history-store.js";
     import {SingleCardStore} from "../../../../single-card-store.js";
     import {getCookie} from "../../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -47,13 +49,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
-
+                alertSuccess('Updated card successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to updated note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while updating note');
         }
     }
 
@@ -86,12 +89,14 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Change history successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to change history');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while changing history');
         }
     }
 
@@ -234,7 +239,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" on:click={handleChangeHistory}>Change</button>
+                        <button type="button" class="btn btn-primary" on:click={handleChangeHistory} data-bs-dismiss="modal">Change</button>
                     </div>
                 </div>
             </div>

@@ -1,13 +1,11 @@
 <script>
-    import {onMount} from "svelte";
     import {SharedDeckStore} from '../../../shared-deck-store.js';
     import {SharedNotebookStore} from '../../../shared-notebook-store.js';
     import {Plus} from "phosphor-svelte";
     import {goto} from "$app/navigation";
     import SvelteMarkdown from "svelte-markdown";
-    import NewNote from "../../../components/Forms/NewNote.svelte";
-    import NewCard from "../../../components/Forms/NewCard.svelte";
     import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -56,12 +54,13 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new note successfully.');
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new note');
         }
     }
     async function handleSubmitCard() {
@@ -84,12 +83,13 @@
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new card successfully.');
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new card.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new card');
         }
     }
 

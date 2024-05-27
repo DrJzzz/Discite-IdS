@@ -1,4 +1,5 @@
 import Swal from "sweetalert2";
+import {goto} from "$app/navigation";
 
 export function alertSuccess(message){
     Swal.fire({
@@ -27,3 +28,28 @@ export function alertError(message){
         timer: 2000
     });
 }
+
+export function alertEndStudy(message, icon){
+    let timerInterval;
+    Swal.fire({
+        title: message,
+        timer: 2000,
+        icon: icon,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval);
+        }
+    }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+        }
+    });
+}
+
