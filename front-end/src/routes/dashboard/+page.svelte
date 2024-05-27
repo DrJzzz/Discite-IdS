@@ -166,6 +166,8 @@
     }
 
     const title = '# Title:'
+
+    const localhost = 'http://localhost:8000'
 </script>
 
 
@@ -183,7 +185,7 @@
                 {#each $HomeStore as info}
                 <div class="card col" style="max-width: 480px">
                     <div class="card-header d-flex align-items-center">
-                        <img src={user.profileImage} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                        <img src={localhost+ info.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
                         <div>
                             <h5 class="card-title mb-0">{info.user.name}</h5>
                             <p class="card-text"><small class="text-muted">{info.user.email}</small></p>
