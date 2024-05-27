@@ -160,6 +160,37 @@
     }
 
 
+    let tag_name = '';
+    async function createTag(){
+        
+        const data = {'name': `${tag_name}`};
+        console.log(JSON.stringify(data))
+        try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
+            const response = await fetch('http://127.0.0.1:8000/tags/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                body: JSON.stringify(data),
+                credentials : 'include',
+            });
+
+            if (response.ok) {
+                alertSuccess('Added new Tag.');
+                await invalidateAll();
+            } else {
+                alertError('Failed to add new Tag.');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new deck.');
+        }
+    }
+
 </script>
 <style>
 
@@ -192,7 +223,25 @@
             </div>
 
             <div class="mb-3">
-                <h6>Tags list</h6>
+                <h4>Tags</h4>
+                <hl>
+                    <div class="form-floating mb-3">
+                        <input bind:value={tag_name} type="text" 
+                        class="form-control" id="floatingInput" 
+                        placeholder="name" style="color:black" >
+                        <label for="floatingInput" style="color:black" >
+                            Tag Name
+                        </label>
+                    </div>
+
+                <button  type="button" 
+                class="btn btn-secondary" 
+                
+                on:click={createTag}>
+                Add
+                </button>
+
+
                 <div class="scrollable">
                     <div class="button-container">
                         {#each buttons as button, index}
@@ -209,7 +258,7 @@
                         {/each}
                     </div>
                 </div>
-
+                
             </div>
             <div class="mb-3">
                 <h6> Links images in markdown</h6>
