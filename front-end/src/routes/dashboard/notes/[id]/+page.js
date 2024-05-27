@@ -1,6 +1,7 @@
 import {getCookie} from "../../../../utils/csrf.js";
 import {SingleNoteStore} from "../../../../single-note-store.js";
 import {HistoryStore} from "../../../../history-store.js";
+import {TagStore} from "../../../../tag-store.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
@@ -37,6 +38,23 @@ export async function load({ fetch, params }) {
 				// Devuelve las cartas cargadas junto con su ID
 				SingleNoteStore.set(note);
 				HistoryStore.set(history.history);
+
+				const tagsEndpoint = 'http://localhost:8000/tags/';
+				const tagsRes = await fetch(tagsEndpoint, {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': `${csrftoken}`,
+						'Authorization': `Token ${token}`,
+					},
+					credentials: 'include'
+				});
+
+				if (tagsRes.ok){
+					const tagsJSON = await tagsRes.json();
+					const tags = tagsJSON.results;
+					TagStore.set(tags);
+				}
 
 				return {note, id: params.id, history};
 			} else {
