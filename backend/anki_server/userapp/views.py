@@ -87,6 +87,11 @@ class UserViewSet(viewsets.ModelViewSet):
             shared_notebooks = user.note_user.filter(public=True)
             if len(shared_decks) == 0 and len(shared_notebooks) == 0:
                 continue
+            
+            deck_tags = list(shared_decks.values_list('tags'))
+            notebook_tags = list(shared_notebooks.values( 'tags'))
+            print(deck_tags)
+                     
             item = {
                 'user' : {'id': user.id, 'name': user.name, 'email': user.email},
                 'decks' : list(shared_decks.values('id', 'name','card_count', 'tags')),
@@ -104,7 +109,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    
 
     
 

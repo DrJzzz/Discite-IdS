@@ -80,6 +80,64 @@ class SharedViewSet(viewsets.ModelViewSet):
         return response.Response(data=values)
     
     
+    def perform_create(self, serializer):
+     
+        sharer = serializer.validated_data['sharer']
+        recipient = serializer.validated_data['recipient']
+        
+        try:
+            deck_shared = serializer.validated_data['deck_shared']
+        except:
+            deck_shared = False      
+       
+        try:
+            notebook_shared = serializer.validated_data['notebook_shared']
+        except:
+            notebook_shared = False      
+       
+
+        obj = 'deck'
+        
+        
+        if  deck_shared and notebook_shared :
+            raise ValidationError(_("Cannot shared both deck and notebook")).as_json()
+            
+        
+        elif deck_shared:
+            deck = serializer.validated_data['deck']
+            list = Shared.objects.filter(sharer=sharer, recipient=recipient, deck=deck)
+           
+        
+        elif notebook_shared:
+            notebook = serializer.validated_data['notebook']
+            obj = 'notebook'
+            list = Shared.objects.filter(sharer=sharer, recipient=recipient, notebook=notebook)
+            
+        if len(list) == 0:
+            serializer.is_valid(raise_exception=True)
+            shared = serializer.save()
+            return response.Response(serializer.data)
+        
+        
+        else:
+            values = []
+            for x in list :
+                json  = model_to_dict(x)
+                values.append(json)
+                
+            data = {'message': 'already shared',
+                    'data' : values 
+                    }
+            raise  ValidationError(_("Invalid value: %(message)s, \n %(data)s"),
+                                    code="invalid",
+                                    params=data,
+                                    )
+
+        
+    
+        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
     
         
         
