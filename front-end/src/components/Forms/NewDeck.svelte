@@ -16,7 +16,7 @@
         const owner = user.id;
         const tags = buttons
             .filter(button => button.color === 'btn-danger')
-            .map(button => button.url);
+            .map(button => button.id);
         const data = {name, owner, tags };
         console.log(JSON.stringify(data))
         try {
