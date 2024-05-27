@@ -118,7 +118,6 @@
 
             <div class="mb-3">
                 <h4>Tags</h4>
-                <hl>
                     <div class="form-floating mb-3">
                         <input bind:value={tag_name} type="text" 
                         class="form-control" id="floatingInput" 
@@ -127,7 +126,6 @@
                             Tag Name
                         </label>
                     </div>
-
                 <button  type="button" 
                 class="btn btn-secondary" 
                 

@@ -5,7 +5,7 @@
     import { writable } from "svelte/store";
     import NewNote from "../../../components/Forms/NewNote.svelte";
     import SvelteMarkdown from "svelte-markdown";
-    import {Plus, X} from "phosphor-svelte";
+    import {Gear, Plus, X} from "phosphor-svelte";
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
     import {UsersStore} from "../../../users-store.js";
     import {UserStore} from "../../../user-store.js";
@@ -283,7 +283,7 @@
                     </button>
                     <div class="col btn-group "style="max-width: 50px;">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-                            Options
+                            <Gear size={24}/>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
                             <li><a class="dropdown-item" data-bs-toggle="modal"  role="button" href="#inviteModal" data-bs-target="#inviteModal" on:click={() => changeIdNotebook(info.notebook.id)} >Invite</a></li>

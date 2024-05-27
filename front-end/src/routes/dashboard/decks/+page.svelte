@@ -3,7 +3,7 @@
     import NewCard from "../../../components/Forms/NewCard.svelte";
     import SvelteMarkdown from "svelte-markdown";
     import {goto} from "$app/navigation";
-    import {Plus, X} from "phosphor-svelte";
+    import {Plus, X, Gear} from "phosphor-svelte";
     import NewDeck from "../../../components/Forms/NewDeck.svelte";
     import {UsersStore} from "../../../users-store.js";
     import {CardStore} from "../../../card-store.js";
@@ -309,7 +309,7 @@
                         </button>
                         <div class="col btn-group "style="max-width: 50px;">
                             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-                                Options
+                                <Gear size={24}/>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)} >Invite</a></li>
