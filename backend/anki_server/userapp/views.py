@@ -83,23 +83,54 @@ class UserViewSet(viewsets.ModelViewSet):
     def user_public_preview(self, request, *ars, **kwargs):
         users = CustomUser.objects.all()
         values = []
-        for user in users :
-            shared_decks = user.deck_user.filter(public=True)
-            shared_notebooks = user.note_user.filter(public=True)
-            if len(shared_decks) == 0 and len(shared_notebooks) == 0:
-                continue
-            
-            deck_tags = list(shared_decks.values_list('tags'))
-            notebook_tags = list(shared_notebooks.values( 'tags'))
-            print(deck_tags)
-                     
-            item = {
-                'user' : {'id': user.id, 'name': user.name, 'email': user.email},
-                'decks' : list(shared_decks.values('id', 'name','card_count', 'tags')),
-                'notebooks' : list(shared_notebooks.values('id', 'name','note_count', 'tags')),
-                'picture' : user.picture.url
-            }
-            values.append(item)
+        
+        if len(users) > 0 :
+            for user in users :
+                deck_tags = None
+                notebook_tags = None
+                shared_decks = user.deck_user.filter(public=True)
+                shared_notebooks = user.note_user.filter(public=True)
+                
+                if len(shared_decks) == 0 and len(shared_notebooks) == 0:
+                    continue
+                
+                
+                list_decks = []
+                for deck in shared_decks:
+                    deck_tags =[]
+                    deck_tags = [x['id'] for x in deck.tags.values('id')]
+
+                    data = {
+                        'id' : deck.id,
+                        'name' : deck.name,
+                        'card_count' : deck.card_count,
+                        'tags' : deck_tags
+                        } #list(deck.values('id', 'name','card_count'))
+                    
+                    list_decks.append(data)
+                
+                list_notebooks = []
+                for nb in shared_notebooks:
+                    notebook_tags =[]
+                    notebook_tags = [x['id'] for x in nb.tags.values('id')]
+
+                    data = {
+                        'id' : nb.id,
+                        'name' : nb.name,
+                        'note_count' : nb.note_count,
+                        'tags' : notebook_tags
+                        } 
+                    
+                    list_notebooks.append(data)
+               
+
+                item = {
+                    'user' : {'id': user.id, 'name': user.name, 'email': user.email},
+                    'decks' : list_decks,
+                    'notebooks' : list_notebooks,
+                    'picture' : user.picture.url
+                }
+                values.append(item)
         
         return Response(data=values, status=200)
     

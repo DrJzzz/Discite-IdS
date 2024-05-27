@@ -17,7 +17,6 @@
         const tags = buttons
             .filter(button => button.color === 'btn-danger')
             .map(button => button.id);
-        console.log(tags)
         const data = {name, owner, tags };
         console.log(JSON.stringify(data))
         try {
@@ -71,16 +70,38 @@
         );
     }
 
+    let tag_name = '';
+    async function createTag(){
+        
+        const data = {'name': `${tag_name}`};
+        console.log(JSON.stringify(data))
+        try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
+            const response = await fetch('http://127.0.0.1:8000/tags/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                body: JSON.stringify(data),
+                credentials : 'include',
+            });
 
-    function changeIdHistory(id){
-        id_history = id;
-        HistoryStore.subscribe(cards =>{
-            // Encontrar el objeto con el mismo history_id
-            history = cards.find(card => card.history_id === id);
-        });
+            if (response.ok) {
+                alertSuccess('Added new Tag.');
+                await invalidateAll();
+            } else {
+                alertError('Failed to add new Tag.');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new deck.');
+        }
     }
 
-    let tag_name = '';
+    
 </script>
 
 <div>
@@ -108,7 +129,7 @@
 
                 <button  type="button" 
                 class="btn btn-secondary" 
-                data-bs-dismiss="modal"
+                
                 on:click={createTag}>
                 Add
                 </button>
@@ -130,6 +151,7 @@
                         {/each}
                     </div>
                 </div>
+                
             </div>
 
 
