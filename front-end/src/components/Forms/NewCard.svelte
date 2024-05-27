@@ -88,7 +88,6 @@
                 }
                 : button
         );
-        console.log(buttons)
     }
 
 </script>
@@ -147,7 +146,6 @@
                         {/each}
                     </div>
                 </div>
-
             </div>
 
         </div>
