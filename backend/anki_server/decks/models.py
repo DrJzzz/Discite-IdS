@@ -6,7 +6,7 @@ from notes.models import Tag
 class Deck(models.Model):
     id = models.AutoField(primary_key=True)
 
-    #tags = models.ManyToManyField('Tag', blank=True)
+    tags = models.ManyToManyField('Tag', blank=True)
     name = models.CharField(max_length=100)
     card_count = models.IntegerField(default=0)
     max_reviews = models.IntegerField(default=20)  
