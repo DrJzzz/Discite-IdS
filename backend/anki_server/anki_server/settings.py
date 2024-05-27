@@ -77,10 +77,12 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'anki_server.urls'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ],
+     'DEFAULT_AUTHENTICATION_CLASSES': [
+         #'rest_framework.authentication.BasicAuthentication',
+         'rest_framework.authentication.TokenAuthentication',
+         'rest_framework.authentication.SessionAuthentication',
+         
+     ],
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
@@ -206,5 +208,5 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 # MEDIA STORAGE
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'

@@ -24,6 +24,16 @@ class NoteViewSet(viewsets.ModelViewSet):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
     
     
+    @action(detail=True, methods=['PUT'])
+    def revert_to(self, request, *args, **kwargs):
+        current = self.get_object()
+        revert_to = current.history.filter(history_id=request.data['id']).get()
+        new_current = revert_to.instance.save()
+        serializer = NoteSerializer(new_current, context={'request': request})
+        return response.Response(serializer.data)
+    
+    
+    
     def perform_create(self, serializer):
         note = serializer.save()
         note.notebook.note_count = note.notebook.note_count + 1
@@ -66,8 +76,14 @@ class NotebookViewSet(viewsets.ModelViewSet):
         serializer = NotebookSerializer(notebook, context={'request': request})
         return Response(serializer.data, status=200)
     
+    
+    
+    
 
-
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    
 
 
 
@@ -79,8 +95,9 @@ def notes_notebook(request, pk):
         'notebook': {
             'id': notebook.id,
             'name': notebook.name,
+            'public' : notebook.public
         },
-        'notes': list(notes.values('id', 'title'))
+        'notes': list(notes.values('id', 'title', 'content' , 'dateCreated'))
     }
 
     return JsonResponse(data)

@@ -1,13 +1,18 @@
 <script>
-    import {NoteStore} from '../../../../note-store.js'
+    import {SingleNoteStore} from "../../../../single-note-store.js";
     import { onMount } from "svelte";
     import SvelteMarkdown from 'svelte-markdown';
-    import {ClockCounterClockwise, Pencil} from "phosphor-svelte";
+    import {ClockCounterClockwise, Pencil, Plus, X} from "phosphor-svelte";
     import {ImagesStore} from "../../../../images-store.js";
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {HistoryStore} from "../../../../history-store.js";
+    import {getCookie} from "../../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
+    import {TagStore} from "../../../../tag-store.js";
+
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
     /** @type {import('./$types').PageData} */
@@ -16,46 +21,61 @@
 
     let id_history = 0;
 
-    let history = {id : 0 , title : '' , content : '', history_date : ""} ;
+    let history = {id : 0 , title : '' , content : '', history_date : "", history_id : 0} ;
 
 
     const note = data.note;
 
     onMount(() =>{
         ImagesStore.set([]);
-        NoteStore.set(data.note);
+        SingleNoteStore.set(data.note);
         HistoryStore.set(data.history.history);
         history = $HistoryStore[id_history];
-        console.log(history)
+        console.log($SingleNoteStore)
     })
 
 
     async function handleSubmit() {
-        console.log(JSON.stringify(note))
         try {
+            const tags = buttons
+                .filter(button => button.color === 'btn-danger')
+                .map(button => button.url);
+            const title = note.title;
+            const content = note.content;
+            const notebook = note.notebook;
+            const data ={title, content,tags, notebook};
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const response = await fetch(`http://127.0.0.1:8000/notes/${note.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
                 },
                 credentials : 'include',
-                body: JSON.stringify(note)
+                body: JSON.stringify(data)
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Updated note successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to updated note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while updating note');
         }
     }
     function changeIdHistory(id){
+        console.log(id)
         id_history = id;
-        history = $HistoryStore[id_history-1];
+        HistoryStore.subscribe(notes =>{
+            // Encontrar el objeto con el mismo history_id
+            history = notes.find(note => note.history_id === id);
+
+        });
     }
 
     const title = `# Title:`
@@ -63,25 +83,11 @@
     // the name to use for the internal file input
     let name = 'filepond';
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const process = (fieldName, file, metadata, load, error, progress, abort) => {
 
         const csrftoken = getCookie('csrftoken');
+        const token = localStorage.getItem('key');
         const formData = new FormData();
         formData.append('image', file); // Cambia 'file' al nombre deseado
         const request = new XMLHttpRequest();
@@ -89,6 +95,7 @@
 
 
         request.setRequestHeader('X-CSRFToken', csrftoken);
+        request.setRequestHeader('Authorization', `Token ${token}`);
         // Configura la solicitud para enviar cookies automáticamente
         request.withCredentials = true;
 
@@ -101,11 +108,14 @@
                 try {
                     const urlImg = JSON.parse(request.response); // Convertir a JSON
                     addImageStore(urlImg);
+                    alertSuccess('Upload image successfuly.');
                 } catch (e) {
                     error('Error parsing response as JSON');
+                    alertError('Error parsing response as JSON');
                 }
             } else {
                 error('Error uploading file');
+                alertError('Error uploading file');
             }
         };
 
@@ -138,25 +148,98 @@
 
     };
 
+    async function handleChangeHistory(){
+        try {
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            const id = history.history_id;
+            const info = {id};
+            console.log(JSON.stringify(info))
+            const response = await fetch(`http://127.0.0.1:8000/notes/${note.id}/revert_to/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`,
+                    'Authorization': `Token ${token}`
+                },
+                credentials : 'include',
+                body: JSON.stringify(info)
+            });
+
+            if (response.ok) {
+                alertSuccess('Change history successfully.');
+                await invalidateAll();
+            } else {
+                alertError('Failed to change history');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while changing history');
+        }
+    }
+    let buttons = [];
+
+    // Suscribirse a TagStore y actualizar los botones cuando cambie
+    const unsubscribe = TagStore.subscribe($TagStore => {
+        buttons = $TagStore.map(data => ({
+            ...data,
+            color: $SingleNoteStore.tags.includes(data.url) ? 'btn-danger' : 'btn-primary', // Inicializa con color según la URL
+            icon: $SingleNoteStore.tags.includes(data.url) ? X : Plus // Inicializa con icono según la URL
+        }));
+    });
+
+    // Función para manejar el clic en los botones
+    function toggleButtonState(index) {
+        buttons = buttons.map((button, i) =>
+            i === index
+                ? {
+                    ...button,
+                    color: button.color === 'btn-primary' ? 'btn-danger' : 'btn-primary',
+                    icon: button.icon === Plus ? X : Plus
+                }
+                : button
+        );
+        console.log(buttons)
+    }
+
+
+
+
+    let tag_name = '';
+    async function createTag(){
+
+        const data = {'name': `${tag_name}`};
+        console.log(JSON.stringify(data))
+        try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
+            const response = await fetch('http://127.0.0.1:8000/tags/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                body: JSON.stringify(data),
+                credentials : 'include',
+            });
+
+            if (response.ok) {
+                alertSuccess('Added new Tag.');
+                await invalidateAll();
+            } else {
+                alertError('Failed to add new Tag.');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new deck.');
+        }
+    }
+
     
 </script>
 
-<style>
-    /* Hacer que la primera columna sea scrollable */
-    .scrollable-column {
-        height: 100%;
-        max-height: 500px; /* Ajusta según sea necesario */
-        overflow-y: auto;
-    }
-
-    .scrollable-column-note {
-        height: 100%;
-        max-height: 800px; /* Ajusta según sea necesario */
-        overflow-y: auto;
-    }
-</style>
-
-{#if NoteStore}
+{#if SingleNoteStore}
     <div class="container-md" >
         <!-- Botón que activa el modal edit-->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -177,12 +260,12 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <SvelteMarkdown source="{title}" />
-                            <SvelteMarkdown source="{$NoteStore.title}" />
+                            <SvelteMarkdown source="{$SingleNoteStore.title}" />
                         </div>
 
                     </div>
                     <div class="card-body">
-                        <SvelteMarkdown source="{$NoteStore.content}" />
+                        <SvelteMarkdown source="{$SingleNoteStore.content}" />
                     </div>
                 </div>
             </div>
@@ -199,11 +282,48 @@
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title</label>
-                                <input type="text" bind:value={$NoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
+                                <input type="text" bind:value={$SingleNoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
                             </div>
                             <div class="mb-3">
                                 <label for="content" class="form-label">Content</label>
-                                <textarea bind:value={$NoteStore.content} style="color:black" class="form-control" id="content" rows="10" placeholder="Type in Markdown"></textarea>
+                                <textarea bind:value={$SingleNoteStore.content} style="color:black" class="form-control" id="content" rows="10" placeholder="Type in Markdown"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <h4>Tags</h4>
+                                <div class="form-floating mb-3">
+                                    <input bind:value={tag_name} type="text"
+                                           class="form-control" id="floatingInput"
+                                           placeholder="name" style="color:black" >
+                                    <label for="floatingInput" style="color:black" >
+                                        Tag Name
+                                    </label>
+                                </div>
+
+                                <button  type="button"
+                                         class="btn btn-secondary"
+
+                                         on:click={createTag}>
+                                    Add
+                                </button>
+
+
+                                <div class="scrollable">
+                                    <div class="button-container">
+                                        {#each buttons as button, index}
+                                            <div class="button-item">
+                                                <button
+                                                        class="btn {button.color} my-1"
+                                                        on:click={() => toggleButtonState(index)}
+                                                        type="button"
+                                                >
+                                                    <svelte:component this={button.icon} size={24} />
+                                                    {button.name}
+                                                </button>
+                                            </div>
+                                        {/each}
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="mb-3">
                                 <h6> Links images in markdown</h6>
@@ -279,7 +399,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Change</button>
+                        <button type="button" class="btn btn-primary" on:click={() => handleChangeHistory()} data-bs-dismiss="modal">Change</button>
                     </div>
                 </div>
             </div>

@@ -46,6 +46,7 @@
 		"filepond-plugin-image-transform": "^3.8.7",
 		"svelte-filepond": "^0.2.2",
 		"svelte-kit": "^1.2.0",
-		"svelte-markdown": "^0.4.1"
+		"svelte-markdown": "^0.4.1",
+		"sweetalert2": "^9.7.2"
 	}
 }

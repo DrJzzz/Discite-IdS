@@ -3,12 +3,16 @@
     import NewCard from "../../../components/Forms/NewCard.svelte";
     import SvelteMarkdown from "svelte-markdown";
     import {goto} from "$app/navigation";
-    import {Plus, X} from "phosphor-svelte";
+    import {Plus, X, Gear} from "phosphor-svelte";
     import NewDeck from "../../../components/Forms/NewDeck.svelte";
     import {UsersStore} from "../../../users-store.js";
     import {CardStore} from "../../../card-store.js";
     import {writable} from "svelte/store";
     import {onMount} from "svelte";
+    import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
+    import NewTag from "../../../components/Forms/NewTag.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -17,6 +21,7 @@
     let is_deck = false;
     let is_rename = false;
     let name = "";
+    let unsubscribe;
 
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
@@ -27,22 +32,14 @@
         UsersStore.set([]);
     });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
+    unsubscribe = CardStore.subscribe(value => {
+        if (value) {
+            console.log('Received event:', value);
+            // Maneja el evento aquí
+        }
+        console.log("change")
+    });
 
     const addUsers = (id) => {
         const user = data.users.find(user => user.id === id);
@@ -85,11 +82,12 @@
             invite(user);
 
         });
-
+        await invalidateAll();
     }
 
     async function handleSubmitRename(){
         try {
+            const token = localStorage.getItem('key');
             const csrftoken = getCookie('csrftoken');
             console.log(csrftoken)
             const info = { name}
@@ -98,18 +96,26 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info),
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Rename deck successfully!');
+                alertSuccess('Rename deck successfully.');
+                await invalidateAll().then(() => {
+                        CardStore.set(data.cards);
+                        console.log($CardStore)
+                        UsersStore.set([]);
+                });
             } else {
-                console.error('Failed to delete deck');
+                console.error('');
+                alertError('Something failed to rename deck');
             }
         } catch (error) {
             console.error('An error occurred while deleting the deck:', error);
+            alertError('An error occurred while renaming the deck');
         }
     }
 
@@ -133,67 +139,123 @@
         const deck = `/decks/${id_deck}/`;
         const recipient = `/users/${user.id}/`
         try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
             const info = {sharer, deck_shared, recipient , deck}
             const endpoint = "http://localhost:8000/shared/"
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info),
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess(`Invitation send to ${user.name}`);
             } else {
-                console.error('Failed to submit form');
+                alertError(`Failed sending invitation to ${user.name}`);
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while sending invitation');
         }
     }
     async function deleteDeck() {
         try {
             const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken)
+            const token = localStorage.getItem('key');
             const endpoint = `http://localhost:8000/decks/${id_deck}/`;
             const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete deck successfully!');
+                alertSuccess('Delete deck successfully.');
+                await invalidateAll().then(() => {
+                    CardStore.set(data.cards);
+                    console.log($CardStore)
+                    UsersStore.set([]);
+                });
             } else {
-                console.error('Failed to delete deck');
+                alertError('Failed to delete deck');
             }
         } catch (error) {
             console.error('An error occurred while deleting the deck:', error);
+            alertError('An error occurred while deleting the deck');
         }
     }
     async function deleteCard() {
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const endpoint = `http://localhost:8000/cards/${id_card}/`;
             const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete card successfully!');
+                alertSuccess('Delete card successfully.');
+                await invalidateAll().then(() => {
+                    CardStore.set(data.cards);
+                    console.log($CardStore)
+                    UsersStore.set([]);
+                });
             } else {
-                console.error('Failed to delete deck');
+                alertError('Failed to delete card.');
             }
         } catch (error) {
             console.error('An error occurred while deleting the deck:', error);
+            alertError('An error occurred while deleting the deck.')
         }
+    }
+
+    async function changePublic(id, state){
+
+            try {
+                const csrftoken = getCookie('csrftoken');
+                const token = localStorage.getItem('key');
+                let endpoint = '';
+                if (!state) {
+                    endpoint = `http://localhost:8000/decks/${id}/set_public/`;
+                }else{
+                    endpoint = `http://localhost:8000/decks/${id}/set_private/`;
+                }
+                const response = await fetch(endpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': `${csrftoken}`,  // Incluir el token CSRF en los encabezados
+                        'Authorization': `Token ${token}`
+                    },
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                    alertSuccess('Change state deck successfully.');
+                    await invalidateAll().then(() => {
+                        CardStore.set(data.cards);
+                        console.log($CardStore)
+                        UsersStore.set([]);
+                    });
+                } else {
+                    alertError('Failed to change state deck.');
+                }
+            } catch (error) {
+                console.error('An error occurred while change state of the deck:', error);
+                alertError('An error occurred while change state of the deck.')
+            }
     }
 </script>
 
@@ -231,6 +293,12 @@
             Add deck
         </div>
     </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal">
+        <div class="d-flex align-items-center">
+            <Plus />
+            Add tag
+        </div>
+    </button>
     {#if CardStore}
             <div class="accordion" id="accordionPanelsStayOpenExample">
             {#each $CardStore as info}
@@ -241,10 +309,16 @@
                         </button>
                         <div class="col btn-group "style="max-width: 50px;">
                             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-                                Options
+                                <Gear size={24}/>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)} >Invite</a></li>
+                                {#if !info.deck.public}
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)} >Public</a></li>
+                                {:else }
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)} >Private</a></li>
+                                {/if}
+
                                 <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdDeckRename(info.deck.id)}>Rename</a></li>
                                 <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)} >Delete</a></li>
                             </ul>
@@ -304,9 +378,9 @@
                         <div class="modal-footer" style="margin-right: 25%">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             {#if is_deck}
-                                <button type="button" class="btn btn-primary"  on:click={() => deleteDeck()}>Confirm</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  on:click={() => deleteDeck()}>Confirm</button>
                             {:else }
-                                <button type="button" class="btn btn-primary"  on:click={() => deleteCard()}>Confirm</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => deleteCard()}>Confirm</button>
                             {/if}
                         </div>
                     {/if}
@@ -317,7 +391,7 @@
             <div>
                 <h3>Cargando..</h3>
             </div>
-        {/if}
+    {/if}
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -330,6 +404,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <NewDeck/>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <NewTag/>
             </div>
         </div>
     </div>

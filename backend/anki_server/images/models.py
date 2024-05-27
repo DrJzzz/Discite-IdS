@@ -13,4 +13,6 @@ class Image(models.Model):
                               on_delete=models.CASCADE,
                               default=create_default_user)
 
+    
+    
 

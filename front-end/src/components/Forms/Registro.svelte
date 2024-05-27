@@ -1,7 +1,7 @@
 <script>
     import { goto } from '$app/navigation';
-	import InputPassword from '../Inputs/InputPassword.svelte';
-	import InputText from '../Inputs/InputText.svelte';
+    import {getCookie} from "../../utils/csrf.js";
+    import {alertCenter} from "../../utils/alerts.js";
 
     let name = '';
     let email = '';
@@ -25,26 +25,28 @@
         };
         console.log(data)
         try {
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data)
             });
 
             const result = await response.json();
             
-            if (response.ok) {    
-                alert('Usuario creado exitosamente');
+            if (response.ok) {
+                alertCenter('Register successfully', 'success');
                 goto('/login')
             } else {
                 console.log(response.statusText)
-                alert('Tu usuairo o contraseña son incorrectos, por favor intenta de nuevo.');
+                alertCenter('Error submitted data, verify data is correct', 'error');
             }
             
         } catch (error) {
-            alert("Bip bop, algo salió mal. Por favor intenta de nuevo.")
+            alertCenter('Something went wrong while register, try again.');
         }
     }
 </script>

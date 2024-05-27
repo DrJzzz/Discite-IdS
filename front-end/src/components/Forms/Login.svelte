@@ -1,7 +1,7 @@
 <script>
     import { goto } from '$app/navigation';
-	import InputPassword from '../Inputs/InputPassword.svelte';
-	import InputText from '../Inputs/InputText.svelte';
+    import {getCookie} from "../../utils/csrf.js";
+    import {alertCenter} from "../../utils/alerts.js";
 
     let email = '';
     let password = '';
@@ -14,11 +14,12 @@
         };
 
         try {
-            const csrfToken = getCookie('csrftoken');
+            const csrftoken = getCookie('csrftoken');
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'
@@ -28,20 +29,17 @@
 
             if (response.ok) {
                 localStorage.setItem('key', result.key);
+                alertCenter('Login successfully', 'success');
                 goto('/dashboard');
             } else {
-                alert('Tu usuairo o contraseña son incorrectos, por favor intenta de nuevo.');
+                alertCenter('Email or password wrong, try again', 'error');
             }
             
         } catch (error) {
-            alert("Bip bop, algo salió mal. Por favor intenta de nuevo.")
+            alertCenter('Something went wrong while login, try again.');
         }
     }
 
-    function getCookie(name) {
-        const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-        return cookieValue ? cookieValue.pop() : '';
-    }
 </script>
 
 <main>

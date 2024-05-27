@@ -6,6 +6,12 @@
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
     import {UsersStore} from "../../users-store.js";
+    import {getCookie} from "../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
+    import {NotebookStore} from "../../notebook-store.js";
+    import {Plus, X} from "phosphor-svelte";
+    import {TagStore} from "../../tag-store.js";
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
@@ -20,57 +26,41 @@
     }
 
     async function handleSubmit() {
-        const notebook_ref = '/notebooks/'+id_notebook+'/'
-        const data = { title, content, notebook_ref };
+        const notebook = '/notebooks/'+id_notebook+'/'
+        const tags = buttons
+            .filter(button => button.color === 'btn-danger')
+            .map(button => button.url);
+        const data = { title, content, notebook, tags };
         console.log(JSON.stringify(data))
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const response = await fetch('http://127.0.0.1:8000/notes/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(data),
                 credentials : 'include'
             });
 
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess('Added new note successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to submit form');
+                alertError('Failed to add new note.');
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new note.');
         }
     }
 
     let notebooks = [];
 
-    async function getNotebooks() {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/users/${user.id}/notebooks/`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials : 'include'
-            });
-
-            if (response.ok) {
-
-                const data =await  response.json()
-                notebooks = data.notebooks
-
-            } else {
-                console.error('Failed decks');
-            }
-        } catch (error) {
-            console.error('An error occurred while getting decks: ', error);
-        }
-    }
     onMount(() => {
-        getNotebooks();
         ImagesStore.set([]);
     });
     // a reference to the component, used to call FilePond methods
@@ -82,21 +72,6 @@
     let name = 'filepond';
 
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 
     const process = (fieldName, file, metadata, load, error, progress, abort) => {
 
@@ -156,8 +131,70 @@
             });
 
     };
-</script>
 
+
+    let buttons = [];
+
+    // Suscribirse a TagStore y actualizar los botones cuando cambie
+    const unsubscribe = TagStore.subscribe($TagStore => {
+        buttons = $TagStore.map(data => ({
+            ...data,
+            color: 'btn-primary', // Color azul de Bootstrap
+            icon: Plus // Icono de Phosphor Icons
+        }));
+    });
+
+
+    // Función para manejar el clic en los botones
+    function toggleButtonState(index) {
+        buttons = buttons.map((button, i) =>
+            i === index
+                ? {
+                    ...button,
+                    color: button.color === 'btn-primary' ? 'btn-danger' : 'btn-primary',
+                    icon: button.icon === Plus ? X : Plus
+                }
+                : button
+        );
+        console.log(buttons)
+    }
+
+
+    let tag_name = '';
+    async function createTag(){
+        
+        const data = {'name': `${tag_name}`};
+        console.log(JSON.stringify(data))
+        try {
+            const token = localStorage.getItem('key');
+            const csrftoken = getCookie('csrftoken');
+            const response = await fetch('http://127.0.0.1:8000/tags/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                body: JSON.stringify(data),
+                credentials : 'include',
+            });
+
+            if (response.ok) {
+                alertSuccess('Added new Tag.');
+                await invalidateAll();
+            } else {
+                alertError('Failed to add new Tag.');
+            }
+        } catch (error) {
+            console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while adding new deck.');
+        }
+    }
+
+</script>
+<style>
+
+</style>
 
 
 <div>
@@ -179,10 +216,48 @@
                 <label for="front-area" class="form-label">Notebooks</label>
                 <select bind:value={id_notebook}  class="form-select" style="color:black" aria-label="Select template">
                     <option value="" disabled selected>Open to select a notebook</option>
-                    {#each notebooks as notebook}
+                    {#each $NotebookStore as notebook}
                         <option value="{notebook.id}">{notebook.name}</option>
                     {/each}
                 </select>
+            </div>
+
+            <div class="mb-3">
+                <h4>Tags</h4>
+                    <div class="form-floating mb-3">
+                        <input bind:value={tag_name} type="text" 
+                        class="form-control" id="floatingInput" 
+                        placeholder="name" style="color:black" >
+                        <label for="floatingInput" style="color:black" >
+                            Tag Name
+                        </label>
+                    </div>
+
+                <button  type="button" 
+                class="btn btn-secondary" 
+                
+                on:click={createTag}>
+                Add
+                </button>
+
+
+                <div class="scrollable">
+                    <div class="button-container">
+                        {#each buttons as button, index}
+                            <div class="button-item">
+                                <button
+                                        class="btn {button.color} my-1"
+                                        on:click={() => toggleButtonState(index)}
+                                        type="button"
+                                >
+                                    <svelte:component this={button.icon} size={24} />
+                                    {button.name}
+                                </button>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+                
             </div>
             <div class="mb-3">
                 <h6> Links images in markdown</h6>

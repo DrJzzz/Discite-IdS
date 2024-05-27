@@ -1,13 +1,19 @@
+import {getCookie} from "../../../utils/csrf.js";
+import {SharedDeckStore} from '../../../shared-deck-store.js';
+import {SharedNotebookStore} from '../../../shared-notebook-store.js';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {
 
     try {
-
+        const token = localStorage.getItem('key');
+        const csrftoken = getCookie('csrftoken');
         const endpoint = `http://localhost:8000/shared/shared_with_me/`;
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`,
+                'X-CSRFToken': `${csrftoken}`
             },
             credentials : 'include'
         });
@@ -24,7 +30,9 @@ export async function load({ parent, fetch, params  }) {
                 const cardsRes = await fetch(cardsEndpoint, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,
+                        'X-CSRFToken': `${csrftoken}`
                     },
                     credentials : 'include'
                 });
@@ -36,7 +44,9 @@ export async function load({ parent, fetch, params  }) {
                 const notesRes = await fetch(notesEndpoint, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${token}`,
+                        'X-CSRFToken': `${csrftoken}`
                     },
                     credentials : 'include'
                 });
@@ -47,7 +57,8 @@ export async function load({ parent, fetch, params  }) {
 
         }
 
-
+        SharedDeckStore.set(cards);
+        SharedNotebookStore.set(notes);
         // Devuelve las notas cargadas
         return { cards, notes };
     }catch (error){

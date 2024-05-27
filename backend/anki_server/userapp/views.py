@@ -60,10 +60,11 @@ class UserViewSet(viewsets.ModelViewSet):
         
         return JsonResponse(data, safe=False)
     
-    @action(detail=True, methods=['POST', 'PUT', 'PATCH'])
+    @action(detail=True, methods=['PUT', 'PATCH'], serializer_class=PictureSerializer)
     def set_user_picture(self, request, *args, **kwargs):
         user = request.user
-        serializer = PictureSerializer(instance=user, data=request.data )
+       
+        serializer = PictureSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=200)
@@ -73,25 +74,61 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['GET'])
     def get_picture(self, request, *args, **kwargs):
-        user = request.user
-        serializer = PictureSerializer(user)
+        user = self.get_object()
+        serializer = PictureSerializer(user, context={'request': request})
         return Response(data=serializer.data, status=200)
     
     @action(detail=False, methods=['GET'])
     def user_public_preview(self, request, *ars, **kwargs):
         users = CustomUser.objects.all()
         values = []
-        for user in users :
-            shared_decks = user.deck_user.filter(public=True)
-            shared_notebooks = user.note_user.filter(public=True)
-            if len(shared_decks) == 0 and len(shared_notebooks) == 0:
-                continue
-            item = {
-                'user' : user.id,
-                'decks' : list(shared_decks.values('id', 'card_count', 'tags')),
-                'notebooks' : list(shared_notebooks.values('id', 'note_count', 'tags')),
-            }
-            values.append(item)
+        
+        if len(users) > 0 :
+            for user in users :
+                deck_tags = None
+                notebook_tags = None
+                shared_decks = user.deck_user.filter(public=True)
+                shared_notebooks = user.note_user.filter(public=True)
+                
+                if len(shared_decks) == 0 and len(shared_notebooks) == 0:
+                    continue
+                
+                
+                list_decks = []
+                for deck in shared_decks:
+                    deck_tags =[]
+                    deck_tags = [x['id'] for x in deck.tags.values('id')]
+
+                    data = {
+                        'id' : deck.id,
+                        'name' : deck.name,
+                        'card_count' : deck.card_count,
+                        'tags' : deck_tags
+                        } #list(deck.values('id', 'name','card_count'))
+                    
+                    list_decks.append(data)
+                
+                list_notebooks = []
+                for nb in shared_notebooks:
+                    notebook_tags =[]
+                    notebook_tags = [x['id'] for x in nb.tags.values('id')]
+
+                    data = {
+                        'id' : nb.id,
+                        'name' : nb.name,
+                        'note_count' : nb.note_count,
+                        'tags' : notebook_tags
+                        } 
+                    
+                    list_notebooks.append(data)
+               
+
+                item = {
+                    'user' : {'id': user.id, 'name': user.name, 'email': user.email},
+                    'decks' : list_decks,
+                    'notebooks' : list_notebooks,
+                }
+                values.append(item)
         
         return Response(data=values, status=200)
     
@@ -103,7 +140,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     queryset = Group.objects.all().order_by('name')
     serializer_class = GroupSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    
 
     
 

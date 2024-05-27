@@ -5,10 +5,14 @@
     import { writable } from "svelte/store";
     import NewNote from "../../../components/Forms/NewNote.svelte";
     import SvelteMarkdown from "svelte-markdown";
-    import {Plus, X} from "phosphor-svelte";
+    import {Gear, Plus, X} from "phosphor-svelte";
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
     import {UsersStore} from "../../../users-store.js";
     import {UserStore} from "../../../user-store.js";
+    import {getCookie} from "../../../utils/csrf.js";
+    import {alertSuccess, alertError} from "../../../utils/alerts.js";
+    import {invalidateAll} from "$app/navigation";
+    import NewTag from "../../../components/Forms/NewTag.svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -66,11 +70,13 @@
             await invite(user);
         }
         UsersStore.set([]); // Reset after submission
+        await invalidateAll();
     }
 
     async function handleSubmitRename(){
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             console.log(csrftoken)
             const info = { name}
             const endpoint = `http://localhost:8000/notebooks/${id_notebook}/`;
@@ -78,18 +84,21 @@
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info),
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Rename notebook successfully!');
+                alertSuccess('Rename notebook successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to delete deck');
+                alertError('Failed to rename notebook')
             }
         } catch (error) {
-            console.error('An error occurred while deleting the deck:', error);
+            console.error('An error occurred while renaming the notebook:', error);
+            alertError('An error occurred while renaming the notebook.')
         }
     }
 
@@ -119,85 +128,112 @@
         const recipient = `/users/${user.id}/`;
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             const info = {sharer, notebook_shared, recipient, notebook};
             const endpoint = "http://localhost:8000/shared/";
             const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 body: JSON.stringify(info),
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Form submitted successfully!');
+                alertSuccess(`Invitation send to ${user.name}`);
             } else {
-                console.error('Failed to submit form');
+                alertError(`Failed sending invitation to ${user.name}`);
             }
         } catch (error) {
             console.error('An error occurred while submitting the form:', error);
+            alertError('An error occurred while sending invitation');
         }
-    }
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
     }
 
     async function deleteNotebook() {
         try {
             const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
             console.log(csrftoken)
             const endpoint = `http://localhost:8000/notebooks/${id_notebook}/`;
             const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete notebook successfully!');
+                alertSuccess('Delete notebook successfully.');
+                await invalidateAll();
             } else {
-                console.error('Failed to delete notebook');
+                alertError('Failed to delete notebook');
             }
         } catch (error) {
             console.error('An error occurred while deleting the notebook:', error);
+            alertError('An error occurred while deleting the notebook.');
         }
     }
 
     async function deleteNote() {
         try {
             const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken)
+            const token = localStorage.getItem('key');
             const endpoint = `http://localhost:8000/notes/${id_note}/`;
             const response = await fetch(endpoint, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken,  // Incluir el token CSRF en los encabezados
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
                 },
                 credentials: 'include'
             });
             if (response.ok) {
-                console.log('Delete note successfully!');
+                alertSuccess('Delete note successfully.');
+                await invalidateAll()
             } else {
-                console.error('Failed to delete note');
+                alertError('Failed to delete note');
             }
         } catch (error) {
             console.error('An error occurred while deleting the note:', error);
+            alertError('An error occurred while deleting the note.')
+        }
+    }
+
+    async function changePublic(id, state){
+
+        try {
+            const csrftoken = getCookie('csrftoken');
+            const token = localStorage.getItem('key');
+            let endpoint = '';
+            if (!state) {
+                endpoint = `http://localhost:8000/notebooks/${id}/set_public/`;
+            }else{
+                endpoint = `http://localhost:8000/notebooks/${id}/set_private/`;
+            }
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                credentials: 'include'
+            });
+            if (response.ok) {
+                alertSuccess('Change state deck successfully.');
+                await invalidateAll();
+            } else {
+                alertError('Failed to change state deck');
+            }
+        } catch (error) {
+            console.error('An error occurred while change state of the deck:', error);
+            alertError('An error occurred while change state of the deck.');
         }
     }
 </script>
@@ -231,6 +267,12 @@
         Add notebook
     </div>
 </button>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal">
+    <div class="d-flex align-items-center">
+        <Plus />
+        Add tag
+    </div>
+</button>
 {#if NoteStore}
     <div class="accordion" id="accordionPanelsStayOpenExample">
         {#each $NoteStore as info}
@@ -241,10 +283,15 @@
                     </button>
                     <div class="col btn-group "style="max-width: 50px;">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
-                            Options
+                            <Gear size={24}/>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
                             <li><a class="dropdown-item" data-bs-toggle="modal"  role="button" href="#inviteModal" data-bs-target="#inviteModal" on:click={() => changeIdNotebook(info.notebook.id)} >Invite</a></li>
+                            {#if !info.notebook.public}
+                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, false)} >Public</a></li>
+                            {:else }
+                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, true)} >Private</a></li>
+                            {/if}
                             <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdNotebookRename(info.notebook.id)}>Rename</a></li>
                             <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNotebook(info.notebook.id)} >Delete</a></li>
                         </ul>
@@ -264,7 +311,6 @@
                                         <X/>
                                     </button>
                                 </div>
-
                             {/each}
                         </div>
                     </div>
@@ -306,10 +352,10 @@
                     <div class="modal-footer" style="margin-right: 25%">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         {#if is_notebook}
-                            <button type="button" class="btn btn-primary"  on:click={() => deleteNotebook()}>Confirm</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => deleteNotebook()}>Confirm</button>
                         {:else }
-                            <button type="button" class="btn btn-primary"  on:click={() => deleteNote()}>Confirm</button>
-                            {/if}
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={() => deleteNote()}>Confirm</button>
+                        {/if}
                     </div>
                 {/if}
             </div>
@@ -335,6 +381,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <NewNotebook/>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <NewTag/>
         </div>
     </div>
 </div>

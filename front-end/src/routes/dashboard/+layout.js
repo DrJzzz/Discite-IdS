@@ -1,16 +1,21 @@
 import {UserStore} from "../../user-store.js";
+import {getCookie} from "../../utils/csrf.js";
 
 /** @type {import('./$types').LayoutLoad} */
 export async function load({ fetch }) {
     try {
         // Construye la URL del endpoint usando el parámetro de la carta ID
+        const token =typeof localStorage !== 'undefined' ? localStorage.getItem('key') : '';
+        const csrftoken = getCookie('csrftoken');
         const endpoint = `http://localhost:8000/rest-auth/user/`;
 
         // Realiza la solicitud GET para obtener los datos de la carta
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'X-CSRFToken': `${csrftoken}`
             },
             credentials : 'include'
         });

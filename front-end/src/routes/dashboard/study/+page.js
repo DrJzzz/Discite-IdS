@@ -1,14 +1,20 @@
+import {getCookie} from "../../../utils/csrf.js";
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
     try {
+        const token = localStorage.getItem('key');
+        const csrftoken = getCookie('csrftoken');
         // Construye la URL del endpoint usando el parámetro de la carta ID
-        const endpoint = `http://localhost:8000/decks/1/to_review/`;
+        const endpoint = `http://localhost:8000/decks/to_review/`;
 
         // Realiza la solicitud GET para obtener los datos de la carta
         const res = await fetch(endpoint, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`,
+                'X-CSRFToken': `${csrftoken}`
             },
             credentials : 'include',
         });
@@ -33,7 +39,9 @@ export async function load({ fetch, params }) {
                     const cardsRes = await fetch(cardsEndpoint, {
                         method: 'GET',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Authorization': `Token ${token}`,
+                            'X-CSRFToken': `${csrftoken}`
                         },
                         credentials : 'include',
                     });
