@@ -1,8 +1,6 @@
 <script>
     import { onMount } from "svelte";
-    import {page} from "$app/stores";
     import SvelteMarkdown from "svelte-markdown";
-    import NewCard from "../../../../components/Forms/NewCard.svelte";
     import {Pencil, ClockCounterClockwise, X, Plus} from "phosphor-svelte";
     import {HistoryStore} from "../../../../history-store.js";
     import {SingleCardStore} from "../../../../single-card-store.js";
@@ -10,7 +8,7 @@
     import {alertSuccess, alertError} from "../../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
     import {TagStore} from "../../../../tag-store.js";
-    import {SingleNoteStore} from "../../../../single-note-store.js";
+    import Katex from 'svelte-katex'
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -200,7 +198,12 @@
                 <div class="text-center mb-3"><p>Back</p></div>
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
-                        <SvelteMarkdown source="{$SingleCardStore.back}"/>
+                        {#if $SingleCardStore.template == 2}
+                            <Katex>{'V=\\pi\\textrm{ m}^3'}</Katex>
+                            <Katex>{$SingleCardStore.back}</Katex>
+                        {:else }
+                            <SvelteMarkdown source="{$SingleCardStore.back}"/>
+                        {/if}
                     </div>
                 </div>
             </div>

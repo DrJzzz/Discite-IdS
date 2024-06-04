@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "svelte-katex": "^0.1.2"
+  }
+}
