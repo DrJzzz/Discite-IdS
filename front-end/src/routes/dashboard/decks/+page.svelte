@@ -27,7 +27,6 @@
         goto(`/dashboard/decks/${id}`);
     }
     onMount(() => {
-        CardStore.set(data.cards);
         console.log($CardStore)
         UsersStore.set([]);
     });
@@ -280,55 +279,55 @@
 
 <div>
     <!-- Botón que activa el modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <div class="d-flex align-items-center">
             <Plus />
             Add card
         </div>
     </button>
     <!-- Botón que activa el modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deckModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#deckModal">
         <div class="d-flex align-items-center">
             <Plus />
             Add deck
         </div>
     </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#tagModal">
         <div class="d-flex align-items-center">
             <Plus />
             Add tag
         </div>
     </button>
     {#if CardStore}
-            <div class="accordion" id="accordionPanelsStayOpenExample">
+
+        <div class="accordion" id="accordionPanelsStayOpenExample">
             {#each $CardStore as info}
                 <div class="accordion-item">
                     <h2 class="accordion-header row">
-                        <button class="col accordion-button" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
+                        <button class="col accordion-button accordion-button-custom" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
                             {info.deck.name}
                         </button>
-                        <div class="col btn-group "style="max-width: 50px;">
+                        <div class="col btn-group" style="max-width: 50px;">
                             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                                 <Gear size={24}/>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)} >Invite</a></li>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)}>Invite</a></li>
                                 {#if !info.deck.public}
-                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)} >Public</a></li>
-                                {:else }
-                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)} >Private</a></li>
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)}>Public</a></li>
+                                {:else}
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)}>Private</a></li>
                                 {/if}
-
-                                <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdDeckRename(info.deck.id)}>Rename</a></li>
-                                <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)} >Delete</a></li>
+                                <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeckRename(info.deck.id)}>Rename</a></li>
+                                <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)}>Delete</a></li>
                             </ul>
                         </div>
                     </h2>
                     <div id="panelsStayOpen-collapse{info.deck.id}" class="accordion-collapse collapse">
-                        <div class="accordion-body" style="max-width: 60%;" >
+                        <div class="accordion-body" style="max-width: 60%;">
                             <div>
-                                <table class="table table-hover">
-                                    <thead>
+                                <table class="table table-hover table-borders">
+                                    <thead class="table-header-custom">
                                     <tr>
                                         <th scope="col">List</th>
                                         <th scope="col">Tags</th>
@@ -336,23 +335,24 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {#each info.cards as card}
-                                        <tr class="table-info">
+                                    {#each info.cards as card, index}
+                                        <tr class=" table-borders">
                                             <th scope="row">
-                                                <a on:click={() => navigateToCard(card.id)}   class="list-group-item list-group-item-action active card-view" aria-current="true">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        Card {card.id}
-                                                    </div>
-                                                </a>
+                                                <div class="card-view">
+                                                    <a on:click={() => navigateToCard(card.id)} class="list-group-item list-group-item-action active " aria-current="true">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            Card {index+1}
+                                                        </div>
+                                                    </a>
+                                                </div>
+
                                             </th>
-                                            <td>Column content</td>
+                                            <td class="tags-column">{card.tags}</td>
                                             <td>
-                                                <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
+                                                <button type="button" class="col btn btn-outline-danger btn-delete "  data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
                                                     <X/>
                                                 </button>
                                             </td>
-
-
                                         </tr>
                                     {/each}
                                     </tbody>
@@ -362,7 +362,7 @@
                     </div>
                 </div>
             {/each}
-            </div>
+        </div>
         <!-- Modal Rename, delete -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">

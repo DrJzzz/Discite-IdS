@@ -3,6 +3,7 @@ import {CardStore} from "../../../card-store.js";
 import {UsersStore} from "../../../users-store.js";
 import {DeckStore} from "../../../deck-store.js";
 import {TagStore} from "../../../tag-store.js";
+import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
     try {
@@ -73,7 +74,8 @@ export async function load({ parent, fetch, params }) {
         const tagsJSON = await tagsRes.json();
         const tags = tagsJSON.results;
         TagStore.set(tags);
-        CardStore.set(cards);
+        CardStore.set(cards)
+        replaceTagIdsWithNames();
         UsersStore.set(users);
         DeckStore.set(decks);
         return { cards, users };
@@ -81,4 +83,20 @@ export async function load({ parent, fetch, params }) {
         console.error("Error fetching data:", error);
         return { cards: [], users: [] };
     }
+}
+
+// Función para reemplazar ids por nombres en CardStore
+function replaceTagIdsWithNames() {
+    let tags = get(TagStore);
+    let cardsData = get(CardStore);
+    let tagDict = {};
+    tags.forEach(tag => {
+        tagDict[tag.id] = tag.name;
+    });
+    cardsData.forEach(deck => {
+        deck.cards.forEach(card => {
+            card.tags = card.tags.map(tagId => tagDict[tagId]);
+        });
+    });
+    CardStore.set(cardsData);
 }

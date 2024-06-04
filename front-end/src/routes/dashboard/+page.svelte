@@ -33,7 +33,7 @@
            tagDict[tag.id] = tag.name;
        });
        let info = get(HomeStore);
-       HomeStore.set(replaceTagIdsWithNames(info, tagDict ));
+       replaceTagIdsWithNames(info, tagDict );
        console.log($HomeStore);
        console.log($TagStore);
        HomeStore.set(info);
