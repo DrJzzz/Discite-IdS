@@ -15,5 +15,4 @@ router.register(r'tags', TagViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('notebooks/<int:pk>/notes/', notes_notebook,name='notes-notebook'),
-    #path('notes/<int:pk>/get_last_edited/', get_last_edited, name='notes-last-edited')
 ]

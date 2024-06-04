@@ -69,7 +69,7 @@ class SharedViewSet(viewsets.ModelViewSet):
         
         for x in list:
             user = x.recipient
-            #user = CustomUser.objects.filter(id=recipient)
+            
             item = {
                 'id' : user.id,
                 'name' : user.name,
