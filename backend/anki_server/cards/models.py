@@ -22,6 +22,7 @@ class Card(models.Model):
     class Template(models.IntegerChoices):
         FLASHCARD = 1
         LATEX = 2
+        IMAGE = 3
 
     id = models.AutoField(primary_key=True)
 

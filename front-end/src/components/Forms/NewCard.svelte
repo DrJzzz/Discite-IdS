@@ -6,11 +6,15 @@
     import {DeckStore} from "../../deck-store.js";
     import {Plus, X} from "phosphor-svelte";
     import {TagStore} from "../../tag-store.js";
+    import FilePond, { registerPlugin, supported } from 'svelte-filepond';
+    import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+    import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
     let front = '';
     let back = '';
     let id_deck = "";
-    let template = "";
+    let templateOption = "";
 
     let decks = [];
 
@@ -18,7 +22,7 @@
 
 
     function resetTemplate(){
-        template = "";
+        templateOption = "";
         id_deck = "";
     }
 
@@ -34,7 +38,8 @@
          const tags = buttons
              .filter(button => button.color === 'btn-danger')
              .map(button => button.url);
-        const data = { front, back, deck, tags };
+        const template = parseInt(templateOption, 10);
+        const data = { front, back, deck, tags, template};
         console.log(JSON.stringify(data))
         try {
             const token = localStorage.getItem('key');
@@ -120,6 +125,70 @@
             alertError('An error occurred while adding new deck.');
         }
     }
+
+    // a reference to the component, used to call FilePond methods
+    let pond;
+
+    // pond.getFiles() will return the active files
+
+    // the name to use for the internal file input
+    let name = 'filepond';
+
+
+
+    const process = (fieldName, file, metadata, load, error, progress, abort) => {
+
+        const csrftoken = getCookie('csrftoken');
+        const token = localStorage.getItem('key');
+        const formData = new FormData();
+        formData.append('image', file); // Cambia 'file' al nombre deseado
+        const request = new XMLHttpRequest();
+        request.open('POST', 'http://localhost:8000/img/');
+
+
+        request.setRequestHeader('X-CSRFToken', csrftoken);
+        request.setRequestHeader('Authorization', `Token ${token}`);
+        // Configura la solicitud para enviar cookies automáticamente
+        request.withCredentials = true;
+
+        request.upload.onprogress = (e) => {
+            progress(e.lengthComputable, e.loaded, e.total);
+        };
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 300) {
+                try {
+                    const urlImg = JSON.parse(request.response); // Convertir a JSON
+                    setBackImage(urlImg.url);
+                } catch (e) {
+                    error('Error parsing response as JSON');
+                }
+            } else {
+                error('Error uploading file');
+            }
+        };
+
+        request.onerror = function() {
+            error('Error uploading file');
+        };
+
+        request.onabort = function() {
+            abort();
+        };
+
+        request.send(formData);
+
+        return {
+            abort: () => {
+                request.abort();
+                abort();
+            }
+        };
+    };
+
+    function setBackImage(imageUrl){
+        back = '![Back image](' + imageUrl  +' )';
+    }
 </script>
 
 <div>
@@ -130,12 +199,14 @@
         <div class="modal-body">
             <div class="mb-3">
                 <label for="front-area" class="form-label">Template</label>
-                <select bind:value={template}  class="form-select" style="color:black" aria-label="Select template">
+                <select bind:value={templateOption} class="form-select" style="color:black" aria-label="Select template">
                     <option value="" disabled selected>Open to select template</option>
                     <option value="1">Basic</option>
+                    <option value="2">Latex</option>
+                    <option value="3">Image</option>
                 </select>
             </div>
-            {#if template != 0}
+            {#if templateOption != 0}
                 <div class="mb-3">
                     <label for="front-area" class="form-label">Deck</label>
                     <select bind:value={id_deck}  class="form-select" style="color:black" aria-label="Select template">
@@ -146,7 +217,7 @@
                     </select>
                 </div>
             {/if}
-            {#if template == 1}
+            {#if templateOption === '1'}
 
                 <div class="mb-3">
                     <label for="front-area" class="form-label">Front Area</label>
@@ -155,6 +226,30 @@
                 <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
+                </div>
+                {:else if templateOption === '2'}
+                <div class="mb-3">
+                    <label for="front-area" class="form-label">Front Area</label>
+                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5"
+                              placeholder="Type in Markdown" maxlength="200"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="back-area" class="form-label">Back Area</label>
+                    <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in latex"></textarea>
+                </div>
+                {:else if templateOption === '3'}
+                <div class="mb-3">
+                    <label for="front-area" class="form-label">Front Area</label>
+                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="back-area" class="form-label">Back Area</label>
+                    <FilePond
+                            bind:this={pond}
+                            {name}
+                            server={{ process }}
+                            allowMultiple={false}
+                    />
                 </div>
             {/if}
 
@@ -200,7 +295,7 @@
 
         <div class="modal-footer">
             <button on:click={resetTemplate} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            {#if template != 0}
+            {#if templateOption != 0}
                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
             {/if}
         </div>

@@ -3,8 +3,8 @@
     import {UserStore} from "../../user-store.js";
     import {ImagesStore} from "../../images-store.js";
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
-    import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-    import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+    import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+    import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
     import {UsersStore} from "../../users-store.js";
     import {getCookie} from "../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
