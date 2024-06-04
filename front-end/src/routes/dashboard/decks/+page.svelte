@@ -325,20 +325,38 @@
                         </div>
                     </h2>
                     <div id="panelsStayOpen-collapse{info.deck.id}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="list-group">
-                                {#each info.cards as card}
-                                    <div class="row">
-                                        <a on:click={() => navigateToCard(card.id)}  style="max-width: 60%;"  class="list-group-item list-group-item-action active card-view" aria-current="true">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <SvelteMarkdown source="{card.front}"/>
-                                            </div>
-                                        </a>
-                                        <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
-                                            <X/>
-                                        </button>
-                                    </div>
-                                {/each}
+                        <div class="accordion-body" style="max-width: 60%;" >
+                            <div>
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">List</th>
+                                        <th scope="col">Tags</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each info.cards as card}
+                                        <tr class="table-info">
+                                            <th scope="row">
+                                                <a on:click={() => navigateToCard(card.id)}   class="list-group-item list-group-item-action active card-view" aria-current="true">
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        Card {card.id}
+                                                    </div>
+                                                </a>
+                                            </th>
+                                            <td>Column content</td>
+                                            <td>
+                                                <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
+                                                    <X/>
+                                                </button>
+                                            </td>
+
+
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

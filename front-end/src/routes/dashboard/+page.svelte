@@ -8,13 +8,15 @@
     import SvelteMarkdown from "svelte-markdown";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
     import {HistoryStore} from "../../history-store.js";
+    import {TagStore} from "../../tag-store.js";
+    import { get } from 'svelte/store';
 
     /** @type {import('./$types').PageData} */
     export let data;
 
 
     let isDeck = true;
-
+    let tagDict = {};
 
     function navigateToCard() {
         goto(`/dashboard/study`);
@@ -23,17 +25,35 @@
 
     onMount(() =>{
        $DeckStore = data.decks;
-       HomeStore.set(data.users);
        max_cards = createArrayWithSize(0, 0);
        if ($DeckStore){
            max_cards = createArrayWithSize($DeckStore.length, 0);
        }
-       console.log($HomeStore)
+       $TagStore.forEach(tag => {
+           tagDict[tag.id] = tag.name;
+       });
+       let info = get(HomeStore);
+       HomeStore.set(replaceTagIdsWithNames(info, tagDict ));
+       console.log($HomeStore);
+       console.log($TagStore);
+       HomeStore.set(info);
     });
 
 
     export function createArrayWithSize(size, defaultValue) {
         return Array.from({ length: size }, () => defaultValue);
+    }
+
+    // Función para reemplazar ids por nombres
+    function replaceTagIdsWithNames(data, tagDict) {
+        data.forEach(item => {
+            item.decks.forEach(deck => {
+                deck.tags = deck.tags.map(tagId => tagDict[tagId]);
+            });
+            item.notebooks.forEach(notebook => {
+                notebook.tags = notebook.tags.map(tagId => tagDict[tagId]);
+            });
+        });
     }
 
 
@@ -201,7 +221,7 @@
                                 </h2>
                                 <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
                                     <div class="accordion-body">
-                                        <table class="table">
+                                        <table class="table table-hover">
                                             <thead>
                                             <tr>
                                                 <th scope="col">Name</th>
