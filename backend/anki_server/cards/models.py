@@ -21,6 +21,7 @@ class Card(models.Model):
     
     class Template(models.IntegerChoices):
         FLASHCARD = 1
+        LATEX = 2
 
     id = models.AutoField(primary_key=True)
 
@@ -45,8 +46,6 @@ class Card(models.Model):
     template = models.IntegerField(choices=Template, 
                                    default=1)    
     
-    
- 
 
 
     def __str__(self):
@@ -87,9 +86,6 @@ class Card(models.Model):
         
         
         
-
-
-
 class FlashCard(Card):
     front = models.TextField(blank=True)
     back = models.TextField(blank=True)

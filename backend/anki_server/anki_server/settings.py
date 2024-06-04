@@ -78,7 +78,6 @@ ROOT_URLCONF = 'anki_server.urls'
 
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': [
-         #'rest_framework.authentication.BasicAuthentication',
          'rest_framework.authentication.TokenAuthentication',
          'rest_framework.authentication.SessionAuthentication',
          
@@ -87,7 +86,6 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-        #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
@@ -195,16 +193,17 @@ REST_AUTH_SERIALIZERS = {
 REST_AUTH_REGISTER_SERIALIZERS = {
      'REGISTER_SERIALIZER': 'userapp.serializers.CustomRegisterSerializer',
  }
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:5173", "http://localhost:5173"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:5173", "http://localhost:5173",
+    "http://127.0.0.1:4173", "http://localhost:4173"
+    ]
 # CORS settings
-#CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173", "http://localhost:5173"
+    "http://127.0.0.1:5173", "http://localhost:5173",
+    "http://127.0.0.1:4173", "http://localhost:4173"
 ]
 CORS_ALLOW_CREDENTIALS = True
-
-# CORS_ALLOW_HEADERS = '*' # <-------- this
-
 
 
 # MEDIA STORAGE

@@ -80,7 +80,25 @@ class DeckViewSet(viewsets.ModelViewSet):
             'values': list(values),
         }
         return JsonResponse(data)
+    
+    @action(detail=True, methods=['GET'])
+    def review(self, request, *args, **kwargs):
+        deck = self.get_object()
+        tzinfo = timezone(timedelta(hours=6))
         
+        values = []
+       
+        cards = deck.card_deck.filter(due__lte=datetime.now(tzinfo))
+        value = {
+            'count' : len(cards),
+            'deck' : deck.id,
+            'cards' : list(cards.values('id'))
+        }
+        values.append(value)
+            
+            
+        
+        return Response(data=values)
         
     @action(detail=True)
     def set_public(self, request, *args, **kwargs):
