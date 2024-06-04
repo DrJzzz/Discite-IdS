@@ -1,6 +1,8 @@
 import {getCookie} from "../../../utils/csrf.js";
 import {SharedDeckStore} from '../../../shared-deck-store.js';
 import {SharedNotebookStore} from '../../../shared-notebook-store.js';
+import {TagStore} from "../../../tag-store.js";
+import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {
 
@@ -56,9 +58,23 @@ export async function load({ parent, fetch, params  }) {
             }
 
         }
-
+        const tagsEndpoint = 'http://localhost:8000/tags/';
+        const tagsRes = await fetch(tagsEndpoint, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': `${csrftoken}`,
+                'Authorization': `Token ${token}`,
+            },
+            credentials: 'include'
+        });
+        const tagsJSON = await tagsRes.json();
+        const tags = tagsJSON.results;
+        TagStore.set(tags);
         SharedDeckStore.set(cards);
         SharedNotebookStore.set(notes);
+        replaceTagIdsWithNamesNotebooks()
+        replaceTagIdsWithNamesDecks()
         // Devuelve las notas cargadas
         return { cards, notes };
     }catch (error){
@@ -66,4 +82,37 @@ export async function load({ parent, fetch, params  }) {
     }
 
 }
+
+// Función para reemplazar ids por nombres en CardStore
+function replaceTagIdsWithNamesNotebooks() {
+    let tags = get(TagStore);
+    let notesData = get(SharedNotebookStore);
+    let tagDict = {};
+    tags.forEach(tag => {
+        tagDict[tag.id] = tag.name;
+    });
+    notesData.forEach(notebook => {
+        notebook.notes.forEach(note => {
+            note.tags = note.tags.map(tagId => tagDict[tagId]);
+        });
+    });
+    SharedNotebookStore.set(notesData);
+}
+
+// Función para reemplazar ids por nombres en CardStore
+function replaceTagIdsWithNamesDecks() {
+    let tags = get(TagStore);
+    let cardsData = get(SharedDeckStore);
+    let tagDict = {};
+    tags.forEach(tag => {
+        tagDict[tag.id] = tag.name;
+    });
+    cardsData.forEach(deck => {
+        deck.cards.forEach(card => {
+            card.tags = card.tags.map(tagId => tagDict[tagId]);
+        });
+    });
+    SharedDeckStore.set(cardsData);
+}
+
 

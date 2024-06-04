@@ -5,7 +5,7 @@
     import { writable } from "svelte/store";
     import NewNote from "../../../components/Forms/NewNote.svelte";
     import SvelteMarkdown from "svelte-markdown";
-    import {Gear, Plus, X} from "phosphor-svelte";
+    import {Gear, LockKey, LockSimpleOpen, Pencil, Plus, Trash, UserPlus, X} from "phosphor-svelte";
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
     import {UsersStore} from "../../../users-store.js";
     import {UserStore} from "../../../user-store.js";
@@ -255,19 +255,19 @@
     }
 </style>
 <!-- Botón que activa el modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
     <div class="d-flex align-items-center">
         <Plus />
         Add note
     </div>
 </button>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#notebookModal">
+<button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#notebookModal">
     <div class="d-flex align-items-center">
         <Plus />
         Add notebook
     </div>
 </button>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal">
+<button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#tagModal">
     <div class="d-flex align-items-center">
         <Plus />
         Add tag
@@ -278,7 +278,7 @@
         {#each $NoteStore as info}
             <div class="accordion-item">
                 <h2 class="accordion-header row">
-                    <button style="max-width: 60%;"  class="col accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
+                    <button style="max-width: 60%;"  class="col accordion-button  accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
                         {info.notebook.name}
                     </button>
                     <div class="col btn-group "style="max-width: 50px;">
@@ -286,14 +286,39 @@
                             <Gear size={24}/>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
-                            <li><a class="dropdown-item" data-bs-toggle="modal"  role="button" href="#inviteModal" data-bs-target="#inviteModal" on:click={() => changeIdNotebook(info.notebook.id)} >Invite</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal"  role="button" href="#inviteModal" data-bs-target="#inviteModal" on:click={() => changeIdNotebook(info.notebook.id)} >
+                                <div class="d-flex align-items-center">
+                                    <UserPlus size={20}/>
+                                    Invite
+                                </div>
+                            </a></li>
                             {#if !info.notebook.public}
-                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, false)} >Public</a></li>
+                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, false)} >
+                                    <div class="d-flex align-items-center">
+                                        <LockSimpleOpen size={20} />
+                                        Public
+                                    </div>
+                                </a></li>
                             {:else }
-                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, true)} >Private</a></li>
+                                <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.notebook.id, true)} >
+                                    <div class="d-flex align-items-center">
+                                        <LockKey size={20}/>
+                                        Private
+                                    </div>
+                                </a></li>
                             {/if}
-                            <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdNotebookRename(info.notebook.id)}>Rename</a></li>
-                            <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNotebook(info.notebook.id)} >Delete</a></li>
+                            <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdNotebookRename(info.notebook.id)}>
+                                <div class="d-flex align-items-center">
+                                    <Pencil size={20} />
+                                    Rename
+                                </div>
+                            </a></li>
+                            <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNotebook(info.notebook.id)} >
+                                <div class="d-flex align-items-center">
+                                    <Trash size={20}/>
+                                    Delete
+                                </div>
+                            </a></li>
                         </ul>
                     </div>
                 </h2>
@@ -310,15 +335,17 @@
                                 </thead>
                                 <tbody>
                                 {#each info.notes as note}
-                                    <tr class="table-info">
+                                    <tr class="table-borders">
                                         <th scope="row">
-                                            <a on:click={() => navigateToNote(note.id)} style="max-width: 60%;"   class="col list-group-item list-group-item-action active card-view" aria-current="true">
-                                                <div class="d-flex w-100 justify-content-between">
-                                                    {note.title}
-                                                </div>
-                                            </a>
+                                            <div class="card-view">
+                                                <a on:click={() => navigateToNote(note.id)} style="max-width: 60%;"   class="col list-group-item list-group-item-action active card-view" aria-current="true">
+                                                    <div class="d-flex w-100 justify-content-between">
+                                                        {note.title}
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </th>
-                                        <td>Column content</td>
+                                        <td>{note.tags}</td>
                                         <td>
                                             <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNote(note.id)}>
                                                 <X/>

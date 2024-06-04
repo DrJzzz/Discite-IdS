@@ -1,13 +1,10 @@
 <script>
-
     import NewCard from "../../../components/Forms/NewCard.svelte";
-    import SvelteMarkdown from "svelte-markdown";
     import {goto} from "$app/navigation";
-    import {Plus, X, Gear} from "phosphor-svelte";
+    import {Plus, X, Gear, LockKey,LockSimpleOpen,Pencil, Trash, UserPlus} from "phosphor-svelte";
     import NewDeck from "../../../components/Forms/NewDeck.svelte";
     import {UsersStore} from "../../../users-store.js";
     import {CardStore} from "../../../card-store.js";
-    import {writable} from "svelte/store";
     import {onMount} from "svelte";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
@@ -299,7 +296,6 @@
         </div>
     </button>
     {#if CardStore}
-
         <div class="accordion" id="accordionPanelsStayOpenExample">
             {#each $CardStore as info}
                 <div class="accordion-item">
@@ -312,14 +308,39 @@
                                 <Gear size={24}/>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark bg-dark">
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)}>Invite</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)}>
+                                    <div class="d-flex align-items-center">
+                                        <UserPlus size={20}/>
+                                        Invite
+                                    </div>
+                                </a></li>
                                 {#if !info.deck.public}
-                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)}>Public</a></li>
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)}>
+                                        <div class="d-flex align-items-center">
+                                            <LockSimpleOpen size={20} />
+                                            Public
+                                        </div>
+                                    </a></li>
                                 {:else}
-                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)}>Private</a></li>
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)}>
+                                        <div class="d-flex align-items-center">
+                                            <LockKey size={20}/>
+                                            Private
+                                        </div>
+                                    </a></li>
                                 {/if}
-                                <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeckRename(info.deck.id)}>Rename</a></li>
-                                <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)}>Delete</a></li>
+                                <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeckRename(info.deck.id)}>
+                                    <div class="d-flex align-items-center">
+                                        <Pencil size={20} />
+                                        Rename
+                                    </div>
+                                </a></li>
+                                <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)}>
+                                    <div class="d-flex align-items-center">
+                                        <Trash size={20}/>
+                                        Delete
+                                    </div>
+                                </a></li>
                             </ul>
                         </div>
                     </h2>

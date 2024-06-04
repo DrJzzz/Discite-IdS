@@ -3,7 +3,7 @@ import {NoteStore} from "../../../note-store.js";
 import {UsersStore} from "../../../users-store.js";
 import {NotebookStore} from "../../../notebook-store.js";
 import {TagStore} from "../../../tag-store.js";
-
+import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
     try {
@@ -76,6 +76,7 @@ export async function load({ parent, fetch, params }) {
         const tags = tagsJSON.results;
         TagStore.set(tags);
         NoteStore.set(notes);
+        replaceTagIdsWithNames();
         UsersStore.set(users);
         NotebookStore.set(notebooks);
         return { notes, users };
@@ -83,4 +84,20 @@ export async function load({ parent, fetch, params }) {
         console.error("Error fetching data:", error);
         return { notes: [], users: [] };
     }
+}
+
+// Función para reemplazar ids por nombres en CardStore
+function replaceTagIdsWithNames() {
+    let tags = get(TagStore);
+    let notesData = get(NoteStore);
+    let tagDict = {};
+    tags.forEach(tag => {
+        tagDict[tag.id] = tag.name;
+    });
+    notesData.forEach(notebook => {
+        notebook.notes.forEach(note => {
+            note.tags = note.tags.map(tagId => tagDict[tagId]);
+        });
+    });
+    NoteStore.set(notesData);
 }

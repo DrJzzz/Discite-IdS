@@ -242,14 +242,14 @@
 {#if SingleNoteStore}
     <div class="container-md" >
         <!-- Botón que activa el modal edit-->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="d-flex align-items-center">
                 <Pencil/>
                 Edit note
             </div>
         </button>
         <!-- Botón que activa el modal history-->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             <div class="d-flex align-items-center">
                 <ClockCounterClockwise/>
                 See history
