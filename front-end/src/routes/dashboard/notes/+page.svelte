@@ -298,20 +298,36 @@
                     </div>
                 </h2>
                 <div id="panelsStayOpen-collapse{info.notebook.id}" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <div class="list-group ">
-                            {#each info.notes as note}
-                                <div class="row">
-                                    <a on:click={() => navigateToNote(note.id)} style="max-width: 60%;"   class="col list-group-item list-group-item-action active card-view" aria-current="true">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <SvelteMarkdown source="{note.title}"/>
-                                        </div>
-                                    </a>
-                                    <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNote(note.id)}>
-                                        <X/>
-                                    </button>
-                                </div>
-                            {/each}
+                    <div class="accordion-body" style="max-width: 60%;" >
+                        <div>
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col">List</th>
+                                    <th scope="col">Tags</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {#each info.notes as note}
+                                    <tr class="table-info">
+                                        <th scope="row">
+                                            <a on:click={() => navigateToNote(note.id)} style="max-width: 60%;"   class="col list-group-item list-group-item-action active card-view" aria-current="true">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    {note.title}
+                                                </div>
+                                            </a>
+                                        </th>
+                                        <td>Column content</td>
+                                        <td>
+                                            <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdNote(note.id)}>
+                                                <X/>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {/each}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
