@@ -31,16 +31,19 @@ class DeckViewSet(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
     permission_classes = [IsAuthenticated]
     
+    # Updates the max review amount for a deck
     @action(detail=True, serializer_class=DeckMaxReviewSerializer, methods=['PATCH'])
     def update_review(self, request, *args, **kwargs):
         deck = self.get_object()
-        new_max_reviews = request.data.get('max_reviews', 5)#data['max_reviews']
+        new_max_reviews = request.data.get('max_reviews', 5)
         deck.max_reviews = new_max_reviews
         deck.save()
         
         serializer = DeckSerializer(instance=deck)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
     
+    
+    # Returns the cards of the given deck
     @action(detail=True, methods=['GET'])
     def cards(self, request, *args, **kwargs):
         deck = self.get_object()
@@ -57,6 +60,7 @@ class DeckViewSet(viewsets.ModelViewSet):
         return JsonResponse(data)
 
     
+    # Returns the decks and its cards that are ready to review in that day
     @action(detail=False, methods=['GET'])
     def to_review(self, request, *args, **kwargs):
         user = request.user
@@ -80,6 +84,8 @@ class DeckViewSet(viewsets.ModelViewSet):
             'values': list(values),
         }
         return JsonResponse(data)
+    
+    
     
     @action(detail=True, methods=['GET'])
     def review(self, request, *args, **kwargs):
