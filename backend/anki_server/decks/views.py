@@ -49,13 +49,25 @@ class DeckViewSet(viewsets.ModelViewSet):
         deck = self.get_object()
         cards = deck.card_deck.all()
 
+        values = []
+        for card in cards: 
+            tags = [x['id'] for x in card.tags.values('id')]
+            data = {
+                'id' :  card.id,
+                'front' : card.front,
+                'back': card.back,
+                'due' : card.due,
+                'tags': tags
+            }
+            values.append(data)
+
         data = {
             'deck': {
                 'id': deck.id,
                 'name': deck.name,
                 'public': deck.public
             },
-            'cards': list(cards.values('id', 'front', 'back', 'due'))
+            'cards': values#list(cards.values('id', 'front', 'back', 'due'))
         }
         return JsonResponse(data)
 
