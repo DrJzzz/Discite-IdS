@@ -192,7 +192,7 @@
 
 
 <div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" >
+    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="margin-bottom: 25px;" >
         <div class="d-flex align-items-center">
             <Brain />
             Study cards

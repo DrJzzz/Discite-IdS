@@ -253,7 +253,14 @@
     .btn-delete{
         max-width: 50px;
     }
+    .button-div {
+        display: flex;
+        justify-content: space-between;
+        max-width: 460px;
+        padding-bottom: 20px;
+    }
 </style>
+<div class="button-div">
 <!-- Botón que activa el modal -->
 <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
     <div class="d-flex align-items-center">
@@ -273,11 +280,12 @@
         Add tag
     </div>
 </button>
+</div>
 {#if NoteStore}
-    <div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion" id="accordionPanelsStayOpenExample" style="padding-top: 20px;">
         {#each $NoteStore as info}
             <div class="accordion-item">
-                <h2 class="accordion-header row">
+                <h2 class="accordion-header row" style="padding-bottom: 20px;">
                     <button style="max-width: 60%;"  class="col accordion-button  accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
                         {info.notebook.name}
                     </button>

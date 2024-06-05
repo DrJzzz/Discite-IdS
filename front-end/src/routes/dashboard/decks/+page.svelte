@@ -272,10 +272,17 @@
         max-width: 50px;
     }
     
+    .button-div {
+        display: flex;
+        justify-content: space-between;
+        max-width: 420px;
+        padding-bottom: 20px;
+    }
 </style>
 
 
 <div>
+    <div class="button-div">
     <!-- Botón que activa el modal -->
     <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
@@ -296,6 +303,8 @@
             Add tag
         </div>
     </button>
+
+    </div>
     {#if CardStore}
         <div class="accordion" id="accordionPanelsStayOpenExample" style="padding-top: 20px;">
             {#each $CardStore as info}
