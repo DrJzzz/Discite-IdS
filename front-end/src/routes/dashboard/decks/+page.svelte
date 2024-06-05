@@ -271,34 +271,35 @@
     .btn-delete{
         max-width: 50px;
     }
+    
 </style>
 
 
 <div>
     <!-- Botón que activa el modal -->
-    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
             <Plus />
             Add card
         </div>
     </button>
     <!-- Botón que activa el modal -->
-    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#deckModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#deckModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
             <Plus />
             Add deck
         </div>
     </button>
-    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#tagModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#tagModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
             <Plus />
             Add tag
         </div>
     </button>
     {#if CardStore}
-        <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion" id="accordionPanelsStayOpenExample" style="padding-top: 20px;">
             {#each $CardStore as info}
-                <div class="accordion-item">
+                <div class="accordion-item" style="padding-bottom: 20px;">
                     <h2 class="accordion-header row">
                         <button class="col accordion-button accordion-button-custom" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
                             {info.deck.name}
@@ -370,7 +371,7 @@
                                             </th>
                                             <td class="tags-column">{card.tags}</td>
                                             <td>
-                                                <button type="button" class="col btn btn-outline-danger btn-delete "  data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
+                                                <button type="button" class="col btn btn-outline-danger btn-delete"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
                                                     <X/>
                                                 </button>
                                             </td>
