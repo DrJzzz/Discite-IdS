@@ -9,6 +9,7 @@
     import {invalidateAll} from "$app/navigation";
     import {TagStore} from "../../../../tag-store.js";
     import Katex from 'svelte-katex'
+    import 'katex/dist/katex.min.css';
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -16,7 +17,7 @@
     let decks = [];
 
     let id_deck = "";
-
+    const math3 = "V=\\frac{1}{3}\\pi r^2 h";
 
     let id_history = 0;
     let modalHistory;
@@ -191,6 +192,7 @@
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
                         <SvelteMarkdown source="{$SingleCardStore.front}"/>
+                        <!-- <Katex>{$SingleCardStore.front}</Katex>  -->
                     </div>
                 </div>
             </div>
@@ -199,8 +201,8 @@
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
                         {#if $SingleCardStore.template == 2}
-                            <Katex>{'V=\\pi\\textrm{ m}^3'}</Katex>
-                            <Katex>{$SingleCardStore.back}</Katex>
+                            <Katex>{math3}</Katex>
+                            
                         {:else }
                             <SvelteMarkdown source="{$SingleCardStore.back}"/>
                         {/if}
