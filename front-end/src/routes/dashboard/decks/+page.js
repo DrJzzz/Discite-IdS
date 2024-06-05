@@ -76,8 +76,8 @@ export async function load({ parent, fetch, params }) {
         TagStore.set(tags);
         CardStore.set(cards)
         replaceTagIdsWithNames();
-        UsersStore.set(users);
         DeckStore.set(decks);
+        console.log(users)
         return { cards, users };
     } catch (error) {
         console.error("Error fetching data:", error);
