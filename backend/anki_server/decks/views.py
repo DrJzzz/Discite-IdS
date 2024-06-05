@@ -83,7 +83,7 @@ class DeckViewSet(viewsets.ModelViewSet):
         
         values = []
         for deck in decks:
-            cards = deck.card_deck.filter(due__lte=datetime.now(tzinfo))
+            cards = deck.card_deck.filter(due__date__lte=datetime.now(tzinfo).date())
             value = {
                 'count' : len(cards),
                 'deck' : deck.id,

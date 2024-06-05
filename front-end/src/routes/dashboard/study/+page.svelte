@@ -23,7 +23,7 @@
             StudyCards.set(data.cards);
             console.log($StudyCards)
         }else{
-            alertEndStudy('No more card to study, comeback later.', 'warning');
+            alertEndStudy('No more cards to study, comeback later.', 'warning');
             navigateToHome();
         }
     })
@@ -90,14 +90,15 @@
                 <button type="button" class="btn btn-outline-danger" on:click={() => handleSubmit(2, 1)}>Again</button>
             </div>
             <div class="col">
+                <button type="button" class="btn btn-outline-warning" on:click={() => handleSubmit(2, 2)}>Hard</button>
+            </div>
+            <div class="col">
                 <button type="button" class="btn btn-outline-primary" on:click={() => handleSubmit(2, 3)}>Good</button>
             </div>
             <div class="col">
                 <button type="button" class="btn btn-outline-success" on:click={() => handleSubmit(2, 4)}>Easy</button>
             </div>
-            <div class="col">
-                <button type="button" class="btn btn-outline-warning" on:click={() => handleSubmit(2, 2)}>Hard</button>
-            </div>
+            
         </div>
         <div class="row">
             <div class="container-sm col">
