@@ -1,14 +1,12 @@
 <script>
-    import {NoteStore} from '../../../note-store.js';
+    import {NoteStore} from '../../../stores.js';
     import {onMount} from 'svelte';
     import { goto } from '$app/navigation';
-    import { writable } from "svelte/store";
     import NewNote from "../../../components/Forms/NewNote.svelte";
-    import SvelteMarkdown from "svelte-markdown";
     import {Gear, LockKey, LockSimpleOpen, Pencil, Plus, Trash, UserPlus, X} from "phosphor-svelte";
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
-    import {UsersStore} from "../../../users-store.js";
-    import {UserStore} from "../../../user-store.js";
+    import {UsersStore} from "../../../stores.js";
+    import {UserStore} from "../../../stores.js";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
@@ -23,7 +21,7 @@
     let is_notebook = false;
     let is_rename = false;
     let name = "";
-
+    const localhost = 'http://localhost:8000'
 
 
     onMount(() => {
@@ -372,7 +370,7 @@
 
     <!-- Modal Rename, delete-->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog ">
             <div class="modal-content">
                 {#if is_rename}
                     <div class="modal-body text-center">
@@ -421,7 +419,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <NewNote/>
         </div>
@@ -472,7 +470,15 @@
 
                         <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                             {#each $UsersStore as user}
-                                <button type="button" class="btn btn-outline-danger" on:click={() => deleteUser(user.id)} >{user.name}</button>
+                                <button type="button" class="btn btn-outline-danger" on:click={() => deleteUser(user.id)} >
+                                    <div class="card-header d-flex align-items-center">
+                                        <img src={localhost + user.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="card-title mb-0">{user.name}</h5>
+                                            <p class="card-text"><small class="text-muted">{user.email}</small></p>
+                                        </div>
+                                    </div>
+                                </button>
                             {/each}
                         </div>
 

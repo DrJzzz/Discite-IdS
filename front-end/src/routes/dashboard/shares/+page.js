@@ -1,7 +1,7 @@
 import {getCookie} from "../../../utils/csrf.js";
-import {SharedDeckStore} from '../../../shared-deck-store.js';
-import {SharedNotebookStore} from '../../../shared-notebook-store.js';
-import {TagStore} from "../../../tag-store.js";
+import {SharedDeckStore} from '../../../stores.js';
+import {SharedNotebookStore} from '../../../stores.js';
+import {TagStore} from "../../../stores.js";
 import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {

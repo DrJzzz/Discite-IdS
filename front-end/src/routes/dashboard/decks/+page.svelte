@@ -3,8 +3,8 @@
     import {goto} from "$app/navigation";
     import {Plus, X, Gear, LockKey,LockSimpleOpen,Pencil, Trash, UserPlus} from "phosphor-svelte";
     import NewDeck from "../../../components/Forms/NewDeck.svelte";
-    import {UsersStore} from "../../../users-store.js";
-    import {CardStore} from "../../../card-store.js";
+    import {UsersStore} from "../../../stores.js";
+    import {CardStore} from "../../../stores.js";
     import {onMount} from "svelte";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
@@ -19,6 +19,7 @@
     let is_rename = false;
     let name = "";
     let unsubscribe;
+    const localhost = 'http://localhost:8000/';
 
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
@@ -491,7 +492,15 @@
 
                             <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                 {#each $UsersStore as user}
-                                    <button type="button" class="btn btn-outline-danger" on:click={() => deleteUser(user)} >{user.name}</button>
+                                    <button type="button" class="btn btn-outline-danger" on:click={() => deleteUser(user)} >
+                                            <div class="card-header d-flex align-items-center">
+                                                <img src={localhost + user.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                                <div>
+                                                    <h5 class="card-title mb-0">{user.name}</h5>
+                                                    <p class="card-text"><small class="text-muted">{user.email}</small></p>
+                                                </div>
+                                            </div>
+                                        </button>
                                 {/each}
                             </div>
 

@@ -15,6 +15,7 @@
 @import 'filepond/dist/filepond.css';
 @import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 @import "sweetalert2/dist/sweetalert2.min.css";
+@import 'katex/dist/katex.min.css';
 :root,
 [data-bs-theme=light] {
   --bs-blue: #378dfc;

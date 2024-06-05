@@ -1,7 +1,6 @@
 <script>
     import {House, CardsThree, Notebook, ShareFat} from "phosphor-svelte";
-    import {onMount} from "svelte";
-    import {UserStore} from "../../user-store.js";
+    import {UserStore} from "../../stores.js";
     import {getCookie} from "../../utils/csrf.js";
     import { derived } from 'svelte/store';
     import { page } from '$app/stores';

@@ -2,14 +2,15 @@
     import {Brain, Eye} from "phosphor-svelte";
     import {goto} from "$app/navigation";
     import { getCookie } from '../../utils/csrf';
-    import {DeckStore} from "../../deck-store.js";
-    import {HomeStore} from "../../home-stote.js";
+    import {DeckStore} from "../../stores.js";
+    import {HomeStore} from "../../stores.js";
     import {onMount} from "svelte";
     import SvelteMarkdown from "svelte-markdown";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
-    import {HistoryStore} from "../../history-store.js";
-    import {TagStore} from "../../tag-store.js";
+    import {TagStore} from "../../stores.js";
     import { get } from 'svelte/store';
+    import Katex from "svelte-katex";
+    import {formatDate} from "../../utils/date.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -125,6 +126,7 @@
             if (cardsRes.ok){
                 deck = await cardsRes.json();
                 card = deck.cards[0];
+                console.log(card)
             }else {
                 alertError('Failed to load deck data');
             }
@@ -164,7 +166,7 @@
         }
     }
     let deck = {
-        deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' },
+        deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' , template:0},
             { id : 1, due : '2024-01-20', front : '', back: '' }]
     }
 
@@ -189,12 +191,23 @@
 
     const localhost = 'http://localhost:8000'
 </script>
-
+<style>
+    .card-custom {
+        border-radius: 15px; /* Hacer los bordes redondos */
+        border: 4px solid #242762; /* Bordes de color #242762 */
+    }
+    .card-header {
+        background-color: #242762; /* Color de fondo del header de la card */
+        color: white; /* Color de las letras del header */
+        border-top-left-radius: 15px; /* Redondear la esquina superior izquierda */
+        border-top-right-radius: 15px; /* Redondear la esquina superior derecha */
+    }
+</style>
 
 <div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="margin-bottom: 25px;" >
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="margin-bottom: 25px;" >
         <div class="d-flex align-items-center">
-            <Brain />
+            <Brain size={24}/>
             Study cards
         </div>
     </button>
@@ -203,95 +216,95 @@
 
             <div class="row">
                 {#each $HomeStore as info}
-                <div class="card col" style="max-width: 480px">
-                    <div class="card-header d-flex align-items-center">
-                        <img src={localhost+ info.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
-                        <div>
-                            <h5 class="card-title mb-0">{info.user.name}</h5>
-                            <p class="card-text"><small class="text-muted">{info.user.email}</small></p>
+                    <div class="card col card-custom" style="max-width: 480px">
+                        <div class="card-header d-flex align-items-center">
+                            <img src={localhost + info.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                            <div>
+                                <h5 class="card-title mb-0">{info.user.name}</h5>
+                                <p class="card-text"><small class="text-muted">{info.user.email}</small></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="accordion" id="accordion-deck-{info.user.id}">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading-deck-{info.user.id}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-deck-{info.user.id}" aria-expanded="false" aria-controls="collapse-deck-{info.user.id}">
-                                        Decks
-                                    </button>
-                                </h2>
-                                <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
-                                    <div class="accordion-body">
-                                        <table class="table table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Cards</th>
-                                                <th scope="col">Tags</th>
-                                                <th scope="col"></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {#each info.decks as deck}
+                        <div class="card-body">
+                            <div class="accordion" id="accordion-deck-{info.user.id}">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-deck-{info.user.id}">
+                                        <button class="accordion-button collapsed accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-deck-{info.user.id}" aria-expanded="false" aria-controls="collapse-deck-{info.user.id}">
+                                            Decks
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-deck-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-deck-{info.user.id}" data-bs-parent="#accordion-deck-{info.user.id}">
+                                        <div class="accordion-body">
+                                            <table class="table table-hover">
+                                                <thead>
                                                 <tr>
-                                                    <td>{deck.name}</td>
-                                                    <td>{deck.card_count}</td>
-                                                    <td>{deck.tags}</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => fetchDeck(deck.id)}>
-                                                            <div class="d-flex align-items-center">
-                                                                <Eye/>
-                                                                View
-                                                            </div>
-                                                        </button>
-                                                    </td>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Cards</th>
+                                                    <th scope="col">Tags</th>
+                                                    <th scope="col"></th>
                                                 </tr>
-                                            {/each}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                {#each info.decks as deck}
+                                                    <tr>
+                                                        <td>{deck.name}</td>
+                                                        <td>{deck.card_count}</td>
+                                                        <td>{deck.tags}</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => fetchDeck(deck.id)}>
+                                                                <div class="d-flex align-items-center">
+                                                                    <Eye />
+                                                                    View
+                                                                </div>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {/each}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-note-{info.user.id}">
+                                        <button class="accordion-button collapsed accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-note-{info.user.id}" aria-expanded="false" aria-controls="collapse-note-{info.user.id}">
+                                            Notebooks
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-note-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-note-{info.user.id}" data-bs-parent="#accordion-note-{info.user.id}">
+                                        <div class="accordion-body">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Notes</th>
+                                                    <th scope="col">Tags</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {#each info.notebooks as notebook}
+                                                    <tr>
+                                                        <td>{notebook.name}</td>
+                                                        <td>{notebook.note_count}</td>
+                                                        <td>{notebook.tags}</td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => fetchNotebook(notebook.id)}>
+                                                                <div class="d-flex align-items-center">
+                                                                    <Eye />
+                                                                    View
+                                                                </div>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                {/each}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading-note-{info.user.id}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-note-{info.user.id}" aria-expanded="false" aria-controls="collapse-note-{info.user.id}">
-                                        Notebooks
-                                    </button>
-                                </h2>
-                                <div id="collapse-note-{info.user.id}" class="accordion-collapse collapse" aria-labelledby="heading-{info.user.id}" data-bs-parent="#accordion-note-{info.user.id}">
-                                    <div class="accordion-body">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Notes</th>
-                                                <th scope="col">Tags</th>
-                                                <th scope="col">Action</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {#each info.notebooks as notebook}
-                                                <tr>
-                                                    <td>{notebook.name}</td>
-                                                    <td>{notebook.note_count}</td>
-                                                    <td>{notebook.tags}</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={fetchNotebook(notebook.id)}>
-                                                            <div class="d-flex align-items-center">
-                                                                <Eye/>
-                                                                View
-                                                            </div>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            {/each}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                </div>
                 {/each}
             </div>
         <!-- Modal Deck-->
@@ -300,7 +313,7 @@
                 <div class="modal-content">
                     {#if isDeck}
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{deck.deck.name}</h1>
+                        <h2 class="modal-title " id="staticBackdropLabel">{deck.deck.name}</h2>
                     </div>
                     <div class="modal-body">
                             <div class="container mt-3">
@@ -315,7 +328,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {card.due}</h4>
+                                            <h4>Date: {formatDate(card.due)}</h4>
                                         </div>
                                         <div class="container mb-3">
                                             <div class="row">
@@ -335,7 +348,11 @@
                                                 <div class="col">
                                                     <div class="card bg-secondary card-width">
                                                         <div class="card-body">
-                                                            <SvelteMarkdown source="{card.back}"/>
+                                                            {#if card.template === 2}
+                                                                <Katex>{card.back}</Katex>
+                                                            {:else }
+                                                                <SvelteMarkdown source="{card.back}"/>
+                                                            {/if}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -349,7 +366,7 @@
                     {:else}
                         <div class="container mt-3">
                             <div class="row">
-                                <h4>List history</h4>
+                                <h2>{infoNotebook.notebook.name}</h2>
                                 <div class="col-3 scrollable-column">
 
                                     <div class="list-group">
@@ -360,7 +377,7 @@
                                 </div>
                                 <div class="col-9">
                                     <div class="row">
-                                        <h4>Date: {note.dateCreated} </h4>
+                                        <h4>Date: {formatDate(note.dateCreated)} </h4>
                                     </div>
                                     <div>
                                         <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">

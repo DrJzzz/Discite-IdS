@@ -1,20 +1,23 @@
 <script>
-    import {SingleNoteStore} from "../../../../single-note-store.js";
+    import {SingleNoteStore} from "../../../../stores.js";
     import { onMount } from "svelte";
     import SvelteMarkdown from 'svelte-markdown';
     import {ClockCounterClockwise, Pencil, Plus, X} from "phosphor-svelte";
-    import {ImagesStore} from "../../../../images-store.js";
+    import {ImagesStore} from "../../../../stores.js";
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-    import {HistoryStore} from "../../../../history-store.js";
+    import {HistoryStore} from "../../../../stores.js";
     import {getCookie} from "../../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
-    import {TagStore} from "../../../../tag-store.js";
+    import {TagStore} from "../../../../stores.js";
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+    import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+    import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+    import {formatDate} from "../../../../utils/date.js";
 
-
-    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -283,10 +286,10 @@
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add note</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit note</h5>
                     </div>
                     <form on:submit|preventDefault={handleSubmit}>
                         <div class="modal-body">
@@ -349,6 +352,12 @@
                                         {name}
                                         server={{ process }}
                                         allowMultiple={true}
+                                        allowImagePreview={true}
+                                        allowImageResize={true}
+                                        imageResizeTargetWidth={300}
+                                        imageResizeTargetHeight={300}
+                                        imageResizeMode="cover"
+                                        allowImageTransform={true}
                                 />
 
                             </div>
@@ -385,7 +394,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {history.history_date} </h4>
+                                            <h4>Date: {formatDate(history.history_date)} </h4>
                                         </div>
                                         <div>
                                             <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">

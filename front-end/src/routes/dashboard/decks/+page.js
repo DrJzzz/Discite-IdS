@@ -1,8 +1,8 @@
 import {getCookie} from "../../../utils/csrf.js";
-import {CardStore} from "../../../card-store.js";
-import {UsersStore} from "../../../users-store.js";
-import {DeckStore} from "../../../deck-store.js";
-import {TagStore} from "../../../tag-store.js";
+import {CardStore} from "../../../stores.js";
+import {UsersStore} from "../../../stores.js";
+import {DeckStore} from "../../../stores.js";
+import {TagStore} from "../../../stores.js";
 import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
@@ -76,8 +76,8 @@ export async function load({ parent, fetch, params }) {
         TagStore.set(tags);
         CardStore.set(cards)
         replaceTagIdsWithNames();
-        UsersStore.set(users);
         DeckStore.set(decks);
+        console.log(users)
         return { cards, users };
     } catch (error) {
         console.error("Error fetching data:", error);

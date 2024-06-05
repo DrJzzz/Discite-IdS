@@ -1,19 +1,21 @@
 <script>
     import {onMount} from "svelte";
-    import {UserStore} from "../../user-store.js";
-    import {ImagesStore} from "../../images-store.js";
+    import {UserStore} from "../../stores.js";
+    import {ImagesStore} from "../../stores.js";
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-    import {UsersStore} from "../../users-store.js";
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+    import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+    import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
     import {getCookie} from "../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
-    import {NotebookStore} from "../../notebook-store.js";
+    import {NotebookStore} from "../../stores.js";
     import {Plus, X} from "phosphor-svelte";
-    import {TagStore} from "../../tag-store.js";
+    import {TagStore} from "../../stores.js";
 
-    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
 
     let title = '';
     let content = '';
@@ -275,6 +277,12 @@
                         {name}
                         server={{ process }}
                         allowMultiple={true}
+                        allowImagePreview={true}
+                        allowImageResize={true}
+                        imageResizeTargetWidth={300}
+                        imageResizeTargetHeight={300}
+                        imageResizeMode="cover"
+                        allowImageTransform={true}
                 />
 
             </div>

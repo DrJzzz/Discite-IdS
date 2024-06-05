@@ -1,10 +1,10 @@
 <script>
-    import {UserStore} from "../../user-store.js";
+    import {UserStore} from "../../stores.js";
     import {getCookie} from "../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
     import {Plus, X} from "phosphor-svelte";
-    import {TagStore} from "../../tag-store.js";
+    import {TagStore} from "../../stores.js";
     let name = '';
     let user;
 
