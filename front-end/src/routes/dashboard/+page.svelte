@@ -248,7 +248,7 @@
                                                     <tr>
                                                         <td>{deck.name}</td>
                                                         <td>{deck.card_count}</td>
-                                                        <td>{deck.tags}</td>
+                                                        <td class="tags-column">{deck.tags}</td>
                                                         <td>
                                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => fetchDeck(deck.id)}>
                                                                 <div class="d-flex align-items-center">

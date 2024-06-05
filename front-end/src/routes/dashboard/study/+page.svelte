@@ -65,6 +65,7 @@
                             alertEndStudy("No more cards to study", 'success');
                             navigateToHome();
                         }
+                        i =0;
                     });
                 }
             } else {
