@@ -259,7 +259,7 @@
                 <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <SvelteMarkdown source="{title}" />
+                            <!-- <SvelteMarkdown source="{title}" /> -->
                             <SvelteMarkdown source="{$SingleNoteStore.title}" />
                         </div>
 
