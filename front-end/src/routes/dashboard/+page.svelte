@@ -35,7 +35,7 @@
        });
        let info = get(HomeStore);
        replaceTagIdsWithNames(info, tagDict );
-       console.log($HomeStore);
+       console.log($DeckStore);
        console.log($TagStore);
        HomeStore.set(info);
     });
@@ -415,7 +415,7 @@
                     {#each $DeckStore as deck, index}
                         <div class="mb-3">
                             <label for="max-reviews" class="form-label">{deck.name}</label>
-                            <input bind:value={max_cards[index]} type="number" class="form-control" id="max-reviews" min="1" style="color: black">
+                            <input bind:value={max_cards[index]} type="number" class="form-control" id="max-reviews"  max="{deck.card_count}"  style="color: black">
                         </div>
                     {/each}
                 <button type="submit" class="btn btn-primary">Go to study</button>
