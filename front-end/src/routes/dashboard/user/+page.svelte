@@ -2,7 +2,7 @@
     import {onMount} from "svelte";
     import {UserStore} from "../../../stores.js";
     import {getCookie} from "../../../utils/csrf.js";
-    import {CameraPlus} from "phosphor-svelte";
+    import {Brain, CameraPlus, Pencil} from "phosphor-svelte";
     import {invalidateAll} from '$app/navigation';
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
 
@@ -142,7 +142,12 @@
     <div class="container py-5 ">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-12 col-xl-4">
-                <a class="button-edit" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit profile</a>
+                <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-controls="exampleModal" style="margin-bottom: 25px;" >
+                    <div class="d-flex align-items-center">
+                        <Pencil size={20}/>
+                        Edit profile
+                    </div>
+                </button>
                 <div class="card" style="border-radius: 15px;">
                     <div class="card-body text-center">
                         <div class="profile-img-container">
