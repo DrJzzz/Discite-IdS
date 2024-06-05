@@ -7,6 +7,7 @@
     import {alertSuccess, alertError,alertEndStudy} from "../../../utils/alerts.js";
     import {onMount} from "svelte";
     import Katex from "svelte-katex";
+    import {invalidateAll} from "$app/navigation";
 
     export let data;
 
@@ -19,7 +20,8 @@
 
     onMount(() => {
         if (data.cards.length > 0){
-            StudyCards.set(data.cards)
+            StudyCards.set(data.cards);
+            console.log($StudyCards)
         }else{
             alertEndStudy('No more card to study, comeback later.', 'warning');
             navigateToHome();
@@ -58,8 +60,12 @@
                     alertSuccess('Study card successfully')
                 }
                 else {
-                    alertEndStudy("No more cards to study", 'success');
-                    navigateToHome();
+                    await invalidateAll().then( () => {
+                        if ($StudyCards.length === 0){
+                            alertEndStudy("No more cards to study", 'success');
+                            navigateToHome();
+                        }
+                    });
                 }
             } else {
                 alertError('Failed to study card, retry');
@@ -74,6 +80,7 @@
     function watchBack() {
         watch = true
     }
+
 </script>
 
 {#if $StudyCards.length > 0}
