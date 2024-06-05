@@ -336,7 +336,11 @@
                                                 <div class="col">
                                                     <div class="card bg-secondary card-width">
                                                         <div class="card-body">
-                                                            <SvelteMarkdown source="{card.front}"/>
+                                                            {#if card.template === 2}
+                                                                <Katex>{card.front}</Katex>
+                                                            {:else }
+                                                                <SvelteMarkdown source="{card.front}"/>
+                                                            {/if}
                                                         </div>
                                                     </div>
                                                 </div>
