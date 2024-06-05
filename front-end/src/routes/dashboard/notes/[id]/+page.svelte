@@ -273,8 +273,8 @@
                 <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <!-- <SvelteMarkdown source="{title}" /> -->
-                            <SvelteMarkdown source="{$SingleNoteStore.title}" />
+                            <h1><b>{$SingleNoteStore.title}</b></h1>
+
                         </div>
 
                     </div>
@@ -296,7 +296,7 @@
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">Title</label>
-                                <input type="text" bind:value={$SingleNoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
+                                <input type="text" bind:value={$SingleNoteStore.title} style="color:black"  class="form-control" id="title"  placeholder="Type text">
                             </div>
                             <div class="mb-3">
                                 <label for="content" class="form-label">Content</label>
@@ -400,8 +400,7 @@
                                             <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
                                                 <div class="card-header">
                                                     <div class="d-flex align-items-center">
-                                                        <SvelteMarkdown source="{title}" />
-                                                        <SvelteMarkdown source="{history.title}" />
+                                                        <h1><b>{history.title}</b></h1>
                                                     </div>
 
                                                 </div>

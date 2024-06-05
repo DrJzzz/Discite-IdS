@@ -196,7 +196,7 @@
         border-radius: 15px; /* Hacer los bordes redondos */
         border: 4px solid #242762; /* Bordes de color #242762 */
     }
-    .card-header {
+    .card-header-custom {
         background-color: #242762; /* Color de fondo del header de la card */
         color: white; /* Color de las letras del header */
         border-top-left-radius: 15px; /* Redondear la esquina superior izquierda */
@@ -217,7 +217,7 @@
             <div class="row">
                 {#each $HomeStore as info}
                     <div class="card col card-custom" style="max-width: 480px">
-                        <div class="card-header d-flex align-items-center">
+                        <div class="card-header card-header-custom d-flex align-items-center">
                             <img src={localhost + info.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
                             <div>
                                 <h5 class="card-title mb-0">{info.user.name}</h5>
@@ -383,8 +383,7 @@
                                         <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
                                             <div class="card-header">
                                                 <div class="d-flex align-items-center">
-                                                    <!-- <SvelteMarkdown source="{title}" /> -->
-                                                    <SvelteMarkdown source="{note.title}" />
+                                                    <h1><b>{note.title}</b></h1>
                                                 </div>
 
                                             </div>
@@ -418,7 +417,7 @@
                             <input bind:value={max_cards[index]} type="number" class="form-control" id="max-reviews"  max="{deck.card_count}"  style="color: black">
                         </div>
                     {/each}
-                <button type="submit" class="btn btn-primary">Go to study</button>
+                <button type="submit" class="btn btn-primary btn-action-color">Go to study</button>
             </form>
         </div>
     </div>

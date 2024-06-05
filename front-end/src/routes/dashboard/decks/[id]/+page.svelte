@@ -424,7 +424,11 @@
                                                 <div class="col">
                                                     <div class="card bg-secondary card-width">
                                                         <div class="card-body">
-                                                            <SvelteMarkdown source="{history.back}"/>
+                                                            {#if $SingleCardStore.template == 2}
+                                                                <Katex>{history.back}</Katex>
+                                                            {:else }
+                                                                <SvelteMarkdown source="{history.back}"/>
+                                                            {/if}
                                                         </div>
                                                     </div>
                                                 </div>

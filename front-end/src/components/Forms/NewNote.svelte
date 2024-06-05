@@ -210,7 +210,7 @@
 
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
-                    <input type="text" bind:value={title} style="color:black"  class="form-control" id="title"  placeholder="Type in Markdown">
+                    <input type="text" bind:value={title} style="color:black"  class="form-control" id="title"  placeholder="Type text">
                 </div>
                 <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
