@@ -107,6 +107,7 @@
         profileImage: 'https://via.placeholder.com/150'
     };
 
+    let isFetched = false;
     async function fetchDeck(id){
         isDeck = true;
         try{
@@ -126,6 +127,9 @@
             if (cardsRes.ok){
                 deck = await cardsRes.json();
                 card = deck.cards[0];
+                if (deck.cards.length > 0){
+                    isFetched = true;
+                }
                 console.log(card)
             }else {
                 alertError('Failed to load deck data');
@@ -156,6 +160,9 @@
             if (decksRes.ok){
                 infoNotebook = await decksRes.json();
                 note = infoNotebook.notes[0];
+                if (infoNotebook.notes.length > 0 ) {
+                    isFetched = true;
+                }
             }else {
                 alertError('Failed to load deck data');
             }
@@ -164,6 +171,10 @@
             console.error('An error occurred while submitting the form:', error);
             alertError('An error occurred while getting deck data');
         }
+    }
+
+    function onClose(){
+        isFetched = false;
     }
     let deck = {
         deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' , template:0},
@@ -312,96 +323,115 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     {#if isDeck}
-                    <div class="modal-header">
-                        <h2 class="modal-title " id="staticBackdropLabel">{deck.deck.name}</h2>
-                    </div>
-                    <div class="modal-body">
+                        <div class="modal-header">
+                            <h2 class="modal-title " id="staticBackdropLabel">{deck.deck.name}</h2>
+                        </div>
+                        {#if isFetched}
+                            <div class="modal-body">
+                                <div class="container mt-3">
+                                    <div class="row">
+                                        <h4>List Cards</h4>
+                                        <div class="col-3 scrollable-column">
+                                            <div class="list-group">
+                                                {#each deck.cards as info, index}
+                                                    <button type="button" class="list-group-item list-group-item-action" on:click={() => changeCard(info.id)}>{index + 1}</button>
+                                                {/each}
+                                            </div>
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="row">
+                                                <h4>Date: {formatDate(card.due)}</h4>
+                                            </div>
+                                            <div class="container mb-3">
+                                                <div class="row">
+                                                    <h5 class="text-center">Front</h5>
+                                                    <div class="col">
+                                                        <div class="card bg-secondary card-width">
+                                                            <div class="card-body">
+                                                                {#if card.template === 2}
+                                                                    <Katex>{card.front}</Katex>
+                                                                {:else }
+                                                                    <SvelteMarkdown source="{card.front}"/>
+                                                                {/if}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="container mb-3">
+                                                <div class="row">
+                                                    <h5 class="text-center">Back</h5>
+                                                    <div class="col">
+                                                        <div class="card bg-secondary card-width">
+                                                            <div class="card-body">
+                                                                {#if card.template === 2}
+                                                                    <Katex>{card.back}</Katex>
+                                                                {:else }
+                                                                    <SvelteMarkdown source="{card.back}"/>
+                                                                {/if}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            {:else }
+                            <div class="modal-body">
+                                <h3>No data on deck</h3>
+                            </div>
+                            {/if}
+
+
+                    {:else}
+                        {#if isFetched}
                             <div class="container mt-3">
                                 <div class="row">
-                                    <h4>List Cards</h4>
+                                    <h2>{infoNotebook.notebook.name}</h2>
                                     <div class="col-3 scrollable-column">
+
+
                                         <div class="list-group">
-                                            {#each deck.cards as info, index}
-                                                <button type="button" class="list-group-item list-group-item-action" on:click={() => changeCard(info.id)}>{index + 1}</button>
+                                            {#each infoNotebook.notes as note, index}
+                                                <button type="button" class="list-group-item list-group-item-action" on:click={() => changeNote(note.id)}>{index + 1}</button>
                                             {/each}
                                         </div>
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {formatDate(card.due)}</h4>
+                                            <h4>Date: {formatDate(note.dateCreated)} </h4>
                                         </div>
-                                        <div class="container mb-3">
-                                            <div class="row">
-                                                <h5 class="text-center">Front</h5>
-                                                <div class="col">
-                                                    <div class="card bg-secondary card-width">
-                                                        <div class="card-body">
-                                                            {#if card.template === 2}
-                                                                <Katex>{card.front}</Katex>
-                                                            {:else }
-                                                                <SvelteMarkdown source="{card.front}"/>
-                                                            {/if}
-                                                        </div>
+                                        <div>
+                                            <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
+                                                <div class="card-header">
+                                                    <div class="d-flex align-items-center">
+                                                        <h1><b>{note.title}</b></h1>
                                                     </div>
+
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="container mb-3">
-                                            <div class="row">
-                                                <h5 class="text-center">Back</h5>
-                                                <div class="col">
-                                                    <div class="card bg-secondary card-width">
-                                                        <div class="card-body">
-                                                            {#if card.template === 2}
-                                                                <Katex>{card.back}</Katex>
-                                                            {:else }
-                                                                <SvelteMarkdown source="{card.back}"/>
-                                                            {/if}
-                                                        </div>
-                                                    </div>
+                                                <div class="card-body">
+                                                    <SvelteMarkdown source="{note.content}" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                    </div>
-                    {:else}
-                        <div class="container mt-3">
-                            <div class="row">
-                                <h2>{infoNotebook.notebook.name}</h2>
-                                <div class="col-3 scrollable-column">
-
-                                    <div class="list-group">
-                                        {#each infoNotebook.notes as note, index}
-                                            <button type="button" class="list-group-item list-group-item-action" on:click={() => changeNote(note.id)}>{index + 1}</button>
-                                        {/each}
-                                    </div>
-                                </div>
-                                <div class="col-9">
-                                    <div class="row">
-                                        <h4>Date: {formatDate(note.dateCreated)} </h4>
-                                    </div>
-                                    <div>
-                                        <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
-                                            <div class="card-header">
-                                                <div class="d-flex align-items-center">
-                                                    <h1><b>{note.title}</b></h1>
-                                                </div>
-
-                                            </div>
-                                            <div class="card-body">
-                                                <SvelteMarkdown source="{note.content}" />
-                                            </div>
-                                        </div>
-                                    </div>
+                            {:else }
+                            <div class="container mt-3">
+                                <div class="row">
+                                    <h2>{infoNotebook.notebook.name}</h2>
+                                    <h3>No data on notebook</h3>
                                 </div>
                             </div>
-                        </div>
+                            {/if}
+
                     {/if}
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" on:click={() => onClose()}>Close</button>
                     </div>
                 </div>
             </div>
