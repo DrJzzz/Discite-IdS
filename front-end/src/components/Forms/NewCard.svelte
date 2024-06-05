@@ -9,7 +9,10 @@
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+    import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+    import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
 
     let front = '';
     let back = '';
@@ -217,31 +220,23 @@
                     </select>
                 </div>
             {/if}
+            <div class="mb-3">
+                <label for="front-area" class="form-label">Front Area</label>
+                <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+            </div>
             {#if templateOption === '1'}
 
-                <div class="mb-3">
-                    <label for="front-area" class="form-label">Front Area</label>
-                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
-                </div>
+
                 <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
                 </div>
                 {:else if templateOption === '2'}
                 <div class="mb-3">
-                    <label for="front-area" class="form-label">Front Area</label>
-                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5"
-                              placeholder="Type in Markdown" maxlength="200"></textarea>
-                </div>
-                <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in latex"></textarea>
                 </div>
                 {:else if templateOption === '3'}
-                <div class="mb-3">
-                    <label for="front-area" class="form-label">Front Area</label>
-                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
-                </div>
                 <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <FilePond
@@ -249,6 +244,12 @@
                             {name}
                             server={{ process }}
                             allowMultiple={false}
+                            allowImagePreview={true}
+                            allowImageResize={true}
+                            imageResizeTargetWidth={300}
+                            imageResizeTargetHeight={300}
+                            imageResizeMode="cover"
+                            allowImageTransform={true}
                     />
                 </div>
             {/if}

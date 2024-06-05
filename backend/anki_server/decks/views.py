@@ -57,6 +57,7 @@ class DeckViewSet(viewsets.ModelViewSet):
                 'front' : card.front,
                 'back': card.back,
                 'due' : card.due,
+                'template' : card.template,
                 'tags': tags
             }
             values.append(data)

@@ -96,7 +96,6 @@
         }
     }
 
-    async function 
 </script>
 
 <style>

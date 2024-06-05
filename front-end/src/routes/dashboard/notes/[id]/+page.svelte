@@ -12,9 +12,11 @@
     import {alertSuccess, alertError} from "../../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
     import {TagStore} from "../../../../tag-store.js";
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+    import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+    import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
-
-    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -283,7 +285,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add note</h5>
@@ -349,6 +351,12 @@
                                         {name}
                                         server={{ process }}
                                         allowMultiple={true}
+                                        allowImagePreview={true}
+                                        allowImageResize={true}
+                                        imageResizeTargetWidth={300}
+                                        imageResizeTargetHeight={300}
+                                        imageResizeMode="cover"
+                                        allowImageTransform={true}
                                 />
 
                             </div>

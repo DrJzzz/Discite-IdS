@@ -10,6 +10,8 @@
     import {HistoryStore} from "../../history-store.js";
     import {TagStore} from "../../tag-store.js";
     import { get } from 'svelte/store';
+    import {SingleCardStore} from "../../single-card-store.js";
+    import Katex from "svelte-katex";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -125,6 +127,7 @@
             if (cardsRes.ok){
                 deck = await cardsRes.json();
                 card = deck.cards[0];
+                console.log(card)
             }else {
                 alertError('Failed to load deck data');
             }
@@ -164,7 +167,7 @@
         }
     }
     let deck = {
-        deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' },
+        deck: {id: 0, name: ''},  cards : [{ id : 1, due : '2024-01-20', front : '', back: '' , template:0},
             { id : 1, due : '2024-01-20', front : '', back: '' }]
     }
 
@@ -192,7 +195,7 @@
 
 
 <div>
-    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="margin-bottom: 25px;" >
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="margin-bottom: 25px;" >
         <div class="d-flex align-items-center">
             <Brain />
             Study cards
@@ -214,8 +217,8 @@
                     <div class="card-body">
                         <div class="accordion" id="accordion-deck-{info.user.id}">
                             <div class="accordion-item">
-                                <h2 class="accordion-header" id="heading-deck-{info.user.id}">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-deck-{info.user.id}" aria-expanded="false" aria-controls="collapse-deck-{info.user.id}">
+                                <h2 class="accordion-header " id="heading-deck-{info.user.id}">
+                                    <button class="accordion-button collapsed accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-deck-{info.user.id}" aria-expanded="false" aria-controls="collapse-deck-{info.user.id}">
                                         Decks
                                     </button>
                                 </h2>
@@ -253,7 +256,7 @@
                             </div>
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="heading-note-{info.user.id}">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-note-{info.user.id}" aria-expanded="false" aria-controls="collapse-note-{info.user.id}">
+                                    <button class="accordion-button collapsed accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-note-{info.user.id}" aria-expanded="false" aria-controls="collapse-note-{info.user.id}">
                                         Notebooks
                                     </button>
                                 </h2>
@@ -300,7 +303,7 @@
                 <div class="modal-content">
                     {#if isDeck}
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">{deck.deck.name}</h1>
+                        <h2 class="modal-title " id="staticBackdropLabel">{deck.deck.name}</h2>
                     </div>
                     <div class="modal-body">
                             <div class="container mt-3">
@@ -335,7 +338,11 @@
                                                 <div class="col">
                                                     <div class="card bg-secondary card-width">
                                                         <div class="card-body">
-                                                            <SvelteMarkdown source="{card.back}"/>
+                                                            {#if card.template === 2}
+                                                                <Katex>{card.back}</Katex>
+                                                            {:else }
+                                                                <SvelteMarkdown source="{card.back}"/>
+                                                            {/if}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -349,7 +356,7 @@
                     {:else}
                         <div class="container mt-3">
                             <div class="row">
-                                <h4>List history</h4>
+                                <h2>{infoNotebook.notebook.name}</h2>
                                 <div class="col-3 scrollable-column">
 
                                     <div class="list-group">
