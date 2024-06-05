@@ -34,7 +34,7 @@
         goto(`/dashboard`);
     }
 
-    async function handleSubmit(id, rating) {
+    async function handleSubmit(rating) {
 
         try {
             const token = localStorage.getItem('key');
@@ -65,8 +65,9 @@
                             alertEndStudy("No more cards to study", 'success');
                             navigateToHome();
                         }
-                        i =0;
                     });
+                    i =0;
+                    watch = false;
                 }
             } else {
                 alertError('Failed to study card, retry');
@@ -88,16 +89,16 @@
     <div>
         <div class="row container" style="max-width: 720px;margin-left: 10%">
             <div class="col">
-                <button type="button" class="btn btn-outline-danger" on:click={() => handleSubmit(2, 1)}>Again</button>
+                <button type="button" class="btn btn-outline-danger" on:click={() => handleSubmit(1)}>Again</button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-outline-warning" on:click={() => handleSubmit(2, 2)}>Hard</button>
+                <button type="button" class="btn btn-outline-warning" on:click={() => handleSubmit(2)}>Hard</button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-outline-primary" on:click={() => handleSubmit(2, 3)}>Good</button>
+                <button type="button" class="btn btn-outline-primary" on:click={() => handleSubmit(3)}>Good</button>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-outline-success" on:click={() => handleSubmit(2, 4)}>Easy</button>
+                <button type="button" class="btn btn-outline-success" on:click={() => handleSubmit(4)}>Easy</button>
             </div>
             
         </div>
