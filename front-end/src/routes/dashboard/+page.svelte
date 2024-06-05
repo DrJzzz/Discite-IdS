@@ -10,6 +10,7 @@
     import {TagStore} from "../../stores.js";
     import { get } from 'svelte/store';
     import Katex from "svelte-katex";
+    import {formatDate} from "../../utils/date.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -316,7 +317,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {card.due}</h4>
+                                            <h4>Date: {formatDate(card.due)}</h4>
                                         </div>
                                         <div class="container mb-3">
                                             <div class="row">
@@ -365,7 +366,7 @@
                                 </div>
                                 <div class="col-9">
                                     <div class="row">
-                                        <h4>Date: {note.dateCreated} </h4>
+                                        <h4>Date: {formatDate(note.dateCreated)} </h4>
                                     </div>
                                     <div>
                                         <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">

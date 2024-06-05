@@ -15,6 +15,7 @@
     import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
     import FilePondPluginImageResize from 'filepond-plugin-image-resize';
     import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+    import {formatDate} from "../../../../utils/date.js";
 
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
     /** @type {import('./$types').PageData} */
@@ -288,7 +289,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add note</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Edit note</h5>
                     </div>
                     <form on:submit|preventDefault={handleSubmit}>
                         <div class="modal-body">
@@ -393,7 +394,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {history.history_date} </h4>
+                                            <h4>Date: {formatDate(history.history_date)} </h4>
                                         </div>
                                         <div>
                                             <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">

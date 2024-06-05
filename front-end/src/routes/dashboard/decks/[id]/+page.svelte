@@ -15,7 +15,10 @@
     import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
     import FilePondPluginImageResize from 'filepond-plugin-image-resize';
     import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+    import {formatDate} from "../../../../utils/date.js";
+
     registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
+
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -401,7 +404,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {history.history_date}</h4>
+                                            <h4>Date: {formatDate(history.history_date)}</h4>
                                         </div>
                                         <div class="container mb-3">
                                             <div class="row">
