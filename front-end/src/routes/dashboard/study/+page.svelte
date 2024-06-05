@@ -17,7 +17,7 @@
     let i = 0;
 
     onMount(() => {
-        if (data.cards > 0){
+        if (data.cards.length > 0){
             CardStore.set(data.cards)
             console.log($CardStore)
         }else{

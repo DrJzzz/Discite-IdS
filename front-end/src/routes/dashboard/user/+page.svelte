@@ -26,6 +26,8 @@
             handleImageUpload(imageFile)
         }
     }
+
+    
     // Función para manejar el envío del archivo (por ejemplo, subirlo a un servidor)
     async function handleImageUpload(imageFile) {
         if (imageFile) {
@@ -93,6 +95,8 @@
             alertError('An error occurred while updating user information.')
         }
     }
+
+    async function 
 </script>
 
 <style>
