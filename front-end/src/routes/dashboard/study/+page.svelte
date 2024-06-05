@@ -18,9 +18,12 @@
 
     let i = 0;
 
+    let card = {front : '', back: ''};
+
     onMount(() => {
         if (data.cards.length > 0){
             StudyCards.set(data.cards);
+            card = $StudyCards[0];
             console.log($StudyCards)
         }else{
             alertEndStudy('No more cards to study, comeback later.', 'warning');
@@ -56,6 +59,7 @@
 
                 if( i < data.cards.length-1){
                     i += 1;
+                    card = $StudyCards[i];
                     watch = false;
                     alertSuccess('Study card successfully')
                 }
@@ -65,9 +69,11 @@
                             alertEndStudy("No more cards to study", 'success');
                             navigateToHome();
                         }
+                        i =0;
+                        card = $StudyCards[i];
+                        watch = false;
                     });
-                    i =0;
-                    watch = false;
+
                 }
             } else {
                 alertError('Failed to study card, retry');
@@ -107,7 +113,7 @@
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
-                        <SvelteMarkdown source="{$StudyCards[i].front}"/>
+                        <SvelteMarkdown source="{card.front}"/>
                     </div>
                 </div>
             </div>
@@ -124,9 +130,9 @@
                             </button>
                         {:else }
                             {#if $StudyCards[i].template === 2}
-                                <Katex>{$StudyCards[i].back}</Katex>
+                                <Katex>{card.back}</Katex>
                             {:else }
-                                <SvelteMarkdown source="{$StudyCards[i].back}"/>
+                                <SvelteMarkdown source="{card.back}"/>
                             {/if}
                         {/if}
 
