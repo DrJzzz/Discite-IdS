@@ -1,4 +1,4 @@
-import {UserStore} from "../../user-store.js";
+import {UserStore} from "../../stores.js";
 import {getCookie} from "../../utils/csrf.js";
 
 /** @type {import('./$types').LayoutLoad} */

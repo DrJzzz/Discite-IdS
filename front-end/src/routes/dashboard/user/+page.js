@@ -1,5 +1,5 @@
 import {getCookie} from "../../../utils/csrf.js";
-
+import {UserStore} from "../../../stores.js";
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
     try {
@@ -38,7 +38,7 @@ export async function load({ fetch, params }) {
             const imgJson = await resImage.json();
             console.log(imgJson)
             const img = imgJson.picture;
-
+            UserStore.set(user);
             // Devuelve las cartas cargadas junto con su ID
             return { user , img};
         } else {

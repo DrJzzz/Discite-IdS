@@ -1,4 +1,5 @@
 import {getCookie} from "../../../utils/csrf.js";
+import {StudyCards} from "../../../stores.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
@@ -52,7 +53,7 @@ export async function load({ fetch, params }) {
             }
 
 
-
+            StudyCards.set(cards);
             // Devuelve las cartas cargadas junto con su ID
             return { cards };
         } else {

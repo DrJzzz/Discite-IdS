@@ -24,7 +24,4 @@ class ImageViewSet(viewsets.ModelViewSet):
         data = {'url': serializer.data['image']}
         return Response(data)
     
-    # def get_file(self, request, *args, **kwargs):
-    #     user = request.user
-    #     return image
 

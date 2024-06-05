@@ -1,7 +1,7 @@
 import {getCookie} from "../../../../utils/csrf.js";
-import {SingleCardStore} from "../../../../single-card-store.js";
-import {HistoryStore} from "../../../../history-store.js";
-import {TagStore} from "../../../../tag-store.js";
+import {SingleCardStore} from "../../../../stores.js";
+import {HistoryStore} from "../../../../stores.js";
+import {TagStore} from "../../../../stores.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {

@@ -1,13 +1,10 @@
 <script>
-
     import NewCard from "../../../components/Forms/NewCard.svelte";
-    import SvelteMarkdown from "svelte-markdown";
     import {goto} from "$app/navigation";
-    import {Plus, X, Gear} from "phosphor-svelte";
+    import {Plus, X, Gear, LockKey,LockSimpleOpen,Pencil, Trash, UserPlus} from "phosphor-svelte";
     import NewDeck from "../../../components/Forms/NewDeck.svelte";
-    import {UsersStore} from "../../../users-store.js";
-    import {CardStore} from "../../../card-store.js";
-    import {writable} from "svelte/store";
+    import {UsersStore} from "../../../stores.js";
+    import {CardStore} from "../../../stores.js";
     import {onMount} from "svelte";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
@@ -22,12 +19,12 @@
     let is_rename = false;
     let name = "";
     let unsubscribe;
+    const localhost = 'http://localhost:8000/';
 
     function navigateToCard(id) {
         goto(`/dashboard/decks/${id}`);
     }
     onMount(() => {
-        CardStore.set(data.cards);
         console.log($CardStore)
         UsersStore.set([]);
     });
@@ -275,76 +272,129 @@
     .btn-delete{
         max-width: 50px;
     }
+    
+    .button-div {
+        display: flex;
+        justify-content: space-between;
+        max-width: 420px;
+        padding-bottom: 20px;
+    }
 </style>
 
 
 <div>
+    <div class="button-div">
     <!-- Botón que activa el modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
             <Plus />
             Add card
         </div>
     </button>
     <!-- Botón que activa el modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deckModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#deckModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
             <Plus />
             Add deck
         </div>
     </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tagModal">
+    <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#tagModal" style="padding-bottom: 20px;">
         <div class="d-flex align-items-center">
             <Plus />
             Add tag
         </div>
     </button>
+
+    </div>
     {#if CardStore}
-            <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion" id="accordionPanelsStayOpenExample" style="padding-top: 20px;">
             {#each $CardStore as info}
-                <div class="accordion-item">
+                <div class="accordion-item" style="padding-bottom: 20px;">
                     <h2 class="accordion-header row">
-                        <button class="col accordion-button" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
+                        <button class="col accordion-button accordion-button-custom" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
                             {info.deck.name}
                         </button>
-                        <div class="col btn-group "style="max-width: 50px;">
+                        <div class="col btn-group" style="max-width: 50px;">
                             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                                 <Gear size={24}/>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-dark bg-dark" >
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)} >Invite</a></li>
+                            <ul class="dropdown-menu dropdown-menu-dark bg-dark">
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#inviteModal" on:click={() => changeIdDeck(info.deck.id)}>
+                                    <div class="d-flex align-items-center">
+                                        <UserPlus size={20}/>
+                                        Invite
+                                    </div>
+                                </a></li>
                                 {#if !info.deck.public}
-                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)} >Public</a></li>
-                                {:else }
-                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)} >Private</a></li>
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, false)}>
+                                        <div class="d-flex align-items-center">
+                                            <LockSimpleOpen size={20} />
+                                            Public
+                                        </div>
+                                    </a></li>
+                                {:else}
+                                    <li><a class="dropdown-item text-primary-emphasis" on:click={() => changePublic(info.deck.id, true)}>
+                                        <div class="d-flex align-items-center">
+                                            <LockKey size={20}/>
+                                            Private
+                                        </div>
+                                    </a></li>
                                 {/if}
-
-                                <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  on:click={() => changeIdDeckRename(info.deck.id)}>Rename</a></li>
-                                <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)} >Delete</a></li>
+                                <li><a class="dropdown-item text-warning-emphasis" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeckRename(info.deck.id)}>
+                                    <div class="d-flex align-items-center">
+                                        <Pencil size={20} />
+                                        Rename
+                                    </div>
+                                </a></li>
+                                <li><a class="dropdown-item text-danger" role="button" href="#staticBackdrop" data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdDeck(info.deck.id)}>
+                                    <div class="d-flex align-items-center">
+                                        <Trash size={20}/>
+                                        Delete
+                                    </div>
+                                </a></li>
                             </ul>
                         </div>
                     </h2>
                     <div id="panelsStayOpen-collapse{info.deck.id}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="list-group">
-                                {#each info.cards as card}
-                                    <div class="row">
-                                        <a on:click={() => navigateToCard(card.id)}  style="max-width: 60%;"  class="list-group-item list-group-item-action active card-view" aria-current="true">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <SvelteMarkdown source="{card.front}"/>
-                                            </div>
-                                        </a>
-                                        <button type="button" class="col  btn btn-outline-danger btn-delete " data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
-                                            <X/>
-                                        </button>
-                                    </div>
-                                {/each}
+                        <div class="accordion-body" style="max-width: 60%;">
+                            <div>
+                                <table class="table table-hover table-borders">
+                                    <thead class="table-header-custom">
+                                    <tr>
+                                        <th scope="col">List</th>
+                                        <th scope="col">Tags</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each info.cards as card, index}
+                                        <tr class=" table-borders">
+                                            <th scope="row">
+                                                <div class="card-view">
+                                                    <a on:click={() => navigateToCard(card.id)} class="list-group-item list-group-item-action active " aria-current="true">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            Card {index+1}
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                            </th>
+                                            <td class="tags-column">{card.tags}</td>
+                                            <td>
+                                                <button type="button" class="col btn btn-outline-danger btn-delete"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" on:click={() => changeIdCard(card.id)}>
+                                                    <X/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
             {/each}
-            </div>
+        </div>
         <!-- Modal Rename, delete -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -442,7 +492,15 @@
 
                             <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
                                 {#each $UsersStore as user}
-                                    <button type="button" class="btn btn-outline-danger" on:click={() => deleteUser(user)} >{user.name}</button>
+                                    <button type="button" class="btn btn-outline-danger" on:click={() => deleteUser(user)} >
+                                            <div class="card-header d-flex align-items-center">
+                                                <img src={localhost + user.picture} alt="Profile Image" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                                                <div>
+                                                    <h5 class="card-title mb-0">{user.name}</h5>
+                                                    <p class="card-text"><small class="text-muted">{user.email}</small></p>
+                                                </div>
+                                            </div>
+                                        </button>
                                 {/each}
                             </div>
 

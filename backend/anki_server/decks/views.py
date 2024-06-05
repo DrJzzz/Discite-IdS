@@ -31,20 +31,36 @@ class DeckViewSet(viewsets.ModelViewSet):
     serializer_class = DeckSerializer
     permission_classes = [IsAuthenticated]
     
+    # Updates the max review amount for a deck
     @action(detail=True, serializer_class=DeckMaxReviewSerializer, methods=['PATCH'])
     def update_review(self, request, *args, **kwargs):
         deck = self.get_object()
-        new_max_reviews = request.data.get('max_reviews', 5)#data['max_reviews']
+        new_max_reviews = request.data.get('max_reviews', 5)
         deck.max_reviews = new_max_reviews
         deck.save()
         
         serializer = DeckSerializer(instance=deck)
         return response.Response(serializer.data, status=status.HTTP_200_OK)
     
+    
+    # Returns the cards of the given deck
     @action(detail=True, methods=['GET'])
     def cards(self, request, *args, **kwargs):
         deck = self.get_object()
         cards = deck.card_deck.all()
+
+        values = []
+        for card in cards: 
+            tags = [x['id'] for x in card.tags.values('id')]
+            data = {
+                'id' :  card.id,
+                'front' : card.front,
+                'back': card.back,
+                'due' : card.due,
+                'template' : card.template,
+                'tags': tags
+            }
+            values.append(data)
 
         data = {
             'deck': {
@@ -52,11 +68,12 @@ class DeckViewSet(viewsets.ModelViewSet):
                 'name': deck.name,
                 'public': deck.public
             },
-            'cards': list(cards.values('id', 'front', 'back', 'due'))
+            'cards': values
         }
         return JsonResponse(data)
 
     
+    # Returns the decks and its cards that are ready to review in that day
     @action(detail=False, methods=['GET'])
     def to_review(self, request, *args, **kwargs):
         user = request.user
@@ -66,7 +83,7 @@ class DeckViewSet(viewsets.ModelViewSet):
         
         values = []
         for deck in decks:
-            cards = deck.card_deck.filter(due__lte=datetime.now(tzinfo))
+            cards = deck.card_deck.filter(due__date__lte=datetime.now(tzinfo).date())
             value = {
                 'count' : len(cards),
                 'deck' : deck.id,
@@ -80,7 +97,28 @@ class DeckViewSet(viewsets.ModelViewSet):
             'values': list(values),
         }
         return JsonResponse(data)
+    
+    
+    
+    @action(detail=True, methods=['GET'])
+    def review(self, request, *args, **kwargs):
+        deck = self.get_object()
+        tzinfo = timezone(timedelta(hours=6))
         
+        values = []
+       
+        cards = deck.card_deck.filter(due__date__lte=datetime.now(tzinfo).date())
+        cards.order_by('due')
+        value = {
+            'count' : len(cards),
+            'deck' : deck.id,
+            'cards' : list(cards.values('id'))
+        }
+        values.append(value)
+            
+            
+        
+        return Response(data=values)
         
     @action(detail=True)
     def set_public(self, request, *args, **kwargs):

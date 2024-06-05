@@ -44,32 +44,31 @@ class CardViewSet(viewsets.ModelViewSet):
         return response.Response(serializer.data, status=status.HTTP_201_CREATED)
 
     
-
+    # Sets a new rating for the card being studied 
     @action(detail=True, methods=['POST'])
     def set_new_rating(self, request, pk):
         # get data from route
         card = self.get_object()
         rating = int(request.data['rating'])
-        # print("Before offset : %s", str(datetime.now()))
+        
         timezone_offset = -60.0
         tzinfo = timezone(-timedelta(hours=6))
         
-        # print("After offset : %s", str(datetime.now(tzinfo)))
         
-        # timedelta(hours=timezone_offset)
         fsrs_scheduling_cards = FSRS().repeat(card, datetime.now(tzinfo))
         card = fsrs_scheduling_cards[rating].card
-        # print(str(card.due))
         card.save()
 
         return Response({'new_rating': request.data['rating']})
     
+    # Returns the change history of the card
     @action(detail=True, methods=['GET'])
     def get_history(self, request, *args, **kwargs):
         card = self.get_object()
         serializer = FlashcardHistorySerializer(card, context={'request': request})
         return response.Response(serializer.data, status=status.HTTP_200_OK)
     
+    # Reverts to a certain state in the change history 
     @action(detail=True, methods=['PUT'])
     def revert_to(self, request, *args, **kwargs):
         current = self.get_object()

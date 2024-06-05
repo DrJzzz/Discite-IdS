@@ -1,5 +1,6 @@
 import { getCookie } from '../../utils/csrf';
-import {HomeStore} from "../../home-stote.js";
+import {HomeStore} from "../../stores.js";
+import {TagStore} from "../../stores.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {
@@ -43,6 +44,19 @@ export async function load({ parent, fetch, params  }) {
             if (resUsers.ok){
                 const users = await resUsers.json();
                 HomeStore.set(users);
+                const tagsEndpoint = 'http://localhost:8000/tags/';
+                const tagsRes = await fetch(tagsEndpoint, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': `${csrftoken}`,
+                        'Authorization': `Token ${token}`,
+                    },
+                    credentials: 'include'
+                });
+                const tagsJSON = await tagsRes.json();
+                const tags = tagsJSON.results;
+                TagStore.set(tags);
                 return {decks, users}
 
             }

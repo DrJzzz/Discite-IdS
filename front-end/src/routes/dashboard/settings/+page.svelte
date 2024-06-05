@@ -1,1 +1,0 @@
-<h1>Very serious settings</h1>

@@ -1,16 +1,24 @@
 <script>
     import { onMount } from "svelte";
-    import {page} from "$app/stores";
     import SvelteMarkdown from "svelte-markdown";
-    import NewCard from "../../../../components/Forms/NewCard.svelte";
     import {Pencil, ClockCounterClockwise, X, Plus} from "phosphor-svelte";
-    import {HistoryStore} from "../../../../history-store.js";
-    import {SingleCardStore} from "../../../../single-card-store.js";
+    import {HistoryStore} from "../../../../stores.js";
+    import {SingleCardStore} from "../../../../stores.js";
     import {getCookie} from "../../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
-    import {TagStore} from "../../../../tag-store.js";
-    import {SingleNoteStore} from "../../../../single-note-store.js";
+    import {TagStore} from "../../../../stores.js";
+    import Katex from 'svelte-katex'
+    import FilePond, { registerPlugin, supported } from 'svelte-filepond';
+    import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+    import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+    import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+    import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
+    import {formatDate} from "../../../../utils/date.js";
+
+    registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview, FilePondPluginImageResize, FilePondPluginImageTransform);
+
     /** @type {import('./$types').PageData} */
     export let data;
 
@@ -18,7 +26,7 @@
     let decks = [];
 
     let id_deck = "";
-
+    const math3 = "V=\\frac{1}{3}\\pi r^2 h";
 
     let id_history = 0;
     let modalHistory;
@@ -168,11 +176,84 @@
             alertError('An error occurred while adding new deck.');
         }
     }
+
+    // the name to use for the internal file input
+    let name = 'filepond';
+
+    // a reference to the component, used to call FilePond methods
+    let pond;
+
+    const process = (fieldName, file, metadata, load, error, progress, abort) => {
+
+        const csrftoken = getCookie('csrftoken');
+        const token = localStorage.getItem('key');
+        const formData = new FormData();
+        formData.append('image', file); // Cambia 'file' al nombre deseado
+        const request = new XMLHttpRequest();
+        request.open('POST', 'http://localhost:8000/img/');
+
+
+        request.setRequestHeader('X-CSRFToken', csrftoken);
+        request.setRequestHeader('Authorization', `Token ${token}`);
+        // Configura la solicitud para enviar cookies automáticamente
+        request.withCredentials = true;
+
+        request.upload.onprogress = (e) => {
+            progress(e.lengthComputable, e.loaded, e.total);
+        };
+
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 300) {
+                try {
+                    const urlImg = JSON.parse(request.response); // Convertir a JSON
+                    setBackImage(urlImg.url);
+                } catch (e) {
+                    error('Error parsing response as JSON');
+                }
+            } else {
+                error('Error uploading file');
+            }
+        };
+
+        request.onerror = function() {
+            error('Error uploading file');
+        };
+
+        request.onabort = function() {
+            abort();
+        };
+
+        request.send(formData);
+
+        return {
+            abort: () => {
+                request.abort();
+                abort();
+            }
+        };
+    };
+
+    function setBackImage(imageUrl){
+        $SingleCardStore.back = '![Back image](' + imageUrl  +' )';
+    }
 </script>
+
+<style>
+    .button-div {
+        display: flex;
+        justify-content: space-between;
+        max-width: 300px;
+        padding-bottom: 20px;
+        margin-left: 20px;
+    }
+</style>
+
+
 {#if SingleCardStore}
     <div>
+        <div class="button-div">
         <!-- Botón que activa el modal edit-->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="d-flex align-items-center">
                 <Pencil/>
                 Edit card
@@ -180,19 +261,22 @@
 
         </button>
         <!-- Botón que activa el modal history-->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             <div class="d-flex align-items-center">
                 <ClockCounterClockwise/>
                 See history
             </div>
 
         </button>
+    </div>
+
         <div class="row">
             <div class="container-sm col">
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
                         <SvelteMarkdown source="{$SingleCardStore.front}"/>
+                        <!-- <Katex>{$SingleCardStore.front}</Katex>  -->
                     </div>
                 </div>
             </div>
@@ -200,7 +284,11 @@
                 <div class="text-center mb-3"><p>Back</p></div>
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
-                        <SvelteMarkdown source="{$SingleCardStore.back}"/>
+                        {#if $SingleCardStore.template == 2}
+                            <Katex>{$SingleCardStore.back}</Katex>
+                        {:else }
+                            <SvelteMarkdown source="{$SingleCardStore.back}"/>
+                        {/if}
                     </div>
                 </div>
             </div>
@@ -219,10 +307,33 @@
                                     <label for="front-area" class="form-label">Front Area</label>
                                     <textarea bind:value={$SingleCardStore.front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="back-area" class="form-label">Back Area</label>
-                                    <textarea bind:value={$SingleCardStore.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
-                                </div>
+                                {#if $SingleCardStore.template === 1}
+                                    <div class="mb-3">
+                                        <label for="back-area" class="form-label">Back Area</label>
+                                        <textarea bind:value={$SingleCardStore.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
+                                    </div>
+                                {:else if $SingleCardStore.template === 2}
+                                    <div class="mb-3">
+                                        <label for="back-area" class="form-label">Back Area</label>
+                                        <textarea bind:value={$SingleCardStore.back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in latex"></textarea>
+                                    </div>
+                                {:else if $SingleCardStore.template === 3}
+                                    <div class="mb-3">
+                                        <label for="back-area" class="form-label">Back Area</label>
+                                        <FilePond
+                                                bind:this={pond}
+                                                {name}
+                                                server={{ process }}
+                                                allowMultiple={false}
+                                                allowImagePreview={true}
+                                                allowImageResize={true}
+                                                imageResizeTargetWidth={300}
+                                                imageResizeTargetHeight={300}
+                                                imageResizeMode="cover"
+                                                allowImageTransform={true}
+                                        />
+                                    </div>
+                                {/if}
                             <div class="mb-3">
                                 <h4>Tags</h4>
                                 <div class="form-floating mb-3">
@@ -293,7 +404,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="row">
-                                            <h4>Date: {history.history_date}</h4>
+                                            <h4>Date: {formatDate(history.history_date)}</h4>
                                         </div>
                                         <div class="container mb-3">
                                             <div class="row">
@@ -313,7 +424,11 @@
                                                 <div class="col">
                                                     <div class="card bg-secondary card-width">
                                                         <div class="card-body">
-                                                            <SvelteMarkdown source="{history.back}"/>
+                                                            {#if $SingleCardStore.template == 2}
+                                                                <Katex>{history.back}</Katex>
+                                                            {:else }
+                                                                <SvelteMarkdown source="{history.back}"/>
+                                                            {/if}
                                                         </div>
                                                     </div>
                                                 </div>

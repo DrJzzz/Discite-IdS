@@ -15,6 +15,7 @@
 @import 'filepond/dist/filepond.css';
 @import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 @import "sweetalert2/dist/sweetalert2.min.css";
+@import 'katex/dist/katex.min.css';
 :root,
 [data-bs-theme=light] {
   --bs-blue: #378dfc;
@@ -12851,4 +12852,36 @@ body {
   height: 100%;
   max-height: 800px; /* Ajusta según sea necesario */
   overflow-y: auto;
+}
+
+.accordion-button-custom {
+  background-color: #242762 !important;
+  color: white !important;
+  border-radius: 50px !important;
+}
+
+.table-header-custom {
+  background-color: #6610f2 !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+.table-row-custom {
+  background-color: #242762 !important;
+  color: white !important;
+}
+
+.tags-column {
+  max-width: 100px; /* Ajusta según sea necesario */
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.table-borders {
+  border-radius: 30px !important;
+}
+
+.btn-action-color{
+  background-color: #9da1f8 !important;
+  color: black !important;
 }

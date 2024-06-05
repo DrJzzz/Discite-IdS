@@ -1,11 +1,11 @@
 <script>
-    import {SharedDeckStore} from '../../../shared-deck-store.js';
-    import {SharedNotebookStore} from '../../../shared-notebook-store.js';
-    import {Plus} from "phosphor-svelte";
+    import {SharedDeckStore} from '../../../stores.js';
+    import {SharedNotebookStore} from '../../../stores.js';
+    import {Plus, X} from "phosphor-svelte";
     import {goto} from "$app/navigation";
-    import SvelteMarkdown from "svelte-markdown";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
+    import {onMount} from "svelte";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -18,7 +18,9 @@
     let id_deck = "";
     let template = "";
 
-
+    onMount(() => {
+        console.log($SharedNotebookStore)
+    })
 
 
     function resetTemplate(){
@@ -106,7 +108,7 @@
 
         {#if $SharedDeckStore.length > 0}
             <!-- Botón que activa el modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <div class="d-flex align-items-center">
                     <Plus />
                     Add card
@@ -117,20 +119,38 @@
             {#each $SharedDeckStore as info}
                 <div class="accordion-item">
                     <h2 class="accordion-header row">
-                        <button class="col accordion-button" type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
+                        <button class="col accordion-button accordion-button-custom"  type="button" data-bs-toggle="collapse" style="max-width: 60%;" data-bs-target="#panelsStayOpen-collapse{info.deck.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.deck.id}">
                             {info.deck.name}
                         </button>
                     </h2>
                     <div id="panelsStayOpen-collapse{info.deck.id}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="list-group">
-                                {#each info.cards as card}
-                                    <a on:click={() => navigateToCard(card.id)}    class="list-group-item list-group-item-action active card-view" aria-current="true">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <p>Card {card.id}</p>
-                                        </div>
-                                    </a>
-                                {/each}
+                        <div class="accordion-body" style="max-width: 60%;">
+                            <div>
+                                <table class="table table-hover table-borders">
+                                    <thead class="table-header-custom">
+                                    <tr>
+                                        <th scope="col">List</th>
+                                        <th scope="col">Tags</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each info.cards as card, index}
+                                        <tr class=" table-borders">
+                                            <th scope="row">
+                                                <div class="card-view">
+                                                    <a on:click={() => navigateToCard(card.id)} class="list-group-item list-group-item-action active " aria-current="true">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            Card {index+1}
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                            </th>
+                                            <td class="tags-column">{card.tags}</td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -201,7 +221,7 @@
     {#if SharedNotebookStore}
         {#if $SharedNotebookStore.length > 0}
             <!-- Botón que activa el modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <div class="d-flex align-items-center">
                     <Plus />
                     Add note
@@ -213,20 +233,38 @@
             {#each $SharedNotebookStore as info}
                 <div class="accordion-item">
                     <h2 class="accordion-header row">
-                        <button style="max-width: 60%;"  class="col accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-note{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
+                        <button style="max-width: 60%;"  class="col accordion-button accordion-button-custom" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-note{info.notebook.id}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{info.notebook.id}">
                             {info.notebook.name}
                         </button>
                     </h2>
                     <div id="panelsStayOpen-collapse-note{info.notebook.id}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <div class="list-group">
-                                {#each info.notes as note}
-                                    <a on:click={() => navigateToNote(note.id)}    class="list-group-item list-group-item-action active card-view" aria-current="true">
-                                        <div class="d-flex w-100 justify-content-between">
-                                            <SvelteMarkdown source="{note.title}"/>
-                                        </div>
-                                    </a>
-                                {/each}
+                        <div class="accordion-body" style="max-width: 60%;" >
+                            <div>
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">List</th>
+                                        <th scope="col">Tags</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {#each info.notes as note}
+                                        <tr class="table-borders">
+                                            <th scope="row">
+                                                <div class="card-view">
+                                                    <a on:click={() => navigateToNote(note.id)} style="max-width: 60%;"   class="col list-group-item list-group-item-action active card-view" aria-current="true">
+                                                        <div class="d-flex w-100 justify-content-between">
+                                                            {note.title}
+                                                        </div>
+                                                    </a>
+                                                </div>
+
+                                            </th>
+                                            <td>{note.tags}</td>
+                                        </tr>
+                                    {/each}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

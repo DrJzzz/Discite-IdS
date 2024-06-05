@@ -76,6 +76,34 @@ class NotebookViewSet(viewsets.ModelViewSet):
         serializer = NotebookSerializer(notebook, context={'request': request})
         return Response(serializer.data, status=200)
     
+    @action(detail=True)
+    def notes(self, request, *args, **kwargs):
+        notebook = self.get_object()
+        notes = notebook.notebook.all()
+
+        values = []
+        for note in notes: 
+            tags = [x['id'] for x in note.tags.values('id')]
+            data = {
+                'id' :  note.id,
+                'title' : note.title,
+                'content' : note.content,
+                'dateCreated' : note.dateCreated,
+                'tags': tags
+            }
+            values.append(data)
+
+        data = {
+            'notebook': {
+                'id': notebook.id,
+                'name': notebook.name,
+                'public' : notebook.public
+            },
+            'notes': values#list(notes.values('id', 'title', 'content' , 'dateCreated'))
+        }
+
+        return JsonResponse(data)
+        
     
     
     
@@ -87,17 +115,3 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 
-def notes_notebook(request, pk):
-    notebook = get_object_or_404(Notebook, pk=pk)
-    notes = notebook.notebook.all()
-
-    data = {
-        'notebook': {
-            'id': notebook.id,
-            'name': notebook.name,
-            'public' : notebook.public
-        },
-        'notes': list(notes.values('id', 'title', 'content' , 'dateCreated'))
-    }
-
-    return JsonResponse(data)

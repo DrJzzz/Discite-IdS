@@ -2,9 +2,6 @@
     import {getCookie} from "../../utils/csrf.js";
     import {alertError, alertSuccess} from "../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
-    import {NotebookStore} from "../../notebook-store.js";
-    import {ImagesStore} from "../../images-store.js";
-
 
     let name = '';
     async function handleSubmit() {

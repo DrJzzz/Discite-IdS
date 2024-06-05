@@ -69,7 +69,7 @@ class SharedViewSet(viewsets.ModelViewSet):
         
         for x in list:
             user = x.recipient
-            #user = CustomUser.objects.filter(id=recipient)
+            
             item = {
                 'id' : user.id,
                 'name' : user.name,
@@ -98,6 +98,8 @@ class SharedViewSet(viewsets.ModelViewSet):
 
         obj = 'deck'
         
+        if sharer == recipient:
+            raise ValidationError(_("Sharer and recipient cannot be the same person.")).as_json()
         
         if  deck_shared and notebook_shared :
             raise ValidationError(_("Cannot shared both deck and notebook")).as_json()

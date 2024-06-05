@@ -30,8 +30,6 @@ class RegisterView(APIView):
 
 
 
-
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -105,7 +103,7 @@ class UserViewSet(viewsets.ModelViewSet):
                         'name' : deck.name,
                         'card_count' : deck.card_count,
                         'tags' : deck_tags
-                        } #list(deck.values('id', 'name','card_count'))
+                        } 
                     
                     list_decks.append(data)
                 
@@ -154,7 +152,7 @@ def decks_user(request, pk):
 
     data = {
         'user': user.id,
-        'decks': list(decks.values('id', 'name')),
+        'decks': list(decks.values('id', 'name', 'card_count')),
     }
     return JsonResponse(data)
 

@@ -1,20 +1,41 @@
 <script>
     import {onMount} from "svelte";
-    import {UserStore} from "../../../user-store.js";
+    import {UserStore, CardStore, NoteStore} from "../../../stores.js";
     import {getCookie} from "../../../utils/csrf.js";
-    import {CameraPlus} from "phosphor-svelte";
+    import {Brain, CameraPlus, Pencil} from "phosphor-svelte";
     import {invalidateAll} from '$app/navigation';
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
 
 
     export let data;
     let img = 'http://localhost:8000/media/blank-user-picture.jpg';
+    let calculated = { totalDecks : 0, totalCards : 0, totalNotebooks : 0, totalNotes : 0};
     onMount(() => {
         UserStore.set(data.user)
         img = data.img;
-        console.log(img)
+        calculated = calculateTotals();
     })
 
+    function calculateTotals() {
+        // Total de decks
+        const totalDecks = $CardStore.length;
+
+        // Total de cards
+        const totalCards = $CardStore.reduce((acc, deck) => acc + deck.cards.length, 0);
+
+        // Total de notebooks
+        const totalNotebooks = $NoteStore.length;
+
+        // Total de notes
+        const totalNotes = $NoteStore.reduce((acc, notebook) => acc + notebook.notes.length, 0);
+
+        return {
+            totalDecks,
+            totalCards,
+            totalNotebooks,
+            totalNotes
+        };
+    }
 
     let imageFile = null;
 
@@ -26,6 +47,8 @@
             handleImageUpload(imageFile)
         }
     }
+
+    
     // Función para manejar el envío del archivo (por ejemplo, subirlo a un servidor)
     async function handleImageUpload(imageFile) {
         if (imageFile) {
@@ -93,6 +116,7 @@
             alertError('An error occurred while updating user information.')
         }
     }
+
 </script>
 
 <style>
@@ -139,7 +163,12 @@
     <div class="container py-5 ">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-md-12 col-xl-4">
-                <a class="button-edit" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit profile</a>
+                <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-controls="exampleModal" style="margin-bottom: 25px;" >
+                    <div class="d-flex align-items-center">
+                        <Pencil size={20}/>
+                        Edit profile
+                    </div>
+                </button>
                 <div class="card" style="border-radius: 15px;">
                     <div class="card-body text-center">
                         <div class="profile-img-container">
@@ -173,15 +202,19 @@
                         </div>
                         <div class="d-flex justify-content-between text-center mt-5 mb-2">
                             <div>
-                                <p class="mb-2 h5">3</p>
-                                <p class="text-muted mb-0">Cards</p>
-                            </div>
-                            <div class="px-3">
-                                <p class="mb-2 h5">12</p>
+                                <p class="mb-2 h5">{calculated.totalDecks}</p>
                                 <p class="text-muted mb-0">Decks</p>
                             </div>
+                            <div class="px-3">
+                                <p class="mb-2 h5">{calculated.totalCards}</p>
+                                <p class="text-muted mb-0">Cards</p>
+                            </div>
                             <div>
-                                <p class="mb-2 h5">10</p>
+                                <p class="mb-2 h5">{calculated.totalNotebooks}</p>
+                                <p class="text-muted mb-0">Notebooks</p>
+                            </div>
+                            <div>
+                                <p class="mb-2 h5">{calculated.totalNotes}</p>
                                 <p class="text-muted mb-0">Notes</p>
                             </div>
                         </div>
