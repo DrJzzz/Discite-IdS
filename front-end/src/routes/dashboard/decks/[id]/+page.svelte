@@ -168,8 +168,21 @@
         }
     }
 </script>
+
+<style>
+    .button-div {
+        display: flex;
+        justify-content: space-between;
+        max-width: 300px;
+        padding-bottom: 20px;
+        margin-left: 20px;
+    }
+</style>
+
+
 {#if SingleCardStore}
     <div>
+        <div class="button-div">
         <!-- Botón que activa el modal edit-->
         <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="d-flex align-items-center">
@@ -186,6 +199,8 @@
             </div>
 
         </button>
+    </div>
+
         <div class="row">
             <div class="container-sm col">
                 <div class="text-center mb-3"><p>Front</p></div>

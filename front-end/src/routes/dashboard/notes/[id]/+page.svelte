@@ -238,10 +238,20 @@
 
     
 </script>
-
+<style>
+    .button-div {
+        display: flex;
+        justify-content: space-between;
+        max-width: 300px;
+        padding-bottom: 20px;
+        margin-left: 20px;
+    }
+</style>
 {#if SingleNoteStore}
     <div class="container-md" >
         <!-- Botón que activa el modal edit-->
+        
+        <div class="button-div">
         <button type="button" class="btn btn-primary btn-action-color" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <div class="d-flex align-items-center">
                 <Pencil/>
@@ -255,6 +265,7 @@
                 See history
             </div>
         </button>
+    </div>
             <div>
                 <div class="card bg-secondary mb-3 scrollable-column-note" style="max-width: 900px;min-width: 720px;min-height: 400px;">
                     <div class="card-header">
