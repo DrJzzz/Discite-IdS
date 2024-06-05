@@ -12872,7 +12872,7 @@ body {
 }
 
 .tags-column {
-  max-height: 150px; /* Ajusta según sea necesario */
+  max-width: 100px; /* Ajusta según sea necesario */
   overflow-x: auto;
   white-space: nowrap;
 }
