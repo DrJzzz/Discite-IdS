@@ -113,7 +113,11 @@
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3" style="width: 30rem;margin-left: 20%;min-height: 300px">
                     <div class="card-body">
-                        <SvelteMarkdown source="{card.front}"/>
+                        {#if $StudyCards[i].template === 2}
+                            <Katex>{card.front}</Katex>
+                        {:else }
+                            <SvelteMarkdown source="{card.front}"/>
+                        {/if}
                     </div>
                 </div>
             </div>

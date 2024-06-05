@@ -77,6 +77,34 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = PictureSerializer(user, context={'request': request})
         return Response(data=serializer.data, status=200)
     
+    
+    @action(detail=True, methods=['GET'])
+    def total(self, request, *args, **kwargs):
+        user = self.get_object()
+        decks = user.deck_user.all()
+        notebooks = user.note_user.all()
+        
+        deck_count = len(decks)
+        nb_count = len(notebooks)
+        card_count = 0 
+        note_count = 0
+        
+        for deck in decks:
+            card_count += deck.card_count
+        
+        for nb in notebooks:
+            note_count += nb.note_count
+        
+        
+        data = {
+            'decks' : deck_count,
+            'notebooks' : nb_count,
+            'cards' : card_count,
+            'notes' : note_count
+        }
+        return Response(data)
+        
+    
     @action(detail=False, methods=['GET'])
     def user_public_preview(self, request, *ars, **kwargs):
         users = CustomUser.objects.all()

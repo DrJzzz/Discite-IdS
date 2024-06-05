@@ -190,7 +190,7 @@
     };
 
     function setBackImage(imageUrl){
-        back = '![Back image](' + imageUrl  +' )';
+        back = '<img src="'+ imageUrl + '" alt="drawing" width="400"/>'
     }
 </script>
 
@@ -220,23 +220,31 @@
                     </select>
                 </div>
             {/if}
-            <div class="mb-3">
-                <label for="front-area" class="form-label">Front Area</label>
-                <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
-            </div>
+
             {#if templateOption === '1'}
 
-
+                <div class="mb-3">
+                    <label for="front-area" class="form-label">Front Area</label>
+                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+                </div>
                 <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in Markdown"></textarea>
                 </div>
                 {:else if templateOption === '2'}
                 <div class="mb-3">
+                    <label for="front-area" class="form-label">Front Area</label>
+                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in latex"></textarea>
+                </div>
+                <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <textarea bind:value={back} style="color:black" class="form-control" id="back-area" rows="10" placeholder="Type in latex"></textarea>
                 </div>
                 {:else if templateOption === '3'}
+                <div class="mb-3">
+                    <label for="front-area" class="form-label">Front Area</label>
+                    <textarea bind:value={front} style="color:black"  class="form-control" id="front-area" rows="5" placeholder="Type in Markdown"></textarea>
+                </div>
                 <div class="mb-3">
                     <label for="back-area" class="form-label">Back Area</label>
                     <FilePond

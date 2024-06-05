@@ -9,33 +9,13 @@
 
     export let data;
     let img = 'http://localhost:8000/media/blank-user-picture.jpg';
-    let calculated = { totalDecks : 0, totalCards : 0, totalNotebooks : 0, totalNotes : 0};
+    let calculated = { decks : 0, cards : 0, notebooks : 0, notes : 0};
     onMount(() => {
         UserStore.set(data.user)
         img = data.img;
-        calculated = calculateTotals();
+        calculated = data.total;
+        console.log(calculated)
     })
-
-    function calculateTotals() {
-        // Total de decks
-        const totalDecks = $CardStore.length;
-
-        // Total de cards
-        const totalCards = $CardStore.reduce((acc, deck) => acc + deck.cards.length, 0);
-
-        // Total de notebooks
-        const totalNotebooks = $NoteStore.length;
-
-        // Total de notes
-        const totalNotes = $NoteStore.reduce((acc, notebook) => acc + notebook.notes.length, 0);
-
-        return {
-            totalDecks,
-            totalCards,
-            totalNotebooks,
-            totalNotes
-        };
-    }
 
     let imageFile = null;
 
@@ -202,19 +182,19 @@
                         </div>
                         <div class="d-flex justify-content-between text-center mt-5 mb-2">
                             <div>
-                                <p class="mb-2 h5">{calculated.totalDecks}</p>
+                                <p class="mb-2 h5">{calculated.decks}</p>
                                 <p class="text-muted mb-0">Decks</p>
                             </div>
                             <div class="px-3">
-                                <p class="mb-2 h5">{calculated.totalCards}</p>
+                                <p class="mb-2 h5">{calculated.cards}</p>
                                 <p class="text-muted mb-0">Cards</p>
                             </div>
                             <div>
-                                <p class="mb-2 h5">{calculated.totalNotebooks}</p>
+                                <p class="mb-2 h5">{calculated.notebooks}</p>
                                 <p class="text-muted mb-0">Notebooks</p>
                             </div>
                             <div>
-                                <p class="mb-2 h5">{calculated.totalNotes}</p>
+                                <p class="mb-2 h5">{calculated.notes}</p>
                                 <p class="text-muted mb-0">Notes</p>
                             </div>
                         </div>

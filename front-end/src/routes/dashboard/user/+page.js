@@ -35,21 +35,32 @@ export async function load({ fetch, params }) {
                 credentials : 'include',
             });
 
+            const endpointTotal = `http://localhost:8000/users/${user.id}/total/`;
+            const resTotal = await fetch(endpointTotal, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`,
+                    'X-CSRFToken': `${csrftoken}`
+                },
+                credentials : 'include',
+            });
+            const total = await resTotal.json();
             const imgJson = await resImage.json();
             console.log(imgJson)
             const img = imgJson.picture;
             UserStore.set(user);
             // Devuelve las cartas cargadas junto con su ID
-            return { user , img};
+            return { user , img, total};
         } else {
             // Si la solicitud no fue exitosa, lanza un error con el mensaje de estado
-            return {user : [], img : ""}
+            return {user : [], img : "", total : []}
         }
     } catch (error) {
         // Maneja cualquier error que ocurra durante la carga de la carta
         console.error('Error loading user:', error);
 
         // Devuelve un objeto vacío en caso de error
-        return { user: [], img : '' };
+        return { user: [], img : '' , total : []};
     }
 }

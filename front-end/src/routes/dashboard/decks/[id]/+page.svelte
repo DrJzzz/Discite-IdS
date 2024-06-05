@@ -234,7 +234,7 @@
     };
 
     function setBackImage(imageUrl){
-        $SingleCardStore.back = '![Back image](' + imageUrl  +' )';
+        $SingleCardStore.back = '<img src="'+ imageUrl + '" alt="drawing" width="400"/>'
     }
 </script>
 
@@ -275,8 +275,11 @@
                 <div class="text-center mb-3"><p>Front</p></div>
                 <div class="card bg-secondary mb-3 card-width" >
                     <div class="card-body">
-                        <SvelteMarkdown source="{$SingleCardStore.front}"/>
-                        <!-- <Katex>{$SingleCardStore.front}</Katex>  -->
+                        {#if $SingleCardStore.template == 2}
+                            <Katex>{$SingleCardStore.front}</Katex>
+                        {:else }
+                            <SvelteMarkdown source="{$SingleCardStore.front}"/>
+                        {/if}
                     </div>
                 </div>
             </div>
@@ -412,7 +415,11 @@
                                                 <div class="col">
                                                     <div class="card bg-secondary card-width">
                                                         <div class="card-body">
-                                                            <SvelteMarkdown source="{history.front}"/>
+                                                            {#if $SingleCardStore.template == 2}
+                                                                <Katex>{history.front}</Katex>
+                                                            {:else }
+                                                                <SvelteMarkdown source="{history.front}"/>
+                                                            {/if}
                                                         </div>
                                                     </div>
                                                 </div>
