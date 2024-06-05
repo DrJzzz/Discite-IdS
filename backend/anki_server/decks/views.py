@@ -141,3 +141,6 @@ class DeckViewSet(viewsets.ModelViewSet):
             
         serializer = DeckSerializer(deck, context={'request': request})
         return Response(serializer.data, status=200)
+    
+    
+    
