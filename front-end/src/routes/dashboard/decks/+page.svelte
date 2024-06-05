@@ -3,8 +3,8 @@
     import {goto} from "$app/navigation";
     import {Plus, X, Gear, LockKey,LockSimpleOpen,Pencil, Trash, UserPlus} from "phosphor-svelte";
     import NewDeck from "../../../components/Forms/NewDeck.svelte";
-    import {UsersStore} from "../../../users-store.js";
-    import {CardStore} from "../../../card-store.js";
+    import {UsersStore} from "../../../stores.js";
+    import {CardStore} from "../../../stores.js";
     import {onMount} from "svelte";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";

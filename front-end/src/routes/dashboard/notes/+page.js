@@ -1,8 +1,7 @@
 import { getCookie } from '../../../utils/csrf';
-import {NoteStore} from "../../../note-store.js";
-import {UsersStore} from "../../../users-store.js";
-import {NotebookStore} from "../../../notebook-store.js";
-import {TagStore} from "../../../tag-store.js";
+import {NoteStore} from "../../../stores.js";
+import {NotebookStore} from "../../../stores.js";
+import {TagStore} from "../../../stores.js";
 import { get } from 'svelte/store';
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params }) {
@@ -77,7 +76,6 @@ export async function load({ parent, fetch, params }) {
         TagStore.set(tags);
         NoteStore.set(notes);
         replaceTagIdsWithNames();
-        UsersStore.set(users);
         NotebookStore.set(notebooks);
         return { notes, users };
     } catch (error) {

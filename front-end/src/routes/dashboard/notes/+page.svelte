@@ -1,14 +1,12 @@
 <script>
-    import {NoteStore} from '../../../note-store.js';
+    import {NoteStore} from '../../../stores.js';
     import {onMount} from 'svelte';
     import { goto } from '$app/navigation';
-    import { writable } from "svelte/store";
     import NewNote from "../../../components/Forms/NewNote.svelte";
-    import SvelteMarkdown from "svelte-markdown";
     import {Gear, LockKey, LockSimpleOpen, Pencil, Plus, Trash, UserPlus, X} from "phosphor-svelte";
     import NewNotebook from "../../../components/Forms/NewNotebook.svelte";
-    import {UsersStore} from "../../../users-store.js";
-    import {UserStore} from "../../../user-store.js";
+    import {UsersStore} from "../../../stores.js";
+    import {UserStore} from "../../../stores.js";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";

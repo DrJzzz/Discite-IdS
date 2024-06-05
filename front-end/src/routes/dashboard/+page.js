@@ -1,6 +1,6 @@
 import { getCookie } from '../../utils/csrf';
-import {HomeStore} from "../../home-stote.js";
-import {TagStore} from "../../tag-store.js";
+import {HomeStore} from "../../stores.js";
+import {TagStore} from "../../stores.js";
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ parent, fetch, params  }) {

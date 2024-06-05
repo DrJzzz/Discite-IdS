@@ -1,17 +1,17 @@
 <script>
-    import {SingleNoteStore} from "../../../../single-note-store.js";
+    import {SingleNoteStore} from "../../../../stores.js";
     import { onMount } from "svelte";
     import SvelteMarkdown from 'svelte-markdown';
     import {ClockCounterClockwise, Pencil, Plus, X} from "phosphor-svelte";
-    import {ImagesStore} from "../../../../images-store.js";
+    import {ImagesStore} from "../../../../stores.js";
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-    import {HistoryStore} from "../../../../history-store.js";
+    import {HistoryStore} from "../../../../stores.js";
     import {getCookie} from "../../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
-    import {TagStore} from "../../../../tag-store.js";
+    import {TagStore} from "../../../../stores.js";
     import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
     import FilePondPluginImageResize from 'filepond-plugin-image-resize';
     import FilePondPluginImageTransform from 'filepond-plugin-image-transform';

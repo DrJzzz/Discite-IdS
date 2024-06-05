@@ -1,9 +1,8 @@
 <script>
-    import {SharedDeckStore} from '../../../shared-deck-store.js';
-    import {SharedNotebookStore} from '../../../shared-notebook-store.js';
+    import {SharedDeckStore} from '../../../stores.js';
+    import {SharedNotebookStore} from '../../../stores.js';
     import {Plus, X} from "phosphor-svelte";
     import {goto} from "$app/navigation";
-    import SvelteMarkdown from "svelte-markdown";
     import {getCookie} from "../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../utils/alerts.js";
     import {onMount} from "svelte";

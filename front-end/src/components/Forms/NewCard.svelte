@@ -1,11 +1,11 @@
 <script>
-    import {UserStore} from "../../user-store.js";
+    import {UserStore} from "../../stores.js";
     import {getCookie} from "../../utils/csrf.js";
     import {alertError, alertSuccess} from "../../utils/alerts.js";
     import {invalidate, invalidateAll} from "$app/navigation";
-    import {DeckStore} from "../../deck-store.js";
+    import {DeckStore} from "../../stores.js";
     import {Plus, X} from "phosphor-svelte";
-    import {TagStore} from "../../tag-store.js";
+    import {TagStore} from "../../stores.js";
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
     import FilePondPluginImagePreview from 'filepond-plugin-image-preview';

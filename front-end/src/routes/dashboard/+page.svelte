@@ -2,15 +2,13 @@
     import {Brain, Eye} from "phosphor-svelte";
     import {goto} from "$app/navigation";
     import { getCookie } from '../../utils/csrf';
-    import {DeckStore} from "../../deck-store.js";
-    import {HomeStore} from "../../home-stote.js";
+    import {DeckStore} from "../../stores.js";
+    import {HomeStore} from "../../stores.js";
     import {onMount} from "svelte";
     import SvelteMarkdown from "svelte-markdown";
     import {alertSuccess, alertError} from "../../utils/alerts.js";
-    import {HistoryStore} from "../../history-store.js";
-    import {TagStore} from "../../tag-store.js";
+    import {TagStore} from "../../stores.js";
     import { get } from 'svelte/store';
-    import {SingleCardStore} from "../../single-card-store.js";
     import Katex from "svelte-katex";
 
     /** @type {import('./$types').PageData} */

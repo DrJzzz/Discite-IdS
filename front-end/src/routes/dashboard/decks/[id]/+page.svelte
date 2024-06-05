@@ -2,12 +2,12 @@
     import { onMount } from "svelte";
     import SvelteMarkdown from "svelte-markdown";
     import {Pencil, ClockCounterClockwise, X, Plus} from "phosphor-svelte";
-    import {HistoryStore} from "../../../../history-store.js";
-    import {SingleCardStore} from "../../../../single-card-store.js";
+    import {HistoryStore} from "../../../../stores.js";
+    import {SingleCardStore} from "../../../../stores.js";
     import {getCookie} from "../../../../utils/csrf.js";
     import {alertSuccess, alertError} from "../../../../utils/alerts.js";
     import {invalidateAll} from "$app/navigation";
-    import {TagStore} from "../../../../tag-store.js";
+    import {TagStore} from "../../../../stores.js";
     import Katex from 'svelte-katex'
     import FilePond, { registerPlugin, supported } from 'svelte-filepond';
     import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';

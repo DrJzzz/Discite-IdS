@@ -1,6 +1,6 @@
 <script>
     import {onMount} from "svelte";
-    import {UserStore} from "../../../user-store.js";
+    import {UserStore} from "../../../stores.js";
     import {getCookie} from "../../../utils/csrf.js";
     import {CameraPlus} from "phosphor-svelte";
     import {invalidateAll} from '$app/navigation';
