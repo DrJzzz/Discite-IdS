@@ -321,8 +321,8 @@
                                     <h4>List Cards</h4>
                                     <div class="col-3 scrollable-column">
                                         <div class="list-group">
-                                            {#each deck.cards as info}
-                                                <button type="button" class="list-group-item list-group-item-action" on:click={() => changeCard(info.id)}>{info.id}</button>
+                                            {#each deck.cards as info, index}
+                                                <button type="button" class="list-group-item list-group-item-action" on:click={() => changeCard(info.id)}>{index + 1}</button>
                                             {/each}
                                         </div>
                                     </div>
@@ -374,8 +374,8 @@
                                 <div class="col-3 scrollable-column">
 
                                     <div class="list-group">
-                                        {#each infoNotebook.notes as note}
-                                            <button type="button" class="list-group-item list-group-item-action" on:click={() => changeNote(note.id)}>{note.id}</button>
+                                        {#each infoNotebook.notes as note, index}
+                                            <button type="button" class="list-group-item list-group-item-action" on:click={() => changeNote(note.id)}>{index + 1}</button>
                                         {/each}
                                     </div>
                                 </div>
